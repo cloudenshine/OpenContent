@@ -11,6 +11,7 @@ from opencontent.kernel import Kernel
 from opencontent.vault import Problem, encode, parse, atomic
 from opencontent.domain import AXES, STATES
 from opencontent.jobs import Jobs
+from opencontent.quote_matcher import match_or_find_quote
 from opencontent.providers import AgentExecutionProvider, discover_skills
 
 STATEMENT = "在本验收材料中，内容需要保留可读取的来源。"
@@ -199,6 +200,97 @@ class KernelTests(unittest.TestCase):
         self.assertEqual(Jobs(self.k).list()[0]['status'],'INTERRUPTED')
         skill=Path(self.tmp.name)/'external-skill'/'SKILL.md';skill.parent.mkdir();skill.write_text('# Skill\nInspect evidence.',encoding='utf-8')
         self.assertEqual(discover_skills([skill.parent])[0]['path'],str(skill))
+
+    def test_invalid_knowledge_reference_is_rejected_without_state_change(self):
+        self.run_stage('distill')
+        before_state = self.k.inspect(self.p)['object']['state']
+        req = self.k.request(self.p, 'research', [])
+        
+        # Test 1: nonexistent knowledge ID
+        r1 = response(req)
+        r1['claims'][0]['knowledge'] = ['nonexistent-knowledge-id']
+        with self.assertRaises(Problem) as ctx:
+            self.k.apply_result(self.p, 'research', r1, req['token'], 'fixture', 'bad-k-ref')
+        self.assertIn('invalid or cross-project Knowledge ID', str(ctx.exception))
+        self.assertEqual(self.k.inspect(self.p)['object']['state'], before_state)
+        self.assertEqual([o for o in self.k.read()[0].values() if o['type'] == 'Claim'], [])
+        
+        # Test 2: invalid confidence
+        r2 = response(req)
+        r2['claims'][0]['confidence'] = 0.8
+        with self.assertRaises(Problem) as ctx:
+            self.k.apply_result(self.p, 'research', r2, req['token'], 'fixture', 'bad-conf')
+        self.assertIn('confidence must be low/medium/high', str(ctx.exception))
+
+    def test_quote_matcher_rejects_altered_numbers_and_flipped_negations(self):
+        source = '有效样本为20人，结论不应直接推广。'
+        self.assertFalse(match_or_find_quote('有效样本为200人', source)[0])
+        self.assertFalse(match_or_find_quote('结论应直接推广', source)[0])
+        self.assertFalse(match_or_find_quote('有效样本为结论', source)[0])
+        # Markdown stripped match preserves source slice
+        md_source = '最终**有效样本为20人**，结论不应直接推广。'
+        matched, slice_text = match_or_find_quote('有效样本为20人', md_source)
+        self.assertTrue(matched)
+        self.assertIn(slice_text, md_source)
+
+    def test_research_analysis_persisted_and_passed_to_draft(self):
+        self.run_stage('distill')
+        req = self.k.request(self.p, 'research', [])
+        r = response(req)
+        r['analysis'] = {
+            'question': '核心研究问题',
+            'observations': '主要观察与范围',
+            'rival_explanations': '竞争解释说明',
+            'evidence_gaps': '材料缺口',
+            'value_add': '相对已有理解新增增量'
+        }
+        self.k.apply_result(self.p, 'research', r, req['token'], 'fixture', 'research-with-analysis')
+        p_obj = self.k.inspect(self.p)['object']
+        self.assertEqual(p_obj.get('analysis', {}).get('question'), '核心研究问题')
+        draft_req = self.k.request(self.p, 'draft', [])
+        self.assertEqual(draft_req.get('analysis', {}).get('question'), '核心研究问题')
+
+    def test_v2_semantic_claim_binding_and_review(self):
+        from opencontent.domain import gate, context_hash
+        aid = self.to_review()
+        a = self.k.inspect(aid)['object']
+        cid = a['derived_from'][0]
+        
+        # Paraphrased excerpt that preserves key tokens (在本验收材料中，内容需要保留可读取的来源。)
+        paraphrased_body = a['body'].replace(STATEMENT, '就这份验收材料而言，内容应当保留读者能够读取的来源。')
+        
+        # Configure v2 artifact
+        a_v2 = copy.deepcopy(a)
+        a_v2['protocol'] = 'opencontent.artifact.v2'
+        a_v2['body'] = paraphrased_body
+        a_v2['claim_bindings'] = {
+            cid: {
+                'claim': cid,
+                'text_excerpt': '就这份验收材料而言，内容应当保留读者能够读取的来源。',
+                'anchor': 'p1'
+            }
+        }
+        
+        objects, errors = self.k.read()
+        objects[aid] = a_v2
+        
+        # Without critic evaluating fidelity -> gate requires fidelity review
+        g_no_review = gate(objects, a_v2, self.k.vault.constitution(self.p), errors)
+        self.assertFalse(any("Claim statement is absent from draft" in issue for issue in g_no_review['issues']))
+        self.assertTrue(any("Missing or stale Critic Review" in issue for issue in g_no_review['issues']))
+        
+        # With faithful critic review
+        r_obj = [o for o in objects.values() if o['type'] == 'Review' and o.get('artifact') == aid and o.get('mode') == 'critique'][-1]
+        r_v2 = copy.deepcopy(r_obj)
+        r_v2['context_hash'] = context_hash(objects, a_v2, self.k.vault.constitution(self.p))
+        r_v2['claim_reviews'] = {
+            cid: {'claim': cid, 'faithful': True, 'fidelity_reason': '忠实转述，保留了核心条件与来源要求'}
+        }
+        objects[r_v2['oc_id']] = r_v2
+        
+        g_faithful = gate(objects, a_v2, self.k.vault.constitution(self.p), errors)
+        self.assertFalse(any("Claim statement is absent from draft" in issue for issue in g_faithful['issues']))
+        self.assertFalse(any("fidelity" in issue.lower() for issue in g_faithful['issues']))
 
 
 if __name__=='__main__':unittest.main()

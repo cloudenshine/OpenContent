@@ -158,20 +158,17 @@ class Cockpit extends ItemView {
           scanBtn.disabled = false;
         }
       });
-      el(feedBanner, 'p', '自动监测「得到大脑」、「收件箱」等输入源，跨笔记聚类生成可证伪选题假设。', 'oc-muted');
+      el(feedBanner, 'p', '基于本地笔记关键词重合度召回关联素材组。深度选题通过正式选题内核校验片段依据与来源独立性。', 'oc-muted');
 
       if (this.feedingClusters && this.feedingClusters.length) {
         for (const cluster of this.feedingClusters) {
           const candidate = pipelineEngine.generateIdeationCandidates(cluster);
           const card = el(feedBanner, 'div', undefined, 'oc-candidate-card');
           el(card, 'h4', candidate.title);
-          el(card, 'p', '🎯 方向：' + candidate.direction);
-          el(card, 'p', '💡 逻辑：' + candidate.logic);
-          el(card, 'small', '📚 关联来源：' + candidate.sources.join(' + '));
-          const adoptBtn = button(card, '一键以此灵感开启创作', async () => {
-            this.homeGoal = candidate.direction;
-            new Notice('已将选题注入写作框，点击下方「开始写作」即可启动！');
-            await this.render();
+          el(card, 'p', '🎯 建议探索方向：' + candidate.direction);
+          el(card, 'small', '📚 关联素材（共 ' + candidate.clusterSize + ' 篇）：' + candidate.sources.join('、'));
+          button(card, '为此素材组深入选题 (使用正式选题内核)', async () => {
+            this.discoverIdeas(null, candidate.folders, candidate.direction);
           }, 'mod-cta');
         }
       }
@@ -273,14 +270,14 @@ class Cockpit extends ItemView {
       },'mod-cta');refresh();
     }).open();
   }
-  discoverIdeas(runId=null){
+  discoverIdeas(runId=null, initialFolders=null, initialDirection=null){
     new FormModal(this.plugin,'发现选题灵感',(root,modal)=>{
       el(root,'p','先选择围绕同一个读者问题的资料范围，再归纳主题、比较观点并生成写作角度。候选需要你判断，不等于已核实的结论。');
-      const query=field(root,'希望探索的方向',this.plugin.settings.ideationDirection||'');
+      const query=field(root,'希望探索的方向',initialDirection || this.plugin.settings.ideationDirection||'');
       const range=el(root,'details');el(range,'summary','选择资料目录与数量');
       el(range,'p','未勾选目录时检索全部允许范围；勾选后只使用这些目录及其子目录。根目录只包含根目录笔记。','oc-muted');
       const directories=el(range,'div',undefined,'oc-scope-list');
-      const selectedFolders=new Set(this.plugin.settings.ideationFolders||[]);
+      const selectedFolders=new Set(initialFolders || this.plugin.settings.ideationFolders||[]);
       const limit=field(range,'最多参与综合的资料数（2–60）',String(this.plugin.settings.ideationLimit||24));limit.type='number';limit.min='2';limit.max='60';
       const scope=el(root,'p','正在准备资料范围…');scope.setAttribute('role','status');
       const provider=el(root,'select');provider.setAttribute('aria-label','选题综合 CLI');const tools=el(root,'div');const list=el(root,'div');
@@ -523,11 +520,11 @@ class Cockpit extends ItemView {
 
     this.issues(root,detail.gate);
 
-    // 原生高颜值排版渲染面板 (Typography Panel)
+    // 原生排版渲染与交付预览面板 (Typography Panel)
     if (typographyEngine) {
       const typoPanel = el(root, 'section', undefined, 'oc-typography-panel');
-      el(typoPanel, 'h3', '🎨 原生高颜值排版与一键富文本发布');
-      el(typoPanel, 'p', '为微信公众号、知乎、语雀等渠道实时渲染内联样式，一键复制富文本即可发布。', 'oc-muted');
+      el(typoPanel, 'h3', '🎨 排版渲染与交付预览');
+      el(typoPanel, 'p', detail.gate.approved ? '此版本已通过人工定稿，可复制正式富文本交付发布。' : '草稿排版预览。注意：草稿尚未通过人工定稿审查，不得作为正式成品直接发布。', 'oc-muted');
 
       const picker = el(typoPanel, 'div', undefined, 'oc-theme-picker');
       const currentTheme = this.plugin.settings.typographyTheme || 'serif';
@@ -545,15 +542,30 @@ class Cockpit extends ItemView {
       const renderedHtml = typographyEngine.renderArticleHtml(a.body || '', currentTheme, a.title || '');
       previewBox.innerHTML = renderedHtml;
 
-      const copyBtn = button(typoPanel, '📋 一键复制为富文本 (粘贴到公众号)', async () => {
-        try {
-          const ok = await typographyEngine.copyRichTextToClipboard(renderedHtml, a.body || '');
-          if (ok) new Notice('✅ 已复制富文本排版到剪贴板，直接粘贴到公众号/知乎后台即可！');
-          else new Notice('⚠️ 剪贴板 API 暂不可用，可直接打开正文复制');
-        } catch(err) {
-          new Notice('复制失败: ' + err.message);
-        }
-      }, 'mod-cta');
+      if (detail.gate.approved) {
+        button(typoPanel, '📋 复制已批准成品 (富文本)', async () => {
+          try {
+            const handoffRes = await this.plugin.api('/handoff', {artifact: a.oc_id, token: detail.token});
+            const readerMarkdown = handoffRes.article || a.body || '';
+            const finalHtml = typographyEngine.renderArticleHtml(readerMarkdown, currentTheme);
+            const ok = await typographyEngine.copyRichTextToClipboard(finalHtml, readerMarkdown);
+            if (ok) new Notice('✅ 已复制已批准成品富文本到剪贴板，内部 Claim 标记已剔除！');
+            else new Notice('⚠️ 剪贴板 API 暂不可用，可直接打开正文复制');
+          } catch(err) {
+            new Notice('正式交付复制失败: ' + err.message);
+          }
+        }, 'mod-cta');
+      } else {
+        button(typoPanel, '📋 复制草稿预览 (未定稿)', async () => {
+          try {
+            const ok = await typographyEngine.copyRichTextToClipboard(renderedHtml, a.body || '');
+            if (ok) new Notice('⚠️ 已复制草稿排版预览。注意：草稿尚未通过人工定稿，非正式成品。');
+            else new Notice('⚠️ 剪贴板 API 暂不可用，可直接打开正文复制');
+          } catch(err) {
+            new Notice('复制失败: ' + err.message);
+          }
+        });
+      }
     }
     const pending=data.inbox.find(i=>i.artifact===a.oc_id);
     if(pending){const accept=button(root,'确认定稿',()=>this.decision(pending,'accept',detail.token),'mod-cta');accept.disabled=detail.gate.status!=='PASS';}

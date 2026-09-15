@@ -179,10 +179,33 @@ def gate(objects, artifact, policies, errors=()):
     markers = set(re.findall(r"\[\[([0-9a-f]{32})(?:\|[^\]]+)?\]\]", artifact["body"]))
     if markers != set(artifact.get("derived_from", [])):
         issues.append("Draft Claim links must match its registered Claims")
+    is_v2 = artifact.get("protocol") == "opencontent.artifact.v2" and "claim_bindings" in artifact
+    bindings = artifact.get("claim_bindings", {})
+    if isinstance(bindings, list):
+        bindings = {b.get("claim"): b for b in bindings if isinstance(b, dict)}
+    elif not isinstance(bindings, dict):
+        bindings = {}
+
+    from .quote_matcher import _extract_tokens_of_interest
+
     for cid in artifact.get("derived_from", []):
         claim = objects.get(cid)
-        if claim and claim["body"].strip() not in artifact["body"]:
-            issues.append(f"Claim statement is absent from draft: {claim['title']}")
+        if not claim:
+            continue
+        if is_v2:
+            b = bindings.get(cid)
+            if not b or not isinstance(b.get("text_excerpt"), str) or not b["text_excerpt"].strip():
+                issues.append(f"Missing claim binding for: {claim['title']}")
+            elif b["text_excerpt"].strip() not in artifact["body"]:
+                issues.append(f"Claim binding excerpt is absent from draft: {claim['title']}")
+            else:
+                claim_tokens = _extract_tokens_of_interest(claim["body"])
+                excerpt_tokens = _extract_tokens_of_interest(b["text_excerpt"])
+                if not claim_tokens.issubset(excerpt_tokens):
+                    issues.append(f"Claim binding altered critical tokens for: {claim['title']}")
+        else:
+            if claim["body"].strip() not in artifact["body"]:
+                issues.append(f"Claim statement is absent from draft: {claim['title']}")
     for text in policies.values():
         headings = ("Audience", "Voice", "Editorial Principles", "Evidence Policy", "Citation Policy", "Originality Standard", "Forbidden Patterns", "Quality Gates")
         if any("## " + h not in text for h in headings):
@@ -205,6 +228,15 @@ def gate(objects, artifact, policies, errors=()):
             axes = review["axes"]
             if not review.get("claims_complete"):
                 issues.append("Important facts are missing from the Claim registry")
+            if is_v2:
+                claim_reviews = review.get("claim_reviews")
+                if not isinstance(claim_reviews, dict):
+                    issues.append("Critic Review must evaluate claim semantic fidelity for v2 artifact")
+                else:
+                    for cid in artifact.get("derived_from", []):
+                        cr = claim_reviews.get(cid)
+                        if not isinstance(cr, dict) or not cr.get("faithful"):
+                            issues.append(f"Claim semantic fidelity not confirmed by Critic for: {objects.get(cid, {}).get('title', cid)}")
             for axis, value in axes.items():
                 if value["status"] != "PASS":
                     issues.append(axis + ": " + value["status"])

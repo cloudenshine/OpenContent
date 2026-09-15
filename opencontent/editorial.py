@@ -22,11 +22,21 @@ Utility：检查是否回答具体读者问题，是否解释关键原因；操�
 """
 
 
+RESEARCH_ANALYSIS = """研究分析底稿要求：
+明确要回答的核心问题与暂定判断；记录主要观察与适用范围；如有竞争解释需说明现有证据是否能够区分；如实列出关键缺口、反证或会改变判断的新事实，严禁虚构来源；阐明相对已有理解的新增增量。
+"""
+
+REVISION = """定向修订要求：
+优先输出“问题位置—影响—最小建议修改”，说明改动理由。读者正文只包含成品内容，不得把执行过程说明、任务元数据、主张标记说明或审稿术语写入正文。
+"""
+
 def guidance(stage):
     if stage == "critique":
-        return WRITING + "\n" + CRITIQUE
-    if stage in ("draft", "revise"):
+        return WRITING + "\n" + CRITIQUE + "\n核对研究分析底稿（若有）：检查正文是否保留了研究记录的适用边界、限制与反证，是否将尚未排除的竞争解释或不确定推断夸大为绝对结论。"
+    if stage == "revise":
+        return WRITING + "\n" + REVISION
+    if stage == "draft":
         return WRITING
     if stage == "research":
-        return "主张原句将进入正文：用受众能理解的完整句子表达具体判断，保留证据的条件和不确定性，避免口号与内部字段。"
+        return "主张原句将进入正文：用受众能理解的完整句子表达具体判断，保留证据的条件和不确定性，避免口号与内部字段。\n" + RESEARCH_ANALYSIS
     return ""

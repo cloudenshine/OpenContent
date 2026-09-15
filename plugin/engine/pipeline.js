@@ -130,16 +130,22 @@ function clusterNotes(notes, threshold = 0.15) {
  * Generate candidate ideation cards from cluster
  */
 function generateIdeationCandidates(cluster) {
+  const sources = cluster.sources.map(s => s.path);
+  const titles = cluster.sources.map(s => s.title);
   const sourceA = cluster.sources[0];
-  const sourceB = cluster.sources[1];
+  const sourceB = cluster.sources[1] || sourceA;
+  const folders = Array.from(new Set(cluster.sources.map(s => {
+    const parts = s.path.split('/');
+    return parts.length > 1 ? parts.slice(0, -1).join('/') : '.';
+  })));
 
   return {
-    id: digest(sourceA.path + sourceB.path).slice(0, 32),
-    title: `基于「${sourceA.title}」与「${sourceB.title}」的深度综合选题`,
-    direction: `探究 ${sourceA.title} 提出的核心实践，与 ${sourceB.title} 中的方法论如何交叉验证并落地。`,
-    sources: [sourceA.path, sourceB.path],
-    logic: `来源一提供一手观察与案例事实，来源二提供结构化方法与验证边界。两者结合可形成完整闭环。`,
-    readerBenefit: `让读者既获得微观执行抓手，又具备宏观判定标准，避免单一来源的信息偏差。`
+    id: digest(sources.join(':')).slice(0, 32),
+    title: `候选素材组：${titles.slice(0, 2).join(' + ')}${titles.length > 2 ? ` 等 ${titles.length} 篇` : ''}`,
+    direction: `围绕「${titles.slice(0, 2).join('」与「')}」的交集展开选题`,
+    sources: sources,
+    folders: folders,
+    clusterSize: cluster.count
   };
 }
 

@@ -59,18 +59,21 @@ const THEMES = {
 /**
  * Render Markdown body into rich HTML with theme inline styles
  */
+function cleanReaderText(markdown) {
+  let text = String(markdown || '').replace(/^---[\s\S]*?---\s*/, '').trim();
+  // Clean internal claim link tags like [[claim-id]] or [[claim-id|alias]]
+  return text.replace(/\[\[([0-9a-f]{32})(?:\|[^\]]+)?\]\]/g, '');
+}
+
 function renderArticleHtml(markdown, themeId = 'serif', title = '') {
   const theme = THEMES[themeId] || THEMES.serif;
   
-  // Clean markdown frontmatter
-  let text = markdown.replace(/^---[\s\S]*?---\s*/, '').trim();
-  // Clean claim link tags like [[claim-id]] for reader presentation
-  text = text.replace(/\[\[([0-9a-f]{32})(?:\|[^\]]+)?\]\]/g, '');
-
+  const text = cleanReaderText(markdown);
   const lines = text.split(/\r?\n/);
   const htmlParts = [];
 
-  if (title) {
+  const firstNonEmpty = lines.find(l => l.trim().length > 0) || '';
+  if (title && !firstNonEmpty.startsWith('# ')) {
     htmlParts.push(`<h1 style="${theme.h1Style}">${escapeHtml(title)}</h1>`);
   }
 
@@ -140,9 +143,10 @@ function formatInline(text, theme) {
  * Copy rendered rich text to system clipboard
  */
 async function copyRichTextToClipboard(htmlString, plainText) {
+  const cleanedText = cleanReaderText(plainText);
   if (typeof navigator !== 'undefined' && navigator.clipboard && typeof ClipboardItem !== 'undefined') {
     const blobHtml = new Blob([htmlString], { type: 'text/html' });
-    const blobText = new Blob([plainText], { type: 'text/plain' });
+    const blobText = new Blob([cleanedText], { type: 'text/plain' });
     await navigator.clipboard.write([
       new ClipboardItem({
         'text/html': blobHtml,
@@ -156,6 +160,7 @@ async function copyRichTextToClipboard(htmlString, plainText) {
 
 module.exports = {
   THEMES,
+  cleanReaderText,
   renderArticleHtml,
   copyRichTextToClipboard
 };
