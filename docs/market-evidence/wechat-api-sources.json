@@ -1,0 +1,41 @@
+{
+  "captured_at": "2026-09-08T13:33:18.741060+00:00",
+  "purpose": "Official API contract research; full downloaded pages excluded from release archives",
+  "sources": [
+    {
+      "name": "token",
+      "url": "https://developers.weixin.qq.com/doc/service/api/base/api_getstableaccesstoken.html",
+      "sha256": "15706c258044a50e7f31cfe73b3b1c4eed57ed6c15308f24241683d02c9edb7c"
+    },
+    {
+      "name": "draft-get",
+      "url": "https://developers.weixin.qq.com/doc/service/api/draftbox/draftmanage/api_getdraft.html",
+      "sha256": "cfb5e696441d6cbcea75067755c759632bc742a407ef00a00726032ba349630c"
+    },
+    {
+      "name": "article-get",
+      "url": "https://developers.weixin.qq.com/doc/service/api/public/api_freepublishgetarticle.html",
+      "sha256": "501a50ed00648423b37fc51642029eff737334e115e0a1e57edddaf09efaa476"
+    },
+    {
+      "name": "cover-upload",
+      "url": "https://developers.weixin.qq.com/doc/service/api/material/permanent/api_addmaterial.html",
+      "sha256": "7179d14ed8945d7f9d254c980239c8927e33db1942d8b6620d61298b8ff9ffe1"
+    },
+    {
+      "name": "publish-status",
+      "url": "https://developers.weixin.qq.com/doc/subscription/api/public/api_freepublish_get.html",
+      "sha256": "42740cbfa93f987d7d63aef3de8f000389be1c787c84737d193caf0f77582c26"
+    },
+    {
+      "name": "publish-submit",
+      "url": "https://developers.weixin.qq.com/doc/subscription/api/public/api_freepublish_submit.html",
+      "sha256": "d346ba6a206cc24b7e381cc82d6e04094bcf55d6b99dc29a5eedd05474263a92"
+    },
+    {
+      "name": "draft-add",
+      "url": "https://developers.weixin.qq.com/doc/service/api/draftbox/draftmanage/api_draft_add",
+      "sha256": "3eaf918d5dbb6b9cd9ba5314fa1776e6522c20e17caa3e06a4248b9570713848"
+    }
+  ]
+}

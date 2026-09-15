@@ -1,0 +1,62 @@
+[
+  {
+    "path": "src/main.ts",
+    "url": "https://raw.githubusercontent.com/mcncarl/ailu/8a232fe082163c5898038cca7bcf26cb1956b9a2/src/main.ts",
+    "sha256": "4c605bda0c59a58689d3b787ef95cf516d0da5c5523c532fe887425bcf522919",
+    "bytes": 126
+  },
+  {
+    "path": "src/runtime/discovery.ts",
+    "url": "https://raw.githubusercontent.com/mcncarl/ailu/8a232fe082163c5898038cca7bcf26cb1956b9a2/src/runtime/discovery.ts",
+    "sha256": "1aadea2f8811e247405bf373c2b9a1b1eedce775573f79e2f04a4409bef148b7",
+    "bytes": 6901
+  },
+  {
+    "path": "src/storage/processWriteLock.ts",
+    "url": "https://raw.githubusercontent.com/mcncarl/ailu/8a232fe082163c5898038cca7bcf26cb1956b9a2/src/storage/processWriteLock.ts",
+    "sha256": "deeb758b335a9677d24f61bf2a27e82f9ed9100b7758ad21355a5de071c57bde",
+    "bytes": 35953
+  },
+  {
+    "path": "src/publishing/publicationGuard.ts",
+    "url": "https://raw.githubusercontent.com/mcncarl/ailu/8a232fe082163c5898038cca7bcf26cb1956b9a2/src/publishing/publicationGuard.ts",
+    "sha256": "fbd4a7a841c78d310f3b7fae5b528c902c68e1509d3adc9490f11eb45a2be567",
+    "bytes": 4731
+  },
+  {
+    "path": "src/ui/inlineEdit.ts",
+    "url": "https://raw.githubusercontent.com/mcncarl/ailu/8a232fe082163c5898038cca7bcf26cb1956b9a2/src/ui/inlineEdit.ts",
+    "sha256": "86ab7025ac421e2e1369a1ced92ea6773760a7e11c5f33f22a313cdeb2ff854d",
+    "bytes": 4089
+  },
+  {
+    "path": "src/ui/runtimeSetupModal.ts",
+    "url": "https://raw.githubusercontent.com/mcncarl/ailu/8a232fe082163c5898038cca7bcf26cb1956b9a2/src/ui/runtimeSetupModal.ts",
+    "sha256": "20f851d60cf1b4e5fe26ac80ce6bd6f747ff68b76b300e5f377ef8ff22558331",
+    "bytes": 1272
+  },
+  {
+    "path": "src/feishu/frontmatter.ts",
+    "url": "https://raw.githubusercontent.com/mcncarl/ailu/8a232fe082163c5898038cca7bcf26cb1956b9a2/src/feishu/frontmatter.ts",
+    "sha256": "c1055f23ca1117efebd88fc0694f1766be8363163afb86792e57a4a7953cb095",
+    "bytes": 3587
+  },
+  {
+    "path": "src/types.ts",
+    "url": "https://raw.githubusercontent.com/mcncarl/ailu/8a232fe082163c5898038cca7bcf26cb1956b9a2/src/types.ts",
+    "sha256": "a308a80148639093519e968cfafb859107564b33997cf331fc867d9cee5af9f5",
+    "bytes": 14461
+  },
+  {
+    "path": "LICENSE",
+    "url": "https://raw.githubusercontent.com/mcncarl/ailu/8a232fe082163c5898038cca7bcf26cb1956b9a2/LICENSE",
+    "sha256": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0",
+    "bytes": 34523
+  },
+  {
+    "path": "PRIVACY.md",
+    "url": "https://raw.githubusercontent.com/mcncarl/ailu/8a232fe082163c5898038cca7bcf26cb1956b9a2/PRIVACY.md",
+    "sha256": "024c63ef1824cfc71a2ba1092c07217358b01725cab649427f9a0fbbb21ea18f",
+    "bytes": 3088
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "version": "0.5.0",
+  "native_provider": "Codex",
+  "two_turn_dialogue": "PASS",
+  "dialogue_persisted_turns": 3,
+  "image_generation": "SUCCEEDED",
+  "image_import": "GENERATED",
+  "image_hash": "8b29e7e2f8e72fe0e71ec3e65266676da0ed10e1f76269f516a941e99930b875",
+  "image_dimensions": [
+    1254,
+    1254
+  ],
+  "initial_image_attempt": "FAILED: timeout after 150s",
+  "correction": "Separate illustration timeout of at least 480s; a new attempt succeeded.",
+  "claude_live_model_call": "NOT_RUN",
+  "obsidian_host_ui": "NOT_RUN",
+  "local_vault_discovery": {
+    "scanned": 8,
+    "skipped": 0,
+    "limited": false,
+    "algorithm": "local-cjk-bigram-tfidf"
+  },
+  "external_publication": "NOT_RUN"
+}

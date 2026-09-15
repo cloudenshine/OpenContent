@@ -1,0 +1,32 @@
+[
+  {
+    "path": "docs\\ux-research\\opendesign\\HomeView.tsx",
+    "url": "https://raw.githubusercontent.com/nexu-io/open-design/00c12c6451d9248c11a5c5122714e4d0b9f5709c/apps/web/src/components/HomeView.tsx",
+    "sha256": "62a983595dcca70f950a87c74cf64ef64e9932dd176ce7467919dbe9c3d7074b"
+  },
+  {
+    "path": "docs\\ux-research\\opendesign\\App.onboarding-agent-autoselect.test.tsx",
+    "url": "https://raw.githubusercontent.com/nexu-io/open-design/00c12c6451d9248c11a5c5122714e4d0b9f5709c/apps/web/tests/components/App.onboarding-agent-autoselect.test.tsx",
+    "sha256": "15ab3ec036be264b816d61d8f89a00b5a5d262b72824fc360fb54b7148df515e"
+  },
+  {
+    "path": "docs\\ux-research\\opendesign\\ChatComposer.tsx",
+    "url": "https://raw.githubusercontent.com/nexu-io/open-design/00c12c6451d9248c11a5c5122714e4d0b9f5709c/apps/web/src/components/ChatComposer.tsx",
+    "sha256": "ea1cfcb1f2bb3bac77030627c15444aafbcd2a413ffdfb24177b0c56d3313185"
+  },
+  {
+    "path": "docs\\ux-research\\opendesign\\LICENSE",
+    "url": "https://raw.githubusercontent.com/nexu-io/open-design/00c12c6451d9248c11a5c5122714e4d0b9f5709c/LICENSE",
+    "sha256": "9d95806a26532623360eb84bb17d298f394b55ef73fb4c0796d99b4319b2b0da"
+  },
+  {
+    "path": "docs\\ux-research\\opendesign\\firstRunGuide.ts",
+    "url": "https://raw.githubusercontent.com/nexu-io/open-design/00c12c6451d9248c11a5c5122714e4d0b9f5709c/apps/web/src/components/home-hero/firstRunGuide.ts",
+    "sha256": "53dbcbf32b12b846293130d8c537ce4167c91afab4b5fc3f760df2f7a54db65b"
+  },
+  {
+    "path": "docs\\ux-research\\opendesign\\agentModelSelection.ts",
+    "url": "https://raw.githubusercontent.com/nexu-io/open-design/00c12c6451d9248c11a5c5122714e4d0b9f5709c/apps/web/src/components/agentModelSelection.ts",
+    "sha256": "401bf9069a5d8a00d4fdc9857e4f24dc67ddb1315ab1a385ffdc5f492d2f36c0"
+  }
+]

@@ -1,0 +1,56 @@
+// Runs only through obsidian_cdp.mjs in the isolated validation-vault.
+(async()=>{
+  if(app.vault.adapter.getBasePath()!=='D:\\Workspaces\\OpenContent\\validation-vault')throw new Error('Wrong Vault');
+  const plugin=app.plugins.plugins.opencontent;
+  const checks=[];
+  const check=(name,ok)=>{checks.push({name,pass:Boolean(ok)});if(!ok)throw new Error(name);};
+  const wait=async test=>{for(let i=0;i<80;i++){if(await test())return;await new Promise(r=>setTimeout(r,100));}throw new Error('UI wait timed out');};
+  const click=(scope,label)=>{const b=[...scope.querySelectorAll('button')].find(b=>b.textContent===label);if(!b)throw new Error('Missing button '+label);b.click();};
+  const selected='这是 v0.3 的选区软件验收，只捕获这句话。';
+  const source='---\nsource: https://example.com/clipper-source\nprivate_property: DO_NOT_CAPTURE_PROPERTY\n---\n\n'+selected+'\n\nDO_NOT_CAPTURE_OTHER_PARAGRAPH\n';
+  const filename='v0.3-原生捕获验收-'+Date.now()+'.md';
+  const file=await app.vault.create(filename,source);
+  await plugin.openNote(file.path);
+  const editor=plugin.editorLeaf.view.editor;
+  const offset=source.indexOf(selected);
+  editor.setSelection(editor.offsetToPos(offset),editor.offsetToPos(offset+selected.length));
+  app.workspace.setActiveLeaf(plugin.editorLeaf,{focus:true});
+  app.commands.executeCommandById('opencontent:capture-note');
+  await wait(()=>document.querySelector('.oc-modal'));
+  let modal=document.querySelector('.oc-modal');
+  check('native_selection_only',modal.querySelector('[aria-label="要捕获的内容"]').value===selected);
+  let select=modal.querySelector('[aria-label="目标项目"]');select.value='';select.dispatchEvent(new Event('change'));
+  const title='v0.3 原生工作流验收 '+Date.now();
+  modal.querySelector('[aria-label="新项目名称"]').value=title;
+  click(modal,'保存到项目');await wait(()=>!document.querySelector('.oc-modal'));
+  let board=await plugin.api('/board');const project=board.projects.find(p=>p.title===title);
+  check('project_created_from_editor',Boolean(project));
+  await wait(()=>app.workspace.getLeavesOfType('opencontent-cockpit')[0].view.selected===project.oc_id);
+  let detail=await plugin.api('/objects/'+project.oc_id);let material=detail.objects.find(o=>o.type==='Material');
+  check('snapshot_preserves_selection_and_source',material.body===selected&&material.source==='vault:'+filename&&material.source_url==='https://example.com/clipper-source');
+  check('source_note_unchanged',await app.vault.read(file)===source);
+  await plugin.captureNote(file,selected);await wait(()=>document.querySelector('.oc-modal'));
+  click(document.querySelector('.oc-modal'),'保存到项目');await wait(()=>!document.querySelector('.oc-modal'));
+  detail=await plugin.api('/objects/'+project.oc_id);
+  check('duplicate_selection_is_not_readded',detail.objects.filter(o=>o.type==='Material').length===1);
+  await plugin.open('project');
+  await wait(()=>[...document.querySelectorAll('.oc-root button')].some(b=>b.textContent==='预览材料并开始创作'));
+  click(document.querySelector('.oc-root'),'预览材料并开始创作');await wait(()=>document.querySelector('.oc-modal'));
+  modal=document.querySelector('.oc-modal');
+  check('preview_shows_selected_scope',modal.textContent.includes(selected)&&!modal.textContent.includes('DO_NOT_CAPTURE_OTHER_PARAGRAPH'));
+  const jobsBefore=(await plugin.api('/jobs')).length;
+  const materialFile=app.vault.getAbstractFileByPath(material.path);const old=await app.vault.read(materialFile);
+  await app.vault.modify(materialFile,old+'\nChanged after preview\n');
+  click(modal,'开始创作');await wait(()=>[...document.querySelectorAll('.notice')].some(n=>n.textContent.includes('Materials changed since preview')));
+  check('stale_preview_does_not_start_job',(await plugin.api('/jobs')).length===jobsBefore);
+  // Restore only this test's material snapshot, never an actual article or decision.
+  await app.vault.modify(materialFile,old);document.querySelector('.modal-header-button').click();
+  await plugin.open('board');
+  check('board_has_continue_queue',document.querySelector('.oc-root').textContent.includes('继续工作'));
+  const remembered=plugin.settings.lastProject;
+  await app.plugins.disablePlugin('opencontent');await new Promise(r=>setTimeout(r,1500));
+  await app.plugins.enablePlugin('opencontent');const reloaded=app.plugins.plugins.opencontent;await reloaded.open('project');
+  check('last_project_survives_reload',reloaded.settings.lastProject===remembered&&remembered===project.oc_id);
+  window.ocWorkflowEvidence={at:new Date().toISOString(),obsidian:app.version||'1.13.7',plugin:reloaded.manifest.version,project:project.oc_id,source:filename,checks};
+  return window.ocWorkflowEvidence;
+})()

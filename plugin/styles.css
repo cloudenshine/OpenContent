@@ -1,0 +1,76 @@
+.oc-root{padding:24px;overflow:auto;background:var(--background-primary);font-size:14px}.oc-header h1{font-family:var(--font-text);margin-bottom:4px}.oc-header p,.oc-muted{color:var(--text-muted)}.oc-nav,.oc-actions{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.oc-content select{max-width:100%;margin:8px 12px 8px 0}.oc-board{display:flex;gap:14px;overflow:auto;padding:8px 0 20px;align-items:stretch}.oc-column{min-width:230px;width:250px;border:1px solid var(--background-modifier-border);background:var(--background-secondary);border-radius:12px;padding:14px}.oc-column h3{margin:0 0 6px}.oc-column small{color:var(--text-muted)}.oc-card{padding:16px;border:1px solid var(--background-modifier-border);background:var(--background-primary);border-radius:10px;margin:12px 0;overflow-wrap:anywhere}.oc-title{white-space:normal;text-align:left;font-weight:600;height:auto;min-height:30px}.oc-card p{line-height:1.7}.oc-axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}.oc-axis{padding:12px;border-left:3px solid var(--text-muted);background:var(--background-secondary);border-radius:6px}.oc-axis.pass{border-color:var(--color-green)}.oc-axis.warn{border-color:var(--color-orange)}.oc-axis.fail{border-color:var(--color-red)}.oc-axis p{font-size:12px;line-height:1.6}.oc-gate{font-weight:700}.oc-gate.pass{color:var(--color-green)}.oc-gate.fail,.oc-error{color:var(--text-error)}.oc-error{white-space:pre-wrap}.oc-field{display:flex;flex-direction:column;gap:7px;margin:14px 0}.oc-field input,.oc-field textarea{width:100%}.oc-field textarea{min-height:90px;resize:vertical}.oc-modal{max-height:75vh;overflow:auto}.oc-modal h4{margin:16px 0 5px}.oc-note-list{max-height:300px;overflow:auto}.oc-note-list label{display:flex;gap:10px;padding:8px}.oc-section{border-top:1px solid var(--background-modifier-border);padding:12px 0}.oc-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}.oc-link{color:var(--text-accent);white-space:normal;height:auto;min-height:28px}.oc-prose{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.9;padding:18px;background:var(--background-secondary);border-radius:8px;font-family:var(--font-text)}.oc-jobs{border-top:1px solid var(--background-modifier-border);padding-top:18px;margin-top:24px}.oc-root blockquote{border-left:3px solid var(--background-modifier-border);padding-left:12px;margin-left:0;color:var(--text-muted)}
+.oc-root .oc-board{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));overflow:visible;align-items:start}.oc-root .oc-column{min-width:0;width:auto;min-height:95px}
+.oc-publish-preview{width:100%;height:380px;background:white;border:1px solid var(--background-modifier-border);border-radius:8px}
+.oc-lesson{border-left:3px solid var(--interactive-accent);padding-left:12px;margin-top:16px}
+.oc-card button{margin:4px}
+.oc-card[hidden]{display:none}
+.oc-conversation .oc-prose { white-space: pre-wrap; overflow-wrap: anywhere; } .oc-generated-image { display: block; max-width: 100%; max-height: 480px; object-fit: contain; margin: 12px 0; } .oc-note-list .oc-card { margin: 8px 0; }
+.oc-root{container-type:inline-size;min-width:0;padding:16px}.oc-nav button{white-space:normal;height:auto;min-height:28px}.oc-actions button{white-space:normal;height:auto;min-height:28px}@container(max-width:440px){.oc-root .oc-board{grid-template-columns:1fr}.oc-axes{grid-template-columns:1fr}.oc-card{padding:12px}.oc-prose{padding:12px}.oc-nav{gap:6px}.oc-nav button{font-size:12px}}
+
+.oc-scope-list{max-height:180px;overflow:auto}.oc-scope-list label{display:flex;gap:8px;margin:8px 0;align-items:start}.oc-feedback{flex-basis:100%;padding:8px;border-left:3px solid var(--text-error)}.oc-modal details{margin:12px 0}.oc-modal summary{cursor:pointer}
+
+/* A quiet writing surface; operational detail stays behind disclosure controls. */
+.oc-header h1{font-size:17px;font-weight:650;margin:0}.oc-header p{font-size:12px;line-height:1.6;margin:6px 0 0}
+.oc-nav{align-items:center;border-bottom:1px solid var(--background-modifier-border);padding-bottom:12px;margin:16px 0 24px}
+.oc-nav>button{flex:1;min-height:34px}.oc-more{position:relative}.oc-more>summary{padding:8px;cursor:pointer;color:var(--text-muted);font-size:12px}
+.oc-more[open]{flex-basis:100%;display:flex;flex-wrap:wrap}.oc-more button{margin:4px}
+.oc-start h2{font-size:22px;line-height:1.4;letter-spacing:-.4px;margin:8px 0 20px}.oc-start .oc-field>span{font-size:12px;color:var(--text-muted)}
+.oc-start textarea{min-height:110px;padding:12px;line-height:1.7;border-radius:10px}.oc-start>.mod-cta{width:100%;min-height:40px;margin-top:4px}
+.oc-context-chip{display:flex;align-items:center;gap:8px;padding:10px 0;font-size:12px;overflow-wrap:anywhere}.oc-context-chip input{flex-shrink:0}
+.oc-start .oc-muted{font-size:12px;line-height:1.65}.oc-content h2{font-size:18px}.oc-content h3{font-size:15px}
+.oc-continue{padding:14px}.oc-continue h3{margin:0 0 6px}.oc-continue p{margin:6px 0;font-size:13px}.oc-continue>.mod-cta{margin:8px 0 0}
+.oc-draft{margin:12px 0 20px}.oc-draft .oc-prose{max-height:300px;overflow:auto;border:1px solid var(--background-modifier-border);background:var(--background-primary);font-size:14px}.oc-draft .oc-prose p{margin:0}
+.oc-tools{margin:12px 0;font-size:12px;color:var(--text-muted)}.oc-tools summary,.oc-project-details summary{cursor:pointer;padding:8px 0}
+.oc-composer{padding:12px;background:var(--background-secondary);border:1px solid var(--background-modifier-border);border-radius:12px;margin:12px 0 20px}
+.oc-composer .oc-field{margin:8px 0}.oc-composer .oc-field>span{font-size:12px;color:var(--text-muted)}.oc-composer textarea{min-height:90px;line-height:1.7}
+.oc-composer>.mod-cta{min-height:36px;width:100%;margin:8px 0}.oc-composer small{display:block;font-size:11px;line-height:1.6}
+.oc-conversation{max-height:480px;overflow:auto}.oc-conversation .oc-card{border:0;border-bottom:1px solid var(--background-modifier-border);border-radius:0;padding:10px 0}
+.oc-conversation .oc-prose{background:none;padding:0;font-size:13px}.oc-conversation h3{font-size:12px;color:var(--text-muted)}
+.oc-project-details{border-top:1px solid var(--background-modifier-border);margin-top:20px;padding-top:8px}.oc-root button:focus-visible,.oc-root summary:focus-visible{outline:2px solid var(--interactive-accent);outline-offset:2px}
+
+
+/* OpenContent V2 - 双模与排版扩展样式 */
+
+/* 1. 顶部模式切换与盾牌指示器 */
+.oc-mode-bar { display: flex; justify-content: space-between; align-items: center; padding: 4px 0 12px; margin-bottom: 8px; border-bottom: 1px dashed var(--background-modifier-border); }
+.oc-mode-badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 12px; font-size: 11.5px; font-weight: 500; cursor: pointer; user-select: none; transition: all 0.15s ease; border: 1px solid var(--background-modifier-border); }
+.oc-mode-badge:hover { background: var(--background-modifier-hover); }
+.oc-mode-badge.expert { border-color: var(--color-green); color: var(--color-green); background: rgba(var(--color-green-rgb), 0.08); }
+.oc-mode-badge.simple { border-color: var(--text-muted); color: var(--text-muted); }
+
+.oc-gate-shield { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 6px; cursor: pointer; }
+.oc-gate-shield.pass { background: rgba(var(--color-green-rgb), 0.12); color: var(--color-green); }
+.oc-gate-shield.fail { background: rgba(var(--color-red-rgb), 0.12); color: var(--text-error); }
+
+/* 2. 极简 3 步流轻量卡片 */
+.oc-simple-flow { display: flex; flex-direction: column; gap: 14px; margin: 16px 0; }
+.oc-flow-step { background: var(--background-secondary); border: 1px solid var(--background-modifier-border); border-radius: 10px; padding: 14px; position: relative; }
+.oc-flow-step-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-weight: 600; font-size: 13.5px; color: var(--text-normal); }
+.oc-step-badge { width: 22px; height: 22px; border-radius: 50%; background: var(--interactive-accent); color: var(--text-on-accent); display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+.oc-claim-list { display: flex; flex-direction: column; gap: 8px; margin: 8px 0; }
+.oc-claim-item { padding: 10px 12px; background: var(--background-primary); border-radius: 6px; border-left: 3px solid var(--interactive-accent); font-size: 13px; line-height: 1.6; }
+
+/* 3. 专家雷达与深度质询抽屉 */
+.oc-expert-drawer { margin-top: 14px; padding: 14px; background: var(--background-primary); border: 1px solid var(--background-modifier-border); border-radius: 10px; }
+.oc-radar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin: 12px 0; }
+.oc-radar-card { padding: 10px; border-radius: 6px; background: var(--background-secondary); border: 1px solid var(--background-modifier-border); text-align: center; }
+.oc-radar-card .axis-name { font-size: 11px; color: var(--text-muted); text-transform: uppercase; }
+.oc-radar-card .axis-val { font-size: 14px; font-weight: 700; margin: 4px 0; }
+.oc-radar-card .axis-val.pass { color: var(--color-green); }
+.oc-radar-card .axis-val.warn { color: var(--color-orange); }
+.oc-radar-card .axis-val.fail { color: var(--color-red); }
+
+/* 4. 自动喂养管道推荐卡片 */
+.oc-pipeline-banner { background: linear-gradient(135deg, rgba(var(--color-blue-rgb), 0.08), rgba(var(--color-purple-rgb), 0.08)); border: 1px solid rgba(var(--color-blue-rgb), 0.25); border-radius: 10px; padding: 14px; margin: 14px 0; }
+.oc-pipeline-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.oc-pipeline-title { font-weight: 600; font-size: 13.5px; color: var(--text-accent); display: flex; align-items: center; gap: 6px; }
+.oc-candidate-card { background: var(--background-primary); border: 1px solid var(--background-modifier-border); border-radius: 8px; padding: 12px; margin: 8px 0; }
+.oc-candidate-card h4 { margin: 0 0 6px; font-size: 13px; }
+.oc-candidate-card p { font-size: 12px; margin: 4px 0; color: var(--text-muted); line-height: 1.5; }
+
+/* 5. 原生排版主题预览与导出面板 */
+.oc-typography-panel { padding: 14px; background: var(--background-secondary); border-radius: 10px; margin: 14px 0; border: 1px solid var(--background-modifier-border); }
+.oc-theme-picker { display: flex; gap: 8px; margin: 10px 0; flex-wrap: wrap; }
+.oc-theme-btn { padding: 6px 12px; border-radius: 6px; font-size: 12px; border: 1px solid var(--background-modifier-border); background: var(--background-primary); cursor: pointer; }
+.oc-theme-btn.active { border-color: var(--interactive-accent); background: var(--interactive-accent); color: var(--text-on-accent); }
+.oc-rendered-preview-box { max-height: 360px; overflow-y: auto; border: 1px solid var(--background-modifier-border); border-radius: 8px; margin: 12px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }

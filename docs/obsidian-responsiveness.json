@@ -1,0 +1,10 @@
+{
+  "at": "2026-09-08T08:52:59.512Z",
+  "vault": "validation-vault",
+  "before": "RUNNING",
+  "after": "RUNNING",
+  "inboxRendered": true,
+  "nativeEditorAvailable": true,
+  "elapsedMs": 777.7000000029802,
+  "method": "scripts/check_responsiveness.js executed in the isolated real Obsidian 1.13.7 renderer via CDP. Includes two cockpit renders and opening the native Markdown editor; not a keyboard latency benchmark."
+}

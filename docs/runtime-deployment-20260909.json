@@ -1,0 +1,111 @@
+{
+  "target": "F:\\Obsidian_vault\\.obsidian\\plugins\\opencontent",
+  "files": [
+    {
+      "file": "main.js",
+      "match": true
+    },
+    {
+      "file": "manifest.json",
+      "match": true
+    },
+    {
+      "file": "styles.css",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/__init__.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/__main__.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/credentials.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/discovery.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/domain.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/handoff.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/ideation.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/jobs.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/kernel.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/lifecycle.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/origins.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/processes.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/providers.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/publishing.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/publishing_adapters.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/server.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/vault.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/workbench.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/templates/CONTENT.md",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/doctor.py",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/requirements.txt",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/LICENSE",
+      "match": true
+    },
+    {
+      "file": "kernel-0.8.0/PRIVACY.md",
+      "match": true
+    }
+  ],
+  "all_match": true,
+  "live_reload": "NOT_VERIFIED_AFTER_THIS_UPDATE"
+}

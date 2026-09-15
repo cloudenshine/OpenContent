@@ -1,0 +1,146 @@
+{
+  "at": "2026-09-09T09:28:15.676320+00:00",
+  "vault": "F:\\Obsidian_vault",
+  "installed": "F:\\Obsidian_vault\\.obsidian\\plugins\\opencontent",
+  "payload_files": 26,
+  "hashes_match": true,
+  "enabled_in_config": true,
+  "existing_plugin_entries_preserved": true,
+  "backup": "F:\\Obsidian_vault\\.opencontent\\install-backups\\enablement-20260909-172815",
+  "environment_check": "PASS",
+  "live_host_reload": "PASS_OBSERVED",
+  "checks": [
+    {
+      "file": "main.js",
+      "match": true,
+      "sha256": "bc6bdc71300a252ecdd50d55d93e2a9a9e35a057b5c54fef30cb4111138b6df3"
+    },
+    {
+      "file": "manifest.json",
+      "match": true,
+      "sha256": "845bca174194ee09bab6ed376dbb134ba192479ae8716da10ba72b67e640683c"
+    },
+    {
+      "file": "styles.css",
+      "match": true,
+      "sha256": "2517dbba17bd6dc3e44c58d5a14ae1e65b06d45da559638bbfb55c37dfa3ad20"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/__init__.py",
+      "match": true,
+      "sha256": "89ca6d72562bb8d4b075655d5ec57094d436ac1b1f6c5a18c4f8c22333f5453b"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/__main__.py",
+      "match": true,
+      "sha256": "9af9f0438388dfbe125ff768746bc5ca0af2f02d8938f64d5cc79a4790e488fa"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/credentials.py",
+      "match": true,
+      "sha256": "3742d27d380c60119957b1d21aa87ec3829de1d4a8265cc47a30d9e9908a63a9"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/discovery.py",
+      "match": true,
+      "sha256": "3908a5e4407db324548a16e2819347f713c4b183992729c1343d377c2d168282"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/domain.py",
+      "match": true,
+      "sha256": "adce581682e1a7c27f655c9fc871b1e1e84a005bf980416bb7217f83b55ab5b2"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/handoff.py",
+      "match": true,
+      "sha256": "74590b4f11afae4ccb447edd12c585a70e9117c847c388e8e967bf290ce68eb7"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/ideation.py",
+      "match": true,
+      "sha256": "54dd16157b9ae440c6407e50ee11dbf6fc531f2a4df85bb027c49350089f7314"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/jobs.py",
+      "match": true,
+      "sha256": "a9da50f31a3ba654cb27a9494c0506b18b7a888da85db6324984fb753ccb1755"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/kernel.py",
+      "match": true,
+      "sha256": "a6b028ab753f7bddf53b063e3926077e9cbff2a377d17c689debf667d6c86ae9"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/lifecycle.py",
+      "match": true,
+      "sha256": "e13ac3ac4128634cb7465db1d41a38b28829cfbf7b059b2b270782cb56e7b1ca"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/origins.py",
+      "match": true,
+      "sha256": "a7fecf158594cc6e1fe6161628fc4caaceabc507383f1ccad349652aac1c90ee"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/processes.py",
+      "match": true,
+      "sha256": "26a27dce9b2e3a6e8ef27be6be8541aefca82713747b3f2d9d1d10cb25149edc"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/providers.py",
+      "match": true,
+      "sha256": "05a168291e3aa94ed6bc56211adde8747faf7fb23805ecac97f96cafd8745357"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/publishing.py",
+      "match": true,
+      "sha256": "c4429853bf8df94039127bb7c53a52556f86f22b2944c883ece347798830369e"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/publishing_adapters.py",
+      "match": true,
+      "sha256": "19b540b0d9816c568466c6cd8687f1f0a2068b5b65defe9e3a760a5db6690179"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/server.py",
+      "match": true,
+      "sha256": "ec850db1a6bbf6318c0c4cdc47dc5efcb312f147e2eb19ab3b495fe981c3d06d"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/vault.py",
+      "match": true,
+      "sha256": "3ee9b0e1da4681ae6f071913cc638a838585c5b0f28f98876789405df80fac52"
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/workbench.py",
+      "match": true,
+      "sha256": "74de3505ea5dabdf0e3d4f5b8f8b6daff0618bb08ae8aa0d440f92fbebd97ad9"
+    },
+    {
+      "file": "kernel-0.8.0/templates/CONTENT.md",
+      "match": true,
+      "sha256": "36dd7b5d0cdf1ae0f4be9c85f27c46a18186d54b52fcc854c546539429987f6c"
+    },
+    {
+      "file": "kernel-0.8.0/doctor.py",
+      "match": true,
+      "sha256": "0e1949acc73b4177cd9370bd7ce0367317396168cc0793b3d6e07b73d248e999"
+    },
+    {
+      "file": "kernel-0.8.0/requirements.txt",
+      "match": true,
+      "sha256": "4cb0310a5a7ffbdadd270bea11d4bbb7b922dda23629053f6d0fcd102e7fa80e"
+    },
+    {
+      "file": "kernel-0.8.0/LICENSE",
+      "match": true,
+      "sha256": "ae76ce617e51d78922038d2bed748a6895b6ddb660c55df824bde5fe102bf020"
+    },
+    {
+      "file": "kernel-0.8.0/PRIVACY.md",
+      "match": true,
+      "sha256": "b921ea747102eaccc9b25f9515aae2459df363e9e4d75bce31c4d84efb84df1a"
+    }
+  ],
+  "live_host_verification": "docs/deployment-live-host-verification.json",
+  "full_interaction_verification": "PARTIAL_SCREEN_LOCKED"
+}

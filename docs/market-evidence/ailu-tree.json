@@ -1,0 +1,2644 @@
+{
+  "sha": "8a232fe082163c5898038cca7bcf26cb1956b9a2",
+  "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/8a232fe082163c5898038cca7bcf26cb1956b9a2",
+  "tree": [
+    {
+      "path": ".github",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c86c258b12b7a023c71ab4e09d261beb2be93029",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/c86c258b12b7a023c71ab4e09d261beb2be93029"
+    },
+    {
+      "path": ".github/workflows",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4d7bf27e52461fcf832551a2580f9977b8ec585a",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/4d7bf27e52461fcf832551a2580f9977b8ec585a"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d14c31acea1bb4f779dcba43861fdb96516e4bc3",
+      "size": 825,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/d14c31acea1bb4f779dcba43861fdb96516e4bc3"
+    },
+    {
+      "path": ".github/workflows/release.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "913ae905e3e82c3c251231977bde19ad3412b0bf",
+      "size": 3082,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/913ae905e3e82c3c251231977bde19ad3412b0bf"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5fc03149d98810417c21314127443842511c157b",
+      "size": 591,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/5fc03149d98810417c21314127443842511c157b"
+    },
+    {
+      "path": "ASSETS.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "45070a5ca1232fd4fb424dde323ab368c704e858",
+      "size": 484,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/45070a5ca1232fd4fb424dde323ab368c704e858"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b7a507866758f4bfb877e9b71cde2c86b1e2b5ae",
+      "size": 1716,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/b7a507866758f4bfb877e9b71cde2c86b1e2b5ae"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "be3f7b28e564e7dd05eaf59d64adba1a4065ac0e",
+      "size": 34523,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/be3f7b28e564e7dd05eaf59d64adba1a4065ac0e"
+    },
+    {
+      "path": "LICENSES",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e681d1a1af61d47f17ef0635c14fd5d0ab2132dc",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/e681d1a1af61d47f17ef0635c14fd5d0ab2132dc"
+    },
+    {
+      "path": "LICENSES/DIJKSTRAJS-MIT.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b662d8039bb841ac245b1e61c0ecd2fbd67da512",
+      "size": 714,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/b662d8039bb841ac245b1e61c0ecd2fbd67da512"
+    },
+    {
+      "path": "LICENSES/ENTITIES-BSD-2-CLAUSE.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "01c933cb1ae0f689a8b533465bd36ec16dc7d244",
+      "size": 1260,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/01c933cb1ae0f689a8b533465bd36ec16dc7d244"
+    },
+    {
+      "path": "LICENSES/MIT.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "98c709429585cecd01c9e26050a9ea91f99e4aa6",
+      "size": 1064,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/98c709429585cecd01c9e26050a9ea91f99e4aa6"
+    },
+    {
+      "path": "LICENSES/MP-PREVIEW-MIT.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "490dc73f5e96766b133469d5bf2372276cd5bcc3",
+      "size": 1068,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/490dc73f5e96766b133469d5bf2372276cd5bcc3"
+    },
+    {
+      "path": "LICENSES/OPEN-DESIGN-APACHE-2.0.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eb79c35bd865477e525b18e56f35d56fbe0f7110",
+      "size": 11296,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/eb79c35bd865477e525b18e56f35d56fbe0f7110"
+    },
+    {
+      "path": "LICENSES/PNGJS-MIT.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6942e25401627fd26b7266eb94f53c94eb5a05e1",
+      "size": 1151,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/6942e25401627fd26b7266eb94f53c94eb5a05e1"
+    },
+    {
+      "path": "LICENSES/QRCODE-MIT.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0a172fc288bc5063bca7189d2d6d6c94873b1f64",
+      "size": 1075,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/0a172fc288bc5063bca7189d2d6d6c94873b1f64"
+    },
+    {
+      "path": "LICENSES/X-ARTICLE-IN-OBSIDIAN-MIT.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "955dc06d81a23679e355ce88d1ad362a6aff8984",
+      "size": 1064,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/955dc06d81a23679e355ce88d1ad362a6aff8984"
+    },
+    {
+      "path": "LICENSES/ZARA-ZHANG-TEMPLATES-MIT.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb9abe0d91abe945cf2048b86acb986deeb0f904",
+      "size": 1067,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/cb9abe0d91abe945cf2048b86acb986deeb0f904"
+    },
+    {
+      "path": "PRIVACY.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "da7fbcba8696905bd2ff057bda85ff4e29286553",
+      "size": 3088,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/da7fbcba8696905bd2ff057bda85ff4e29286553"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1cf7859beb3dedf2773f19d2199ac68d6844768a",
+      "size": 27795,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/1cf7859beb3dedf2773f19d2199ac68d6844768a"
+    },
+    {
+      "path": "SECURITY.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f8516e9e1309dd2b095aacfa6fe65a33c74ecca8",
+      "size": 2301,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/f8516e9e1309dd2b095aacfa6fe65a33c74ecca8"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "163ae9914d0de886b2c26dc8c75645c3a65f0106",
+      "size": 4471,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/163ae9914d0de886b2c26dc8c75645c3a65f0106"
+    },
+    {
+      "path": "THREAT_MODEL.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "222972c32cd35cd2c8ef7e2732f43ba37c6be1db",
+      "size": 5049,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/222972c32cd35cd2c8ef7e2732f43ba37c6be1db"
+    },
+    {
+      "path": "assets",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "d67ba0f02c3b08b4cd743edcd655aa8c6f7dfcba",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/d67ba0f02c3b08b4cd743edcd655aa8c6f7dfcba"
+    },
+    {
+      "path": "assets/ailu-ribbon-icon.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "64cdbcf54cfdc366094cb4fa917ae85b6e37b438",
+      "size": 14777,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/64cdbcf54cfdc366094cb4fa917ae85b6e37b438"
+    },
+    {
+      "path": "docs",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3afbcfd8d84f842c617ca94659f429e1a049c417",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/3afbcfd8d84f842c617ca94659f429e1a049c417"
+    },
+    {
+      "path": "docs/COMPLETE_SETUP.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eef773626d00e4f93bf1fb7319c683525117b5ad",
+      "size": 25839,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/eef773626d00e4f93bf1fb7319c683525117b5ad"
+    },
+    {
+      "path": "esbuild.config.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "413a2ef0ff8d5b730d48df2d3c80ac42a865217c",
+      "size": 2034,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/413a2ef0ff8d5b730d48df2d3c80ac42a865217c"
+    },
+    {
+      "path": "eslint.config.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2804b2b08554fce3d85348dfc2b334605f87f803",
+      "size": 973,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/2804b2b08554fce3d85348dfc2b334605f87f803"
+    },
+    {
+      "path": "manifest.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "97c1488ca589c250f3439de32b8c324fa911ccc4",
+      "size": 263,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/97c1488ca589c250f3439de32b8c324fa911ccc4"
+    },
+    {
+      "path": "package-lock.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e93d094c38bcf3a38a26b51ec2a9019b30ef60fe",
+      "size": 226835,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/e93d094c38bcf3a38a26b51ec2a9019b30ef60fe"
+    },
+    {
+      "path": "package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8d791bf5ae124e2ba11035a6665a760800c25fb5",
+      "size": 1961,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/8d791bf5ae124e2ba11035a6665a760800c25fb5"
+    },
+    {
+      "path": "public-source-files.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "13fd77e864b6635b45939d33e4dabf2ed6212191",
+      "size": 10602,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/13fd77e864b6635b45939d33e4dabf2ed6212191"
+    },
+    {
+      "path": "scripts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "54ab5f2fdf1c88df91aa44097a92fe71b8fc5912",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/54ab5f2fdf1c88df91aa44097a92fe71b8fc5912"
+    },
+    {
+      "path": "scripts/build-extracted-theme-previews.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6a7cc0ca86b8dd8e13fde9fb398285779dd8e1b3",
+      "size": 6850,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/6a7cc0ca86b8dd8e13fde9fb398285779dd8e1b3"
+    },
+    {
+      "path": "scripts/build-release.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "03beedc9facb66207a0987bb314f6ac0ae204b2f",
+      "size": 2440,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/03beedc9facb66207a0987bb314f6ac0ae204b2f"
+    },
+    {
+      "path": "scripts/deploy-ailu.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "85c44f0b7550d39d3c943a4ac1b0721b06898558",
+      "size": 55184,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/85c44f0b7550d39d3c943a4ac1b0721b06898558"
+    },
+    {
+      "path": "scripts/public-source-policy.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "32d5eb6cfac6056e49cce559fe1474525b395ea9",
+      "size": 11868,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/32d5eb6cfac6056e49cce559fe1474525b395ea9"
+    },
+    {
+      "path": "scripts/test-public-source-policy.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "12775be30696ffbab49945d2a6a6f31b023f01da",
+      "size": 2708,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/12775be30696ffbab49945d2a6a6f31b023f01da"
+    },
+    {
+      "path": "scripts/verify-release.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e2a1d2ed66160141fb98a0c44149f49b570472e5",
+      "size": 23850,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/e2a1d2ed66160141fb98a0c44149f49b570472e5"
+    },
+    {
+      "path": "src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3cae3ccb508b5c26e0129babfe826d9650b5211f",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/3cae3ccb508b5c26e0129babfe826d9650b5211f"
+    },
+    {
+      "path": "src/agents.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7fd7291bf3013be002b994de8ea7015f81487bef",
+      "size": 1566,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/7fd7291bf3013be002b994de8ea7015f81487bef"
+    },
+    {
+      "path": "src/assets.d.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a3932cc1e932e7e831f3cb58ac8a9542a9dafbc7",
+      "size": 149,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/a3932cc1e932e7e831f3cb58ac8a9542a9dafbc7"
+    },
+    {
+      "path": "src/chat",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2a79d8e04e07e51368638965ade01324ca225fd3",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/2a79d8e04e07e51368638965ade01324ca225fd3"
+    },
+    {
+      "path": "src/chat/chatContextService.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4caaaecc25c6922248d0b9022ea3f37a0eb5cbac",
+      "size": 19000,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/4caaaecc25c6922248d0b9022ea3f37a0eb5cbac"
+    },
+    {
+      "path": "src/chat/chatRunCoordinator.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "736f5a709a3358cea901b5fad62dd7508db8422d",
+      "size": 92034,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/736f5a709a3358cea901b5fad62dd7508db8422d"
+    },
+    {
+      "path": "src/chat/contextCompression.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "05bfd317375f7fd7e3b6db5fb04062dfadcbe8ff",
+      "size": 32702,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/05bfd317375f7fd7e3b6db5fb04062dfadcbe8ff"
+    },
+    {
+      "path": "src/chat/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "512334582177e06fb9b012c2735151202a9d91af",
+      "size": 114,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/512334582177e06fb9b012c2735151202a9d91af"
+    },
+    {
+      "path": "src/feishu",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c2d49b6417177194f92e7327f197600f333a50a6",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/c2d49b6417177194f92e7327f197600f333a50a6"
+    },
+    {
+      "path": "src/feishu/assetStaging.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d27713e3e11ae10886fadea5364acab4c4b24504",
+      "size": 3664,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/d27713e3e11ae10886fadea5364acab4c4b24504"
+    },
+    {
+      "path": "src/feishu/association.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "91333180d5e24e6a5268bb1d0ee23719c8f88665",
+      "size": 4917,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/91333180d5e24e6a5268bb1d0ee23719c8f88665"
+    },
+    {
+      "path": "src/feishu/destination.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e9afd136fcaa8eaa0c2a7eb3a95b54df7bdff9b3",
+      "size": 3798,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/e9afd136fcaa8eaa0c2a7eb3a95b54df7bdff9b3"
+    },
+    {
+      "path": "src/feishu/frontmatter.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "363c0fdac5d50476d08b5ac7ecc6a0d48c816560",
+      "size": 3587,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/363c0fdac5d50476d08b5ac7ecc6a0d48c816560"
+    },
+    {
+      "path": "src/feishu/larkCli.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7c6f905e39e97c1f00260650cf06a5a04c09eb61",
+      "size": 59272,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/7c6f905e39e97c1f00260650cf06a5a04c09eb61"
+    },
+    {
+      "path": "src/feishu/markdown.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc0190564861e9cebde7874b0c329f53031dde59",
+      "size": 9574,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/bc0190564861e9cebde7874b0c329f53031dde59"
+    },
+    {
+      "path": "src/feishu/preview.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fc1f4e1edc8dec96574c65a7f828a7c7d9db6c02",
+      "size": 1958,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/fc1f4e1edc8dec96574c65a7f828a7c7d9db6c02"
+    },
+    {
+      "path": "src/feishu/publisher.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b4b14e7012f3c8a53910a6006bdfc47c66e85ff5",
+      "size": 6883,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/b4b14e7012f3c8a53910a6006bdfc47c66e85ff5"
+    },
+    {
+      "path": "src/feishu/remoteVerification.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4bbce4cb9ae182898ebcd3c1b8b8b6dccd91c26e",
+      "size": 25892,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/4bbce4cb9ae182898ebcd3c1b8b8b6dccd91c26e"
+    },
+    {
+      "path": "src/feishu/snapshot.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a4543883b4672a18e013d8c5da70f7abf838d228",
+      "size": 2990,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/a4543883b4672a18e013d8c5da70f7abf838d228"
+    },
+    {
+      "path": "src/feishu/types.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8d1b825a9c1f5a841fe15c7345e6f22bab19e7f0",
+      "size": 2924,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/8d1b825a9c1f5a841fe15c7345e6f22bab19e7f0"
+    },
+    {
+      "path": "src/ids.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f21acc11afb7e91e1b6728de452c62876d02b9d8",
+      "size": 3038,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/f21acc11afb7e91e1b6728de452c62876d02b9d8"
+    },
+    {
+      "path": "src/main.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c4d64b7449838d765a64fecd8b23665149a5a41d",
+      "size": 126,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/c4d64b7449838d765a64fecd8b23665149a5a41d"
+    },
+    {
+      "path": "src/memory",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "53950b1e8add0dcf20c1d53f7538186fff579bb0",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/53950b1e8add0dcf20c1d53f7538186fff579bb0"
+    },
+    {
+      "path": "src/memory/creativeMemory.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bdc9b53cf31145ae1047e82f0fbd76fa50bc21b5",
+      "size": 3458,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/bdc9b53cf31145ae1047e82f0fbd76fa50bc21b5"
+    },
+    {
+      "path": "src/memory/memoryctlPath.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b093c65bf76789cfbd869f723b7ca3d97480ab11",
+      "size": 209,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/b093c65bf76789cfbd869f723b7ca3d97480ab11"
+    },
+    {
+      "path": "src/memory/runtimeHandshake.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "03d9c59d44507111a8bcb0ee5f4fda92f8583708",
+      "size": 15449,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/03d9c59d44507111a8bcb0ee5f4fda92f8583708"
+    },
+    {
+      "path": "src/memory/verifiedMemory.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "62bec3daff67ab718501c9a3ed37b53570e5f032",
+      "size": 25084,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/62bec3daff67ab718501c9a3ed37b53570e5f032"
+    },
+    {
+      "path": "src/memory/verifiedMemoryWrite.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2cb2a45ef1e3ddda66892dbe6adc86bdd847e069",
+      "size": 41364,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/2cb2a45ef1e3ddda66892dbe6adc86bdd847e069"
+    },
+    {
+      "path": "src/paths.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b6ce898a61e1cb5799479e7334ade7c0c1c6cdaa",
+      "size": 2048,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/b6ce898a61e1cb5799479e7334ade7c0c1c6cdaa"
+    },
+    {
+      "path": "src/publishing",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e567c892b01f3be444b0082d0c369aee2cafa29e",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/e567c892b01f3be444b0082d0c369aee2cafa29e"
+    },
+    {
+      "path": "src/publishing/advisories.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "820a9a2b45382f6e3a78a88f897064b69cc89353",
+      "size": 433,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/820a9a2b45382f6e3a78a88f897064b69cc89353"
+    },
+    {
+      "path": "src/publishing/draftVerifier.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3cb1a24b788ff1dd28ecbda0ab6858f7715d2f03",
+      "size": 11343,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/3cb1a24b788ff1dd28ecbda0ab6858f7715d2f03"
+    },
+    {
+      "path": "src/publishing/fromSnapshot.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b7c9eae63acbf68ff5ee346dbe5d68e9374ffa9d",
+      "size": 2979,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/b7c9eae63acbf68ff5ee346dbe5d68e9374ffa9d"
+    },
+    {
+      "path": "src/publishing/imagePreflight.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "80dea692174e61d0eec6e29391d8117297f2784d",
+      "size": 9835,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/80dea692174e61d0eec6e29391d8117297f2784d"
+    },
+    {
+      "path": "src/publishing/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "25b930dc3207df76be24925c842d5de98993fbfb",
+      "size": 660,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/25b930dc3207df76be24925c842d5de98993fbfb"
+    },
+    {
+      "path": "src/publishing/localRelayTransport.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5aae21c7fdbe300948642093c36cf01be40459c5",
+      "size": 9134,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/5aae21c7fdbe300948642093c36cf01be40459c5"
+    },
+    {
+      "path": "src/publishing/preparedArticleBuilder.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5a94d2943bf196157e113e91ef078c7468daa88c",
+      "size": 29921,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/5a94d2943bf196157e113e91ef078c7468daa88c"
+    },
+    {
+      "path": "src/publishing/previewStats.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ebb0b4275dfba0fca359b06db623b5d04f1c708b",
+      "size": 6684,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/ebb0b4275dfba0fca359b06db623b5d04f1c708b"
+    },
+    {
+      "path": "src/publishing/publicationGuard.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c837b3d7aefc197a82e7f1b037a0ad4ded997d9f",
+      "size": 4731,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/c837b3d7aefc197a82e7f1b037a0ad4ded997d9f"
+    },
+    {
+      "path": "src/publishing/sourceTitle.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5fdfc6bf05da840da0183003360bddeba7bff72b",
+      "size": 296,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/5fdfc6bf05da840da0183003360bddeba7bff72b"
+    },
+    {
+      "path": "src/publishing/types.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "92aae5240f72011c721768761a87037880b94f53",
+      "size": 4018,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/92aae5240f72011c721768761a87037880b94f53"
+    },
+    {
+      "path": "src/runtime",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c5810f77de808fcfd9ad612899ba1c632bc8d3e3",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/c5810f77de808fcfd9ad612899ba1c632bc8d3e3"
+    },
+    {
+      "path": "src/runtime/adapter.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "441fdbf36e0195a17cd8e6b59948e23f1ec53057",
+      "size": 27190,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/441fdbf36e0195a17cd8e6b59948e23f1ec53057"
+    },
+    {
+      "path": "src/runtime/ccSwitch.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9e4a77cefa57939ed58c26e171e049ef2a64d60e",
+      "size": 22835,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/9e4a77cefa57939ed58c26e171e049ef2a64d60e"
+    },
+    {
+      "path": "src/runtime/codexAppServer.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "137b0f08b571958f5946936584a9d99eeecb2e4a",
+      "size": 14581,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/137b0f08b571958f5946936584a9d99eeecb2e4a"
+    },
+    {
+      "path": "src/runtime/codexDesktop.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1d7e1e7dde3f750f696b50f647450bc0b4c16e98",
+      "size": 3960,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/1d7e1e7dde3f750f696b50f647450bc0b4c16e98"
+    },
+    {
+      "path": "src/runtime/codexRuntime.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7ae5cc2811bae7aaf3c5290b9cfd744f1d7233ba",
+      "size": 61734,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/7ae5cc2811bae7aaf3c5290b9cfd744f1d7233ba"
+    },
+    {
+      "path": "src/runtime/discovery.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6d426d049a399e3b706e569dc0d3e1ec270631e9",
+      "size": 6901,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/6d426d049a399e3b706e569dc0d3e1ec270631e9"
+    },
+    {
+      "path": "src/runtime/errors.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b4d93e3398718b3190422648de7fd3ae3350533e",
+      "size": 2500,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/b4d93e3398718b3190422648de7fd3ae3350533e"
+    },
+    {
+      "path": "src/runtime/frozenAttachments.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9fe70e912d8b5177a42be97b2d6cd73afd23d8ba",
+      "size": 11840,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/9fe70e912d8b5177a42be97b2d6cd73afd23d8ba"
+    },
+    {
+      "path": "src/runtime/localModels.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8359fba73a4215f0e70f86311e1bb512231a2e13",
+      "size": 13940,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/8359fba73a4215f0e70f86311e1bb512231a2e13"
+    },
+    {
+      "path": "src/runtime/outputLimits.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a111ee3f43c810881b37c07826b264276f52e75f",
+      "size": 278,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/a111ee3f43c810881b37c07826b264276f52e75f"
+    },
+    {
+      "path": "src/runtime/parsers.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3610c355f5983cb1cbeb9d8c2d3f8fede8389c89",
+      "size": 7212,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/3610c355f5983cb1cbeb9d8c2d3f8fede8389c89"
+    },
+    {
+      "path": "src/runtime/providerProjection.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e2f29e29fcd86102a2175690b302b390238d140c",
+      "size": 9051,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/e2f29e29fcd86102a2175690b302b390238d140c"
+    },
+    {
+      "path": "src/runtime/reasoningCapabilities.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2e89f740c2c47c0046b6b1d4a97b1831d13174a5",
+      "size": 3411,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/2e89f740c2c47c0046b6b1d4a97b1831d13174a5"
+    },
+    {
+      "path": "src/runtime/runtimeManager.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6a3c5de2d8321d3a8d1136bc12544f52916f0c73",
+      "size": 28379,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/6a3c5de2d8321d3a8d1136bc12544f52916f0c73"
+    },
+    {
+      "path": "src/settings",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e313b385b89bbc7c1301074b3a01fb96e0a6db2f",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/e313b385b89bbc7c1301074b3a01fb96e0a6db2f"
+    },
+    {
+      "path": "src/settings/agentSettings.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4dc920e9381899ec278ab0fa5a1c95e063c51792",
+      "size": 3934,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/4dc920e9381899ec278ab0fa5a1c95e063c51792"
+    },
+    {
+      "path": "src/settings/publishingSettings.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "904a56e5dfbb28dcb7a95f6f160aba02094d2ee9",
+      "size": 2313,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/904a56e5dfbb28dcb7a95f6f160aba02094d2ee9"
+    },
+    {
+      "path": "src/settings/xPublishingSettings.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "85ee77c8cf78a4cd5f0a54de891b42f07675c2e3",
+      "size": 3332,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/85ee77c8cf78a4cd5f0a54de891b42f07675c2e3"
+    },
+    {
+      "path": "src/share",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "0b2bbe57d431c4b67a56d7b231548da42888bca7",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/0b2bbe57d431c4b67a56d7b231548da42888bca7"
+    },
+    {
+      "path": "src/share/markdownTransforms.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7c5be0ae71b75a27b53eeae04f2ef67394143c97",
+      "size": 1600,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/7c5be0ae71b75a27b53eeae04f2ef67394143c97"
+    },
+    {
+      "path": "src/share/snapshot.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "081f860e62edc35d2650a4f26e96a8ae31d7ead6",
+      "size": 6649,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/081f860e62edc35d2650a4f26e96a8ae31d7ead6"
+    },
+    {
+      "path": "src/share/sourceLineMap.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8978ce287b9bf620545440e5525b267d6f97d98c",
+      "size": 1963,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/8978ce287b9bf620545440e5525b267d6f97d98c"
+    },
+    {
+      "path": "src/share/types.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ae8f7178295fae223a3f7677f2416c3969fa8e93",
+      "size": 1498,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/ae8f7178295fae223a3f7677f2416c3969fa8e93"
+    },
+    {
+      "path": "src/skill",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3adebb20407d7ff655bd56b8473427f1ed170485",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/3adebb20407d7ff655bd56b8473427f1ed170485"
+    },
+    {
+      "path": "src/skill/creativeSkills.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0934b4761cf55d3f870fd0f3c74ccbfa60017225",
+      "size": 600,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/0934b4761cf55d3f870fd0f3c74ccbfa60017225"
+    },
+    {
+      "path": "src/skill/skillDiscovery.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "40082464ed993734bf8955568704abb1382e8c80",
+      "size": 7805,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/40082464ed993734bf8955568704abb1382e8c80"
+    },
+    {
+      "path": "src/skill/skillParser.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d89744ac45ec2fae8daa0e1b94d31b04bd44d5be",
+      "size": 2726,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/d89744ac45ec2fae8daa0e1b94d31b04bd44d5be"
+    },
+    {
+      "path": "src/storage",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f92854766789b6c958e71bfd823bbfbad737dcd8",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/f92854766789b6c958e71bfd823bbfbad737dcd8"
+    },
+    {
+      "path": "src/storage/chatStoreLease.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bcee1b2e4cd68bae7a0b377a3b8e141589a78e44",
+      "size": 20717,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/bcee1b2e4cd68bae7a0b377a3b8e141589a78e44"
+    },
+    {
+      "path": "src/storage/conversationRepositoryV2.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e8349fc835da20d8c69c97e3c2b0821368b3b7c6",
+      "size": 245390,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/e8349fc835da20d8c69c97e3c2b0821368b3b7c6"
+    },
+    {
+      "path": "src/storage/conversationStoreErrors.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "956ed1b0eaf2df500245c9448e26dd4ac99f0dc0",
+      "size": 2189,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/956ed1b0eaf2df500245c9448e26dd4ac99f0dc0"
+    },
+    {
+      "path": "src/storage/localLog.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "935f37c37338a77ba9016f300dccae5c9bd504ae",
+      "size": 5224,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/935f37c37338a77ba9016f300dccae5c9bd504ae"
+    },
+    {
+      "path": "src/storage/processWriteLock.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1954996bf1adb4a426a9c00b88fa8b7cdc55e36e",
+      "size": 35953,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/1954996bf1adb4a426a9c00b88fa8b7cdc55e36e"
+    },
+    {
+      "path": "src/storage/providerStore.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "23ba658b0c9c5ed6f7f6dc18c9c15f4decd2e9a8",
+      "size": 34594,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/23ba658b0c9c5ed6f7f6dc18c9c15f4decd2e9a8"
+    },
+    {
+      "path": "src/storage/runtimeSnapshot.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2d2e66e3ac5793f917e7f35fdec8ffc25fd9b381",
+      "size": 524,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/2d2e66e3ac5793f917e7f35fdec8ffc25fd9b381"
+    },
+    {
+      "path": "src/storage/vaultStore.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d65a580e8933a3db9696598b96a6230dd30dd8c3",
+      "size": 89422,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/d65a580e8933a3db9696598b96a6230dd30dd8c3"
+    },
+    {
+      "path": "src/studioMain.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "39a1ddbb20b915b2a99fbb386165a3a2cbfdc602",
+      "size": 46977,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/39a1ddbb20b915b2a99fbb386165a3a2cbfdc602"
+    },
+    {
+      "path": "src/types.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ca669d1d415d7df83d1e991794daea25670d2b7a",
+      "size": 14461,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/ca669d1d415d7df83d1e991794daea25670d2b7a"
+    },
+    {
+      "path": "src/ui",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "53411c027d64cf644f87c3aa42857e942ec6c062",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/53411c027d64cf644f87c3aa42857e942ec6c062"
+    },
+    {
+      "path": "src/ui/ailuBrandMark.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "00ab6f6db753d1cd4348547970e2d903da8432fb",
+      "size": 1501,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/00ab6f6db753d1cd4348547970e2d903da8432fb"
+    },
+    {
+      "path": "src/ui/chatAgentSelection.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ddf061acfb276abab323ef356cc94a0028bda8b6",
+      "size": 6518,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/ddf061acfb276abab323ef356cc94a0028bda8b6"
+    },
+    {
+      "path": "src/ui/chatConversationUiState.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "36500a3f667e7980b9af9f678da2ab0766f5f505",
+      "size": 7609,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/36500a3f667e7980b9af9f678da2ab0766f5f505"
+    },
+    {
+      "path": "src/ui/chatLabels.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d1e3a5c97feb6ae5d642e82bbcf1666788a26ffd",
+      "size": 1076,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/d1e3a5c97feb6ae5d642e82bbcf1666788a26ffd"
+    },
+    {
+      "path": "src/ui/chatMessageRendering.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8cd9dcf9d68427be6ced1e411ed8cb8e67addeef",
+      "size": 3180,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/8cd9dcf9d68427be6ced1e411ed8cb8e67addeef"
+    },
+    {
+      "path": "src/ui/chatUiStatePersistence.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "debbda957a0330d17d3446df016f4495dbf61978",
+      "size": 9677,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/debbda957a0330d17d3446df016f4495dbf61978"
+    },
+    {
+      "path": "src/ui/chatView.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a2488b6fd842fbcbe14b3b636ea44581e6de9e4d",
+      "size": 156009,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/a2488b6fd842fbcbe14b3b636ea44581e6de9e4d"
+    },
+    {
+      "path": "src/ui/confirmDraftUploadModal.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "284fac97c6ebbc6aeafee152d380d09ba3148b26",
+      "size": 3095,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/284fac97c6ebbc6aeafee152d380d09ba3148b26"
+    },
+    {
+      "path": "src/ui/confirmXArticleUploadModal.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8608764a70890a55457a1b9461b45f5a057a87f6",
+      "size": 3278,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/8608764a70890a55457a1b9461b45f5a057a87f6"
+    },
+    {
+      "path": "src/ui/feishuConnectionRefresh.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "51ec05d08784280e1e2f3f622412eb192a27577c",
+      "size": 2313,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/51ec05d08784280e1e2f3f622412eb192a27577c"
+    },
+    {
+      "path": "src/ui/feishuDestinationModal.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1e4e0cbafa95c7b88e8b2512c100408e729e9717",
+      "size": 16441,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/1e4e0cbafa95c7b88e8b2512c100408e729e9717"
+    },
+    {
+      "path": "src/ui/feishuPublishingPanel.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "046977bb0d8ff423de9f8824f99b5983dce306c0",
+      "size": 54511,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/046977bb0d8ff423de9f8824f99b5983dce306c0"
+    },
+    {
+      "path": "src/ui/feishuSharePanel.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c1977ba2468a277f11fd0576899a5d53a9ed14f2",
+      "size": 31725,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/c1977ba2468a277f11fd0576899a5d53a9ed14f2"
+    },
+    {
+      "path": "src/ui/generateWeChatCoverModal.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "920dc49aa7291ffeba9b55d130fc4cc5337b413d",
+      "size": 9970,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/920dc49aa7291ffeba9b55d130fc4cc5337b413d"
+    },
+    {
+      "path": "src/ui/generatedImageDrag.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "96292cac974c24bee352fc9bcb4a6c2aa4a1eccd",
+      "size": 17505,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/96292cac974c24bee352fc9bcb4a6c2aa4a1eccd"
+    },
+    {
+      "path": "src/ui/inlineEdit.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "50e8b9cbe2931263a4e158d7e9e4d19d189d441d",
+      "size": 4089,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/50e8b9cbe2931263a4e158d7e9e4d19d189d441d"
+    },
+    {
+      "path": "src/ui/markdownEditorScrollExtension.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "99592df1db60ba57778794dbcfdfaf9d45ae327d",
+      "size": 2862,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/99592df1db60ba57778794dbcfdfaf9d45ae327d"
+    },
+    {
+      "path": "src/ui/memoryWriteModal.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "06e018be84404c5d11518d73e352e102f6ee8755",
+      "size": 19412,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/06e018be84404c5d11518d73e352e102f6ee8755"
+    },
+    {
+      "path": "src/ui/publishingPreviewScroll.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2e6177a851196d56eb9083d1925ff6069d23a2b7",
+      "size": 1410,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/2e6177a851196d56eb9083d1925ff6069d23a2b7"
+    },
+    {
+      "path": "src/ui/publishingSourceScroll.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ce649a75b11ae6c5aeea020dd92ed1c4aa7676ac",
+      "size": 11560,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/ce649a75b11ae6c5aeea020dd92ed1c4aa7676ac"
+    },
+    {
+      "path": "src/ui/publishingStudioView.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "84428e9bd742ffad10eba48c3fa708890391fc67",
+      "size": 60734,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/84428e9bd742ffad10eba48c3fa708890391fc67"
+    },
+    {
+      "path": "src/ui/publishingTargetActivity.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "73eaf0334e9972f4ec278fcac2fc6a9d6b2dd023",
+      "size": 1055,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/73eaf0334e9972f4ec278fcac2fc6a9d6b2dd023"
+    },
+    {
+      "path": "src/ui/runtimeSetupModal.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb49133df9e19396a2e020f298c13ac351b96112",
+      "size": 1272,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/cb49133df9e19396a2e020f298c13ac351b96112"
+    },
+    {
+      "path": "src/ui/secretInput.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "857248c31776f823aef11cb2b11f31e9a8760412",
+      "size": 634,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/857248c31776f823aef11cb2b11f31e9a8760412"
+    },
+    {
+      "path": "src/ui/settingsTab.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2b6e4224c4b4dbbb1cab7ba261ed2ca3b4df3975",
+      "size": 75432,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/2b6e4224c4b4dbbb1cab7ba261ed2ca3b4df3975"
+    },
+    {
+      "path": "src/ui/shareConfirm.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "594d643bd281398ad0d1a140e5a9001ce7299acd",
+      "size": 1370,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/594d643bd281398ad0d1a140e5a9001ce7299acd"
+    },
+    {
+      "path": "src/ui/streamingPreviewAutoFollow.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5aa55014367db5d30f90f31a538aac760e7468d7",
+      "size": 1477,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/5aa55014367db5d30f90f31a538aac760e7468d7"
+    },
+    {
+      "path": "src/ui/studioChrome.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "790488a55e556d27812fab453b4107d6b86d7b16",
+      "size": 1836,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/790488a55e556d27812fab453b4107d6b86d7b16"
+    },
+    {
+      "path": "src/ui/textPromptModal.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7c72821b83b0b6a0f261cd4edb5cbc97f0595fec",
+      "size": 2476,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/7c72821b83b0b6a0f261cd4edb5cbc97f0595fec"
+    },
+    {
+      "path": "src/ui/toolEventVisibility.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "02af6618ef6f469fc419469ef75ffd1c85a498e1",
+      "size": 521,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/02af6618ef6f469fc419469ef75ffd1c85a498e1"
+    },
+    {
+      "path": "src/ui/wechatCoverGeneratorConfig.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "324da009998ff74247789bccd409bf190ac64c96",
+      "size": 769,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/324da009998ff74247789bccd409bf190ac64c96"
+    },
+    {
+      "path": "src/ui/wechatCoverPreview.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c6ee907dce2e3b4acac2de54e396ee8286505261",
+      "size": 1519,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/c6ee907dce2e3b4acac2de54e396ee8286505261"
+    },
+    {
+      "path": "src/ui/xPublishingPanel.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "77a56fb4f85da11e272bc0f71eb2b4b865056b36",
+      "size": 38939,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/77a56fb4f85da11e272bc0f71eb2b4b865056b36"
+    },
+    {
+      "path": "src/utils",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "9962b62ef15e85f30c3dc68587ac8153c08683f2",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/9962b62ef15e85f30c3dc68587ac8153c08683f2"
+    },
+    {
+      "path": "src/utils/command.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5c67a5bc01403e1f909dcbd386afa73aa0677084",
+      "size": 1276,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/5c67a5bc01403e1f909dcbd386afa73aa0677084"
+    },
+    {
+      "path": "src/utils/context.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "49b21a63662a4129992d9edc5b47a091e31c5de7",
+      "size": 2701,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/49b21a63662a4129992d9edc5b47a091e31c5de7"
+    },
+    {
+      "path": "src/utils/env.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1bc2e2594bebf73457146ef65f3a34d83d26798e",
+      "size": 3081,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/1bc2e2594bebf73457146ef65f3a34d83d26798e"
+    },
+    {
+      "path": "src/utils/fs.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8e636cd8efa8afc895f418822850ae4548a0684d",
+      "size": 1456,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/8e636cd8efa8afc895f418822850ae4548a0684d"
+    },
+    {
+      "path": "src/utils/id.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9c4b43591c91ddd798fca0842c63540452dd9c6c",
+      "size": 170,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/9c4b43591c91ddd798fca0842c63540452dd9c6c"
+    },
+    {
+      "path": "src/utils/inputQueries.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eb19291b7a6486f6decc6a9789cb300aa13b5c31",
+      "size": 414,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/eb19291b7a6486f6decc6a9789cb300aa13b5c31"
+    },
+    {
+      "path": "src/utils/previewSecurity.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9c31f6bc457e9c71f6c7fad3c55ec898f4d5f2d9",
+      "size": 8597,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/9c31f6bc457e9c71f6c7fad3c55ec898f4d5f2d9"
+    },
+    {
+      "path": "src/utils/providerAuth.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9f65ecb2815b64eb1fcb25eb9475bc7be87635ec",
+      "size": 3878,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/9f65ecb2815b64eb1fcb25eb9475bc7be87635ec"
+    },
+    {
+      "path": "src/utils/providerModels.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3227a69beb4c6c51710c63510e2ed6bb081a766e",
+      "size": 8748,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/3227a69beb4c6c51710c63510e2ed6bb081a766e"
+    },
+    {
+      "path": "src/utils/records.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1686ad87a48f4ce78f09b9133151f4b0bffa9535",
+      "size": 322,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/1686ad87a48f4ce78f09b9133151f4b0bffa9535"
+    },
+    {
+      "path": "src/utils/secureAssets.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e0c05a14762419d88fb12d323a70b999ca844a9c",
+      "size": 17373,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/e0c05a14762419d88fb12d323a70b999ca844a9c"
+    },
+    {
+      "path": "src/utils/slashCommands.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "855f579164adb2af2d43ab751891853b64112f4d",
+      "size": 2871,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/855f579164adb2af2d43ab751891853b64112f4d"
+    },
+    {
+      "path": "src/utils/userFacingError.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4dc90989afc9eddeb0452ba293b20e082fe356af",
+      "size": 7939,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/4dc90989afc9eddeb0452ba293b20e082fe356af"
+    },
+    {
+      "path": "src/utils/vault.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b625261fd351e27986cabf988aa1e1753a19a099",
+      "size": 1915,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/b625261fd351e27986cabf988aa1e1753a19a099"
+    },
+    {
+      "path": "src/wechat",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "8472e26627fb682c6d4e16722ac4fe99ec68e877",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/8472e26627fb682c6d4e16722ac4fe99ec68e877"
+    },
+    {
+      "path": "src/wechat/extractedDesignThemes.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "291a3ffa59a01d8e0836bdf14ea5a1060fce67b2",
+      "size": 23965,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/291a3ffa59a01d8e0836bdf14ea5a1060fce67b2"
+    },
+    {
+      "path": "src/wechat/frontmatter.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cdc58a5ddd957011cb8e8c27c1fb76acb20af86a",
+      "size": 2615,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/cdc58a5ddd957011cb8e8c27c1fb76acb20af86a"
+    },
+    {
+      "path": "src/wechat/layout.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "09f41021585d03934bb3fcf442402c22e2bd4d2c",
+      "size": 233,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/09f41021585d03934bb3fcf442402c22e2bd4d2c"
+    },
+    {
+      "path": "src/wechat/paperInkTheme.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1293c4f767c5692139fc633015b7bea5619559a3",
+      "size": 13914,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/1293c4f767c5692139fc633015b7bea5619559a3"
+    },
+    {
+      "path": "src/wechat/renderer.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b0b4197578e84e007887f5e6016dc6c14a38c54e",
+      "size": 31512,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/b0b4197578e84e007887f5e6016dc6c14a38c54e"
+    },
+    {
+      "path": "src/wechat/snapshot.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cf5ffb45f1373590dbeb98ab36997e852d8a9da5",
+      "size": 12287,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/cf5ffb45f1373590dbeb98ab36997e852d8a9da5"
+    },
+    {
+      "path": "src/wechat/softPastelTheme.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7aea712c980b7aac2a1561fc0e5d64df3cff5a27",
+      "size": 10874,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/7aea712c980b7aac2a1561fc0e5d64df3cff5a27"
+    },
+    {
+      "path": "src/wechat/streamingPreview.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c7e84eff7a17f3134ab636b16995ed50519a556e",
+      "size": 1988,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/c7e84eff7a17f3134ab636b16995ed50519a556e"
+    },
+    {
+      "path": "src/wechat/textFlowGuards.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "680e267e7476eedbf69d37fc7fe249ccd502349a",
+      "size": 3161,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/680e267e7476eedbf69d37fc7fe249ccd502349a"
+    },
+    {
+      "path": "src/wechat/themeService.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ea9aeabb0ba97bfc752f95611443cb80ca14acdd",
+      "size": 459,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/ea9aeabb0ba97bfc752f95611443cb80ca14acdd"
+    },
+    {
+      "path": "src/wechat/themes.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a80b0a68852ab60e03b31d783dd5a5d998ffa681",
+      "size": 2458,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/a80b0a68852ab60e03b31d783dd5a5d998ffa681"
+    },
+    {
+      "path": "src/wechat/types.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d0a7233ccb94d77b24c628bf970c47528dfcf285",
+      "size": 1779,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/d0a7233ccb94d77b24c628bf970c47528dfcf285"
+    },
+    {
+      "path": "src/wechat/typography.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "791d48cc7201ec3a22861501db90926bef8826c5",
+      "size": 6185,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/791d48cc7201ec3a22861501db90926bef8826c5"
+    },
+    {
+      "path": "src/xArticle",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "d308c7ae4fa21fab4d7c55a24e73d7fe356efb29",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/d308c7ae4fa21fab4d7c55a24e73d7fe356efb29"
+    },
+    {
+      "path": "src/xArticle/cookieMutationCoordinator.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "37164172dbe25bd20ff1bf3952bb193196cf7385",
+      "size": 1084,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/37164172dbe25bd20ff1bf3952bb193196cf7385"
+    },
+    {
+      "path": "src/xArticle/cookieStore.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ad226d0d91438d928daa3272bd2d1c39287b812b",
+      "size": 11072,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/ad226d0d91438d928daa3272bd2d1c39287b812b"
+    },
+    {
+      "path": "src/xArticle/domMapper.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "639f7565fae30dee04bc85a9dffb1012b1faa6bf",
+      "size": 6923,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/639f7565fae30dee04bc85a9dffb1012b1faa6bf"
+    },
+    {
+      "path": "src/xArticle/enhancements.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dacf59a9f4ad49dc4194cf90eda3edd782675dca",
+      "size": 10504,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/dacf59a9f4ad49dc4194cf90eda3edd782675dca"
+    },
+    {
+      "path": "src/xArticle/issuePresentation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dc55a86f96b6270bd5016778797d549f7e097d07",
+      "size": 3357,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/dc55a86f96b6270bd5016778797d549f7e097d07"
+    },
+    {
+      "path": "src/xArticle/localUploader.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a79981cb39b6827393276c92ea6a615cb595d813",
+      "size": 114458,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/a79981cb39b6827393276c92ea6a615cb595d813"
+    },
+    {
+      "path": "src/xArticle/markdownFence.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "87f54d6ddf1038ac4ff3e6d36237a64fa08ec050",
+      "size": 1021,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/87f54d6ddf1038ac4ff3e6d36237a64fa08ec050"
+    },
+    {
+      "path": "src/xArticle/preflight.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7ca2ddfe93d3d5f593eb685fe1f53a7f889a7213",
+      "size": 17441,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/7ca2ddfe93d3d5f593eb685fe1f53a7f889a7213"
+    },
+    {
+      "path": "src/xArticle/prepareMarkdown.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7b91f24e65ee02fe83e1016bd134c82148efab38",
+      "size": 13733,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/7b91f24e65ee02fe83e1016bd134c82148efab38"
+    },
+    {
+      "path": "src/xArticle/preview.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1e48e79a3bd95c549fe377e88ebd20fe60743b90",
+      "size": 24176,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/1e48e79a3bd95c549fe377e88ebd20fe60743b90"
+    },
+    {
+      "path": "src/xArticle/types.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "98e22f473ac7ea67d389f56ca43e83ccddc6b22a",
+      "size": 6224,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/98e22f473ac7ea67d389f56ca43e83ccddc6b22a"
+    },
+    {
+      "path": "src/xArticle/uploadTaskCoordinator.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "37f6b3233b9a4be4ee1b8a081c4ff7e405673245",
+      "size": 4719,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/37f6b3233b9a4be4ee1b8a081c4ff7e405673245"
+    },
+    {
+      "path": "styles.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "280007803d2f6464c4dd71b9da12e4c6a9cba068",
+      "size": 140358,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/280007803d2f6464c4dd71b9da12e4c6a9cba068"
+    },
+    {
+      "path": "tests",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "265ae4010af0efdba904c7772ac96c25fb009ab0",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/265ae4010af0efdba904c7772ac96c25fb009ab0"
+    },
+    {
+      "path": "tests/adapter.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2de1a70e304dd7d30d7bf1600919e062a9bd5db1",
+      "size": 29514,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/2de1a70e304dd7d30d7bf1600919e062a9bd5db1"
+    },
+    {
+      "path": "tests/adapterStreaming.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4fe40af9cdbccc816b593079843d08e6ce8367a5",
+      "size": 2136,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/4fe40af9cdbccc816b593079843d08e6ce8367a5"
+    },
+    {
+      "path": "tests/agentSettings.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f37b9143a9d9116f17714f571fc4cc4c17c91f84",
+      "size": 4347,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/f37b9143a9d9116f17714f571fc4cc4c17c91f84"
+    },
+    {
+      "path": "tests/ccSwitch.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b80f62cd054cba8818793c2ee21a6de2839c8940",
+      "size": 23041,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/b80f62cd054cba8818793c2ee21a6de2839c8940"
+    },
+    {
+      "path": "tests/chatAgentSelection.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f9a23d372eceb5b77e36252695a004687a1dcf91",
+      "size": 11808,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/f9a23d372eceb5b77e36252695a004687a1dcf91"
+    },
+    {
+      "path": "tests/chatComposerUi.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e9a2ff7869b6e1a5d555a71bfd0343f12435dd5a",
+      "size": 2631,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/e9a2ff7869b6e1a5d555a71bfd0343f12435dd5a"
+    },
+    {
+      "path": "tests/chatContextCompression.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "01b0f4a49629c1dec82949ca95c771623e7165de",
+      "size": 23593,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/01b0f4a49629c1dec82949ca95c771623e7165de"
+    },
+    {
+      "path": "tests/chatContextService.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "503426fb464a570500d420d7cf914a93aec3ac45",
+      "size": 21255,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/503426fb464a570500d420d7cf914a93aec3ac45"
+    },
+    {
+      "path": "tests/chatConversationUiState.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "021a10f428001c81e339fb5af77fc1aea0bba760",
+      "size": 4658,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/021a10f428001c81e339fb5af77fc1aea0bba760"
+    },
+    {
+      "path": "tests/chatHistoryUi.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "99ff093e44d86b90d3a456466c7477ececd94090",
+      "size": 7471,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/99ff093e44d86b90d3a456466c7477ececd94090"
+    },
+    {
+      "path": "tests/chatLabels.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e85512d25b8ff273cb628c344dd930769d32d38e",
+      "size": 1220,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/e85512d25b8ff273cb628c344dd930769d32d38e"
+    },
+    {
+      "path": "tests/chatMessageRendering.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ec843f43b6990fa95d8a6ea86bdda9e2b74fdc41",
+      "size": 5892,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/ec843f43b6990fa95d8a6ea86bdda9e2b74fdc41"
+    },
+    {
+      "path": "tests/chatRunCoordinator.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "974eb7e48e2a61093a144d6f8e220aaf6f85641e",
+      "size": 129949,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/974eb7e48e2a61093a144d6f8e220aaf6f85641e"
+    },
+    {
+      "path": "tests/chatStorageIntegration.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8be4f89207604d52fbdf858cad162c315d936621",
+      "size": 24035,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/8be4f89207604d52fbdf858cad162c315d936621"
+    },
+    {
+      "path": "tests/chatUiStatePersistence.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9c247a001c5d83b44dbf3ea0da9c79d70c5c7a13",
+      "size": 8124,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/9c247a001c5d83b44dbf3ea0da9c79d70c5c7a13"
+    },
+    {
+      "path": "tests/codexAppServer.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "478dd960e1e3764e0fe33cd19a63f476e24dc209",
+      "size": 9680,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/478dd960e1e3764e0fe33cd19a63f476e24dc209"
+    },
+    {
+      "path": "tests/codexDesktop.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9b259a81b5b70525fbf554c52180126b4173f1a7",
+      "size": 2664,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/9b259a81b5b70525fbf554c52180126b4173f1a7"
+    },
+    {
+      "path": "tests/codexRuntime.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3c1517f25049a2387e6a4676a84427c6f4c09042",
+      "size": 70552,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/3c1517f25049a2387e6a4676a84427c6f4c09042"
+    },
+    {
+      "path": "tests/contextSecurity.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "11d82e6d22a9aa614bb11893034fce26c80c9f8d",
+      "size": 5412,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/11d82e6d22a9aa614bb11893034fce26c80c9f8d"
+    },
+    {
+      "path": "tests/conversationRepositoryV2.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ca2bd81f5843b3680d49343c2856532081c210ae",
+      "size": 84825,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/ca2bd81f5843b3680d49343c2856532081c210ae"
+    },
+    {
+      "path": "tests/creativeMemory.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fc035cad14c9b8643933b6be5bd3b24ea6b22e93",
+      "size": 2537,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/fc035cad14c9b8643933b6be5bd3b24ea6b22e93"
+    },
+    {
+      "path": "tests/creativeSkills.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "23c0b5430e0b0acc8089418e925032912fd746c6",
+      "size": 937,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/23c0b5430e0b0acc8089418e925032912fd746c6"
+    },
+    {
+      "path": "tests/draftVerifier.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0ba00bc8cd69308a807ce734c4a45f53819c94bb",
+      "size": 13462,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/0ba00bc8cd69308a807ce734c4a45f53819c94bb"
+    },
+    {
+      "path": "tests/env.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f16c064cb6d0557243fba1cdd55b3eeb206fad13",
+      "size": 2469,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/f16c064cb6d0557243fba1cdd55b3eeb206fad13"
+    },
+    {
+      "path": "tests/extractedDesignThemes.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b3b5fa18ccdf04267e4d627cc6bb449f6fa6da28",
+      "size": 4420,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/b3b5fa18ccdf04267e4d627cc6bb449f6fa6da28"
+    },
+    {
+      "path": "tests/feishuAssociation.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7e1c116faa43fbf0a7e30ec4f5151a9db210747a",
+      "size": 3205,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/7e1c116faa43fbf0a7e30ec4f5151a9db210747a"
+    },
+    {
+      "path": "tests/feishuConnectionRefresh.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0ba8f1f5e0f1bf5c231630155443ebc9ddf37d46",
+      "size": 1856,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/0ba8f1f5e0f1bf5c231630155443ebc9ddf37d46"
+    },
+    {
+      "path": "tests/feishuDestination.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6c23696db8395304f8e66512a777d79ad259fedf",
+      "size": 2568,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/6c23696db8395304f8e66512a777d79ad259fedf"
+    },
+    {
+      "path": "tests/feishuFrontmatter.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "24c1e8c642e981b1d88f6005da4e68e894d5c9ee",
+      "size": 4513,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/24c1e8c642e981b1d88f6005da4e68e894d5c9ee"
+    },
+    {
+      "path": "tests/feishuMarkdown.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7b05fe9cc8157a3eb46548cdbd69c4d137f3a823",
+      "size": 10542,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/7b05fe9cc8157a3eb46548cdbd69c4d137f3a823"
+    },
+    {
+      "path": "tests/feishuPreview.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2641354a490c4f74ad1ed817da6e3e445633c1f0",
+      "size": 2119,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/2641354a490c4f74ad1ed817da6e3e445633c1f0"
+    },
+    {
+      "path": "tests/feishuPublisher.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8f50112a27d3efa742cdb77ea89f7ac6ad746944",
+      "size": 14837,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/8f50112a27d3efa742cdb77ea89f7ac6ad746944"
+    },
+    {
+      "path": "tests/feishuRemoteVerification.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3509b7fd3722aecd469b8e9c94312bd9ae64b37f",
+      "size": 16068,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/3509b7fd3722aecd469b8e9c94312bd9ae64b37f"
+    },
+    {
+      "path": "tests/feishuSnapshot.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e2adfdc32f491b5d85bd8e96df43931370d58984",
+      "size": 2859,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/e2adfdc32f491b5d85bd8e96df43931370d58984"
+    },
+    {
+      "path": "tests/fixtures",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e0330ce23bf752630eb60b566adbf7e4d1083a92",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/e0330ce23bf752630eb60b566adbf7e4d1083a92"
+    },
+    {
+      "path": "tests/fixtures/fake-claude-duplicate-stream.mjs",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "bd0793a88c9f0221dc16c40e37c168a105d9a79d",
+      "size": 1765,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/bd0793a88c9f0221dc16c40e37c168a105d9a79d"
+    },
+    {
+      "path": "tests/fixtures/imageBytes.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b4bb030f135561a94421409cf354aa7ece9e1989",
+      "size": 1337,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/b4bb030f135561a94421409cf354aa7ece9e1989"
+    },
+    {
+      "path": "tests/fixtures/skill-home",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "80747e5ad6e247fec8f73873d06488b895534679",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/80747e5ad6e247fec8f73873d06488b895534679"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.agents",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7ef10705e974174daf70886c3ad45c40397023f1",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/7ef10705e974174daf70886c3ad45c40397023f1"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.agents/skills",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1b50fdbdbfdb24d4ccd67b40eac1f2951e1ee9c8",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/1b50fdbdbfdb24d4ccd67b40eac1f2951e1ee9c8"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.agents/skills/.backup",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "43e9c851bd6af25c1d29a1f7186a51f5fb0a6dd5",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/43e9c851bd6af25c1d29a1f7186a51f5fb0a6dd5"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.agents/skills/.backup/hidden",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "b3572d699552aaf454545d078a55e5fd8ad720ee",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/b3572d699552aaf454545d078a55e5fd8ad720ee"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.agents/skills/.backup/hidden/SKILL.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7e99cebd5e32cb5a8abb00c4bef2f9554f560377",
+      "size": 75,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/7e99cebd5e32cb5a8abb00c4bef2f9554f560377"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.agents/skills/duplicate",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "6a9eb1c5e94c2c42c42ad6041dd321c3343684bd",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/6a9eb1c5e94c2c42c42ad6041dd321c3343684bd"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.agents/skills/duplicate/SKILL.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2d6dc79d2a64b54d96f6ad5c34e31efd8a1ec97a",
+      "size": 71,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/2d6dc79d2a64b54d96f6ad5c34e31efd8a1ec97a"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.agents/skills/shared-writer",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "86f83a4bb0d5c5714ee747135e7abc75da49ca8b",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/86f83a4bb0d5c5714ee747135e7abc75da49ca8b"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.agents/skills/shared-writer/SKILL.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9eaf6380c8c3b421b38ddc2a723ec9677b59e4aa",
+      "size": 83,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/9eaf6380c8c3b421b38ddc2a723ec9677b59e4aa"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.claude",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "87f77df3b38d95380f0410880a2105aa26638421",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/87f77df3b38d95380f0410880a2105aa26638421"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.claude/skills",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "67ba473a452d5c508227d92f6e3e2752125c5fef",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/67ba473a452d5c508227d92f6e3e2752125c5fef"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.claude/skills/duplicate",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "fc97f0f9efb9792aef7e51139c55ebedd1a6f7f2",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/fc97f0f9efb9792aef7e51139c55ebedd1a6f7f2"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.claude/skills/duplicate/SKILL.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "06308e9e6fc804bd61c0b2ae3bc5340618caea03",
+      "size": 71,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/06308e9e6fc804bd61c0b2ae3bc5340618caea03"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.codex",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "ee8ea87da283db77c47fbf3b754e98e79349caf8",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/ee8ea87da283db77c47fbf3b754e98e79349caf8"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.codex/plugins",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "37afe974fd56168eaff6c0beb7e345c8c7f04e48",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/37afe974fd56168eaff6c0beb7e345c8c7f04e48"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.codex/plugins/cache",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "38fecbe7ff2ac1d6cc00a56e6d8137e49055ffc5",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/38fecbe7ff2ac1d6cc00a56e6d8137e49055ffc5"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.codex/plugins/cache/openai-curated-remote",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4bc2d66937dce1df36fec16c10f35ad6e762196c",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/4bc2d66937dce1df36fec16c10f35ad6e762196c"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.codex/plugins/cache/openai-curated-remote/build-web-apps",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "b9f0067b6c3e0718d18f1f6a9413be7a3f317373",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/b9f0067b6c3e0718d18f1f6a9413be7a3f317373"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.codex/plugins/cache/openai-curated-remote/build-web-apps/0.1.2",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1b6eb4c8246cccf781dab972fdebacbf237a7efd",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/1b6eb4c8246cccf781dab972fdebacbf237a7efd"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.codex/plugins/cache/openai-curated-remote/build-web-apps/0.1.2/skills",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c03b2ab284521d86f9f578f629ea765c25349bbb",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/c03b2ab284521d86f9f578f629ea765c25349bbb"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.codex/plugins/cache/openai-curated-remote/build-web-apps/0.1.2/skills/frontend-testing",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "ca03823ce76cc2e76eb93dcc74c1b4984801df83",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/ca03823ce76cc2e76eb93dcc74c1b4984801df83"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.codex/plugins/cache/openai-curated-remote/build-web-apps/0.1.2/skills/frontend-testing/SKILL.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ae19fe8588994281d21e8640d12e21380b43aed1",
+      "size": 107,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/ae19fe8588994281d21e8640d12e21380b43aed1"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.codex/skills",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c770f8936cb2ff1d611a26ff3238eb6d0a9c77c2",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/c770f8936cb2ff1d611a26ff3238eb6d0a9c77c2"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.codex/skills/.system",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "6aed7fe92f48dad394c69d19edbaf35fa44b10ec",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/6aed7fe92f48dad394c69d19edbaf35fa44b10ec"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.codex/skills/.system/system-one",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e4966c7a4661b56577ea7d92117b20fa3517d797",
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/trees/e4966c7a4661b56577ea7d92117b20fa3517d797"
+    },
+    {
+      "path": "tests/fixtures/skill-home/.codex/skills/.system/system-one/SKILL.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "51d40484fddb8b21b4dd3f3b2d79675b89fb1604",
+      "size": 75,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/51d40484fddb8b21b4dd3f3b2d79675b89fb1604"
+    },
+    {
+      "path": "tests/fixtures/xArticleAnchorNormalizationVectors.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d0729640736eeacfe1b8b8bf54a628408dec28b5",
+      "size": 5939,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/d0729640736eeacfe1b8b8bf54a628408dec28b5"
+    },
+    {
+      "path": "tests/fromSnapshot.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "31e34b194883855a8abd89beb7df8d05c4ba1b0b",
+      "size": 4481,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/31e34b194883855a8abd89beb7df8d05c4ba1b0b"
+    },
+    {
+      "path": "tests/frozenAttachments.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2680712c6d0ed8af549679d6357ae6d0ab7d9dd3",
+      "size": 5227,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/2680712c6d0ed8af549679d6357ae6d0ab7d9dd3"
+    },
+    {
+      "path": "tests/generateWeChatCover.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9c756c98957f43229db3c1122b1c392482335153",
+      "size": 1177,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/9c756c98957f43229db3c1122b1c392482335153"
+    },
+    {
+      "path": "tests/generatedImageDrag.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2607c0e59e3e8a693c151b7583198c2c9e5d1e40",
+      "size": 16585,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/2607c0e59e3e8a693c151b7583198c2c9e5d1e40"
+    },
+    {
+      "path": "tests/ids.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3fe0655577dba5b87237ea6e9e189f04b68e273d",
+      "size": 2411,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/3fe0655577dba5b87237ea6e9e189f04b68e273d"
+    },
+    {
+      "path": "tests/imagePreflight.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3e45fe8e5295e9f8875948f83de34c79f704daed",
+      "size": 3827,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/3e45fe8e5295e9f8875948f83de34c79f704daed"
+    },
+    {
+      "path": "tests/larkCli.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "35a58ffcd8503116f1929cbd93f05a35048f37bf",
+      "size": 35694,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/35a58ffcd8503116f1929cbd93f05a35048f37bf"
+    },
+    {
+      "path": "tests/localLog.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "459c2f2dabdc184eb7fec5562b27746d56783fa9",
+      "size": 2789,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/459c2f2dabdc184eb7fec5562b27746d56783fa9"
+    },
+    {
+      "path": "tests/localModels.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c90f16a8515a4729105f9224e563b2eb4c563da",
+      "size": 10662,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/0c90f16a8515a4729105f9224e563b2eb4c563da"
+    },
+    {
+      "path": "tests/localRelayTransport.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "65d8d209b9a792506d0d8a9e49c3e91b13c2fc72",
+      "size": 9677,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/65d8d209b9a792506d0d8a9e49c3e91b13c2fc72"
+    },
+    {
+      "path": "tests/memoryRuntimeHandshake.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "08d15f8cc29662e32b4c376cf619a04e14f8d96f",
+      "size": 7636,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/08d15f8cc29662e32b4c376cf619a04e14f8d96f"
+    },
+    {
+      "path": "tests/memoryWriteModal.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1f10032c6dc0e5a107bda263d9be952c73b38f93",
+      "size": 2671,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/1f10032c6dc0e5a107bda263d9be952c73b38f93"
+    },
+    {
+      "path": "tests/onboardingDocs.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "36e25116a7769f2ea6328b258d775e24ec30bf76",
+      "size": 4724,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/36e25116a7769f2ea6328b258d775e24ec30bf76"
+    },
+    {
+      "path": "tests/paperInkTheme.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6f2ebc5a52e2c0e48551a765ca1da4fa997a71ef",
+      "size": 3057,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/6f2ebc5a52e2c0e48551a765ca1da4fa997a71ef"
+    },
+    {
+      "path": "tests/parsers.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f9d2030396ceb308ca803d28c63db9adb537ee8a",
+      "size": 6273,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/f9d2030396ceb308ca803d28c63db9adb537ee8a"
+    },
+    {
+      "path": "tests/paths.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "94eb3c25a254007cf4aee5542c4f6f7f45315c82",
+      "size": 1116,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/94eb3c25a254007cf4aee5542c4f6f7f45315c82"
+    },
+    {
+      "path": "tests/preparedArticleBuilder.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f9d525f69f557f49ae1a9bdba577b6f5ef0017d1",
+      "size": 12885,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/f9d525f69f557f49ae1a9bdba577b6f5ef0017d1"
+    },
+    {
+      "path": "tests/previewSecurity.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "24d93c6b9717bbe311877e14ebbbccfb1be54a44",
+      "size": 6297,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/24d93c6b9717bbe311877e14ebbbccfb1be54a44"
+    },
+    {
+      "path": "tests/processWriteLockOrder.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b1053976d5d3b08cce8a5d92934c6770a090cbe3",
+      "size": 796,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/b1053976d5d3b08cce8a5d92934c6770a090cbe3"
+    },
+    {
+      "path": "tests/providerAuth.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "947874a0fde915a62cad0f6c072e0160a2e5bd34",
+      "size": 2115,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/947874a0fde915a62cad0f6c072e0160a2e5bd34"
+    },
+    {
+      "path": "tests/providerModels.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "05806128b813b5139cc89837b724ebc1a887f2b3",
+      "size": 7955,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/05806128b813b5139cc89837b724ebc1a887f2b3"
+    },
+    {
+      "path": "tests/providerProjection.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8a82a0a4b4510a0534819242e4775c4e2659e7d7",
+      "size": 10243,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/8a82a0a4b4510a0534819242e4775c4e2659e7d7"
+    },
+    {
+      "path": "tests/providerStore.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "612cc7347ed2cf149ea97a11b81c815f764b2803",
+      "size": 16983,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/612cc7347ed2cf149ea97a11b81c815f764b2803"
+    },
+    {
+      "path": "tests/publicationGuard.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "05ec50c0a4571c01f4ef396f5c019aa16ab65282",
+      "size": 3180,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/05ec50c0a4571c01f4ef396f5c019aa16ab65282"
+    },
+    {
+      "path": "tests/publishingAdvisories.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0712562770aa0b2115031b3602e5f70ffab4dc87",
+      "size": 483,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/0712562770aa0b2115031b3602e5f70ffab4dc87"
+    },
+    {
+      "path": "tests/publishingPreviewScroll.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7c418b452e59bc80680377a6fb4204da2f43e36d",
+      "size": 1537,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/7c418b452e59bc80680377a6fb4204da2f43e36d"
+    },
+    {
+      "path": "tests/publishingPreviewStats.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f83e222c9e224bc586600fc1783910cf8e15581a",
+      "size": 2227,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/f83e222c9e224bc586600fc1783910cf8e15581a"
+    },
+    {
+      "path": "tests/publishingSettings.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f520f10ebbb2667e4c73e943ba9e4d6371e97574",
+      "size": 2152,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/f520f10ebbb2667e4c73e943ba9e4d6371e97574"
+    },
+    {
+      "path": "tests/publishingSourceScroll.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6f0df2ce6971d01eb06c6ab5cc2f1ac543a1215a",
+      "size": 7592,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/6f0df2ce6971d01eb06c6ab5cc2f1ac543a1215a"
+    },
+    {
+      "path": "tests/publishingTargetActivity.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ae3032818af50fad81a7b34ec9edb4454a8227d6",
+      "size": 4759,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/ae3032818af50fad81a7b34ec9edb4454a8227d6"
+    },
+    {
+      "path": "tests/reasoningCapabilities.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9a5733fbdcbb18de297a54927faeda01017a45f8",
+      "size": 2349,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/9a5733fbdcbb18de297a54927faeda01017a45f8"
+    },
+    {
+      "path": "tests/releaseWorkflow.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b149efcc0bf940e72950a686a38fcf1c87e486e1",
+      "size": 970,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/b149efcc0bf940e72950a686a38fcf1c87e486e1"
+    },
+    {
+      "path": "tests/runtimeDiscovery.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dd004acebc8f8b679cae0107a32e7f1d82c616bc",
+      "size": 5335,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/dd004acebc8f8b679cae0107a32e7f1d82c616bc"
+    },
+    {
+      "path": "tests/runtimeErrors.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f55565ec612b1aff6434f93ae9cbe1d781a401e3",
+      "size": 2191,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/f55565ec612b1aff6434f93ae9cbe1d781a401e3"
+    },
+    {
+      "path": "tests/runtimeManager.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7ee9735808182f91878536c16aea08ce0a2645d4",
+      "size": 38449,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/7ee9735808182f91878536c16aea08ce0a2645d4"
+    },
+    {
+      "path": "tests/runtimeSnapshot.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cefd1e168b2bf52eebceba4d4379d7c078063bbd",
+      "size": 1195,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/cefd1e168b2bf52eebceba4d4379d7c078063bbd"
+    },
+    {
+      "path": "tests/secretInput.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "adf35cb5dcb3620a5efe31884a5705a0aa9ea9d3",
+      "size": 526,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/adf35cb5dcb3620a5efe31884a5705a0aa9ea9d3"
+    },
+    {
+      "path": "tests/secureAssets.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a6c74405e650f9ef78b7b312f1e2169a6de083eb",
+      "size": 10182,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/a6c74405e650f9ef78b7b312f1e2169a6de083eb"
+    },
+    {
+      "path": "tests/shareMarkdown.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "14baef98cdec4c23da40dfd4bfcc2c8adeb1381e",
+      "size": 1352,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/14baef98cdec4c23da40dfd4bfcc2c8adeb1381e"
+    },
+    {
+      "path": "tests/shareSnapshot.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "653cdd936f8ab48edfbcf7e166bc64916a7dbd9f",
+      "size": 2043,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/653cdd936f8ab48edfbcf7e166bc64916a7dbd9f"
+    },
+    {
+      "path": "tests/shareSnapshotPhysical.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "79556f70b068aa21ee0c75eef9c317fa593e058b",
+      "size": 3193,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/79556f70b068aa21ee0c75eef9c317fa593e058b"
+    },
+    {
+      "path": "tests/skillDiscovery.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b8e48eeb785b679db94dac0893fada05a588b336",
+      "size": 1996,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/b8e48eeb785b679db94dac0893fada05a588b336"
+    },
+    {
+      "path": "tests/skillParser.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3a3189116072d7ec75ec1e97e06932347f37e6ac",
+      "size": 2634,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/3a3189116072d7ec75ec1e97e06932347f37e6ac"
+    },
+    {
+      "path": "tests/slashCommands.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f645f0e87f6dbf0d421d7deadc5a09235471dada",
+      "size": 2364,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/f645f0e87f6dbf0d421d7deadc5a09235471dada"
+    },
+    {
+      "path": "tests/softPastelTheme.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "11223e0a1ee011194cb4f73adaf811f744c8c21d",
+      "size": 1187,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/11223e0a1ee011194cb4f73adaf811f744c8c21d"
+    },
+    {
+      "path": "tests/sourceLineMap.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3235090101a54753cdf340ee40b53add139ed984",
+      "size": 1197,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/3235090101a54753cdf340ee40b53add139ed984"
+    },
+    {
+      "path": "tests/streamingPreviewAutoFollow.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f4ea12c1aef4a36513299d797cf36cd67a5e3351",
+      "size": 2316,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/f4ea12c1aef4a36513299d797cf36cd67a5e3351"
+    },
+    {
+      "path": "tests/suggestions.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f92e3e9449475dba9adcd3d182bf8fa7cfef9b92",
+      "size": 715,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/f92e3e9449475dba9adcd3d182bf8fa7cfef9b92"
+    },
+    {
+      "path": "tests/toolEventVisibility.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "021341dd9e6f7ff90cd176ef9fab821112a5a68c",
+      "size": 866,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/021341dd9e6f7ff90cd176ef9fab821112a5a68c"
+    },
+    {
+      "path": "tests/userFacingError.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9dd231f071b8ad4b85bee4c95fbcff6799056c57",
+      "size": 3170,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/9dd231f071b8ad4b85bee4c95fbcff6799056c57"
+    },
+    {
+      "path": "tests/vaultStore.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c12e25de225753a8203b8e544ee0241a3d2bbbae",
+      "size": 50465,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/c12e25de225753a8203b8e544ee0241a3d2bbbae"
+    },
+    {
+      "path": "tests/vaultStoreImages.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e6284f7fc2a8e630fbb9f800d1e9798ab1e4e0b2",
+      "size": 5205,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/e6284f7fc2a8e630fbb9f800d1e9798ab1e4e0b2"
+    },
+    {
+      "path": "tests/verifiedMemory.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a570cfef069a36ce2da0e580ee56f7b86b2e2fd9",
+      "size": 10412,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/a570cfef069a36ce2da0e580ee56f7b86b2e2fd9"
+    },
+    {
+      "path": "tests/verifiedMemoryWrite.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7bc11ecad186c49d817d2855b086e0c8208c4f5d",
+      "size": 29610,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/7bc11ecad186c49d817d2855b086e0c8208c4f5d"
+    },
+    {
+      "path": "tests/wechatCoverPreview.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ad19a059202e4c82a7a80fefbe1259d57f3af5ec",
+      "size": 5156,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/ad19a059202e4c82a7a80fefbe1259d57f3af5ec"
+    },
+    {
+      "path": "tests/wechatFrontmatter.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1f8355e6ea6d429418af2480ffbcb4c6b8478126",
+      "size": 3504,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/1f8355e6ea6d429418af2480ffbcb4c6b8478126"
+    },
+    {
+      "path": "tests/wechatSnapshot.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c5fe2a29f1c9f0c904f612d2cc287edd37155fd5",
+      "size": 9844,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/c5fe2a29f1c9f0c904f612d2cc287edd37155fd5"
+    },
+    {
+      "path": "tests/wechatStreamingPreview.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "039aaba68d4803a7e02ac22a4d12da1d0caa2d42",
+      "size": 1706,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/039aaba68d4803a7e02ac22a4d12da1d0caa2d42"
+    },
+    {
+      "path": "tests/wechatTextFlowGuards.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d6aa9a98f2aad6a2461d7ae7d1e0e2d0c0882202",
+      "size": 5158,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/d6aa9a98f2aad6a2461d7ae7d1e0e2d0c0882202"
+    },
+    {
+      "path": "tests/wechatThemes.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9c3ea00d8e35a61c35063838ee07092f82b20388",
+      "size": 2818,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/9c3ea00d8e35a61c35063838ee07092f82b20388"
+    },
+    {
+      "path": "tests/wechatTypography.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "acaa52b1fe064b0c930ee9e6bfc4fa5134e155ac",
+      "size": 2838,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/acaa52b1fe064b0c930ee9e6bfc4fa5134e155ac"
+    },
+    {
+      "path": "tests/xArticleIssuePresentation.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ed7e1e5b957c40118ddf8d97aca65c3fe5a66a89",
+      "size": 1997,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/ed7e1e5b957c40118ddf8d97aca65c3fe5a66a89"
+    },
+    {
+      "path": "tests/xArticlePrepareMarkdown.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9a33db3cd045fbbc9811aecaa8afda5dc9debcc4",
+      "size": 12271,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/9a33db3cd045fbbc9811aecaa8afda5dc9debcc4"
+    },
+    {
+      "path": "tests/xArticlePreview.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9911871f1c638ea0371e3ccdadaf7b1316ddc507",
+      "size": 14590,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/9911871f1c638ea0371e3ccdadaf7b1316ddc507"
+    },
+    {
+      "path": "tests/xArticleUploadTaskCoordinator.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4ef689104a4f119fb8d1ed07c6e29258c8042875",
+      "size": 4728,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/4ef689104a4f119fb8d1ed07c6e29258c8042875"
+    },
+    {
+      "path": "tests/xArticleUploader.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5a597f19de794f450d3a28de56026466716664a8",
+      "size": 131862,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/5a597f19de794f450d3a28de56026466716664a8"
+    },
+    {
+      "path": "tests/xCookieMutationCoordinator.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c0b1b7dd3e73adaa927f83612cba6fc825e87d84",
+      "size": 1780,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/c0b1b7dd3e73adaa927f83612cba6fc825e87d84"
+    },
+    {
+      "path": "tests/xCookieStore.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c21a427c2bea61a2b8b5405ec1b2bf8a47bd5713",
+      "size": 5753,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/c21a427c2bea61a2b8b5405ec1b2bf8a47bd5713"
+    },
+    {
+      "path": "tests/xPublishingSettings.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "634d5943c5c05f48dec27b86dff6d4eb32322225",
+      "size": 2430,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/634d5943c5c05f48dec27b86dff6d4eb32322225"
+    },
+    {
+      "path": "tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e872ffceb091b4dbb1e3b67db67fce0130d6bccd",
+      "size": 453,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/e872ffceb091b4dbb1e3b67db67fce0130d6bccd"
+    },
+    {
+      "path": "versions.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c296c70445d7ee71ed1103ed3363fd604633cedb",
+      "size": 24,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/c296c70445d7ee71ed1103ed3363fd604633cedb"
+    },
+    {
+      "path": "vitest.config.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2afc5ced117f0dddf113b782d49a5fd89f8f22a6",
+      "size": 177,
+      "url": "https://api.github.com/repos/mcncarl/ailu/git/blobs/2afc5ced117f0dddf113b782d49a5fd89f8f22a6"
+    }
+  ],
+  "truncated": false
+}

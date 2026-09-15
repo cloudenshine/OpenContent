@@ -1,0 +1,298 @@
+{
+  "at": "2026-09-08T09:15:07.808874+00:00",
+  "projects": [
+    {
+      "id": "2c63e2129aea492f9545574e2e6a844f",
+      "title": "真实 Agent · 从材料到编辑判断",
+      "state": "REVIEWING",
+      "effective_state": "REVIEWING",
+      "counts": {
+        "Material": 1,
+        "Knowledge": 1,
+        "Idea": 1,
+        "Claim": 5,
+        "Evidence": 5,
+        "Review": 1,
+        "Publication": 0
+      },
+      "history": [
+        {
+          "from": "CAPTURED",
+          "to": "DISTILLED",
+          "at": "2026-09-08T08:50:47.563583+00:00",
+          "basis": "22d1067008004cc2a8747cc8db9bd843"
+        },
+        {
+          "from": "DISTILLED",
+          "to": "IDEA",
+          "at": "2026-09-08T08:50:47.566585+00:00",
+          "basis": "22d1067008004cc2a8747cc8db9bd843"
+        },
+        {
+          "from": "IDEA",
+          "to": "RESEARCHING",
+          "at": "2026-09-08T08:50:47.568585+00:00",
+          "basis": "22d1067008004cc2a8747cc8db9bd843"
+        },
+        {
+          "from": "RESEARCHING",
+          "to": "ARGUMENT_READY",
+          "at": "2026-09-08T08:51:52.632510+00:00",
+          "basis": "aeed940aacf34eec9bcda8c05f21716c"
+        },
+        {
+          "from": "ARGUMENT_READY",
+          "to": "DRAFTING",
+          "at": "2026-09-08T08:51:52.640513+00:00",
+          "basis": "aeed940aacf34eec9bcda8c05f21716c"
+        },
+        {
+          "from": "DRAFTING",
+          "to": "REVIEWING",
+          "at": "2026-09-08T08:53:17.967960+00:00",
+          "basis": "f5ac05aeeabc4375902d2021838d1c62"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "9db0eba7dddc4a07a46d5df7ffdf45d8",
+          "title": "让知识与内容有据可查",
+          "gate": "PASS",
+          "issues": [],
+          "approved": false,
+          "context_hash": "23de6005e8ea83083a1d4716c62d914351c83888b504a48010ec367ddec74a20",
+          "axes": {
+            "Evidence": {
+              "status": "PASS",
+              "reason": "五项正文主张均有已登记 Claim 和对应 Evidence，引文与 Material 原文一致；各 Claim 经 Knowledge 回溯同一材料，保留来源 vault:验收材料.md。具体记录方法明确属于新增建议。"
+            },
+            "Logic": {
+              "status": "PASS",
+              "reason": "从保留来源、核查依据推进到版本变化后复核，论证连贯；明确可追溯性不能保证语义正确或来源可靠，未将必要支持误作质量保证。"
+            },
+            "Originality": {
+              "status": "PASS",
+              "reason": "将备忘录原则转化为记录来源路径、摘录和支持理由的操作建议，并以“本文进一步建议”标明新增判断；未冒称原创研究或已完成查重。"
+            },
+            "Voice": {
+              "status": "PASS",
+              "reason": "语言克制清楚，开篇限定为本地设计建议，未宣称外部实证结论；正文篇幅符合约三百字目标。"
+            },
+            "Utility": {
+              "status": "PASS",
+              "reason": "读者可据此记录重要主张的依据，并在正文、资料或政策变化后复核；同时明确证据不足应暂缓批准及用户最终决定的边界。"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "a88e6acd2ed44bbd9b3ffa2cf7150858",
+      "title": "软件门禁验收样本（合成内容与审查）",
+      "state": "APPROVED",
+      "effective_state": "APPROVED",
+      "counts": {
+        "Material": 1,
+        "Knowledge": 1,
+        "Idea": 1,
+        "Claim": 1,
+        "Evidence": 1,
+        "Review": 3,
+        "Publication": 0
+      },
+      "history": [
+        {
+          "from": "CAPTURED",
+          "to": "DISTILLED",
+          "at": "2026-09-08T08:55:10.783682+00:00",
+          "basis": "software-ui-fixture-distill"
+        },
+        {
+          "from": "DISTILLED",
+          "to": "IDEA",
+          "at": "2026-09-08T08:55:10.783682+00:00",
+          "basis": "software-ui-fixture-distill"
+        },
+        {
+          "from": "IDEA",
+          "to": "RESEARCHING",
+          "at": "2026-09-08T08:55:10.784682+00:00",
+          "basis": "software-ui-fixture-distill"
+        },
+        {
+          "from": "RESEARCHING",
+          "to": "ARGUMENT_READY",
+          "at": "2026-09-08T08:55:10.948545+00:00",
+          "basis": "software-ui-fixture-research"
+        },
+        {
+          "from": "ARGUMENT_READY",
+          "to": "DRAFTING",
+          "at": "2026-09-08T08:55:10.949546+00:00",
+          "basis": "software-ui-fixture-research"
+        },
+        {
+          "from": "DRAFTING",
+          "to": "REVIEWING",
+          "at": "2026-09-08T08:55:11.269053+00:00",
+          "basis": "software-ui-fixture-critique"
+        },
+        {
+          "from": "REVIEWING",
+          "to": "REVIEWING",
+          "at": "2026-09-08T08:55:43.727752+00:00",
+          "basis": "936adc0fbceb41eb9e158214ff098c75"
+        },
+        {
+          "from": "REVIEWING",
+          "to": "APPROVED",
+          "at": "2026-09-08T08:56:11.992410+00:00",
+          "basis": "d5381c4e0d854f1abf00fa688652ee4a"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "82c7bb494c1548e6950bd8751a034b7c",
+          "title": "合成验收草稿",
+          "gate": "PASS",
+          "issues": [],
+          "approved": true,
+          "context_hash": "8e7febb1cb7677d588739e18e4d44ee89a42ea3e9a12b1a548c45f77f25c2545",
+          "axes": {
+            "Evidence": {
+              "status": "PASS",
+              "reason": "合成测试评审：只验证此维度状态与版本门禁，不代表真实质量。"
+            },
+            "Logic": {
+              "status": "PASS",
+              "reason": "合成测试评审：只验证此维度状态与版本门禁，不代表真实质量。"
+            },
+            "Originality": {
+              "status": "PASS",
+              "reason": "合成测试评审：只验证此维度状态与版本门禁，不代表真实质量。"
+            },
+            "Voice": {
+              "status": "PASS",
+              "reason": "合成测试评审：只验证此维度状态与版本门禁，不代表真实质量。"
+            },
+            "Utility": {
+              "status": "PASS",
+              "reason": "合成测试评审：只验证此维度状态与版本门禁，不代表真实质量。"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "jobs": [
+    {
+      "id": "5ff162b60c894266aa9f58cc5a05473c",
+      "project": "2c63e2129aea492f9545574e2e6a844f",
+      "status": "SUCCEEDED",
+      "detail": {
+        "provider": "codex",
+        "stage": null,
+        "attempts": [
+          {
+            "id": "22d1067008004cc2a8747cc8db9bd843",
+            "stage": "distill",
+            "started": "2026-09-08T08:50:03.205464+00:00",
+            "status": "COMMITTED",
+            "completed": "2026-09-08T08:50:47.649786+00:00",
+            "objects": [
+              "e6f134f1280343d99b392dc0cecd3c00",
+              "e65ac4d675c84c73a7953c7d719a299d",
+              "2c63e2129aea492f9545574e2e6a844f"
+            ]
+          },
+          {
+            "id": "aeed940aacf34eec9bcda8c05f21716c",
+            "stage": "research",
+            "started": "2026-09-08T08:50:47.751631+00:00",
+            "status": "COMMITTED",
+            "completed": "2026-09-08T08:51:52.933925+00:00",
+            "objects": [
+              "eb255c110e1d4764b1618449cb22b659",
+              "2e8942328c5e410f8cd0800386fdfd92",
+              "a317fd20abba470a97de93d46e4ea8c6",
+              "1d63f0f720704720bad23bebf9095f52",
+              "e1de92d7a03d42a8951a19763025abe6",
+              "664b38b4d1554bdaa55ecd4542a4726f",
+              "55ec1f0cfaa24ef3ad7ccfc5f73f6d29",
+              "212f72c379d245d4bc0ff675f6d9043b",
+              "1f4eeb07c6ce48258eb4c2563ccb044e",
+              "59e1bf9447eb4168bf36606af48e1cc0",
+              "2c63e2129aea492f9545574e2e6a844f"
+            ]
+          },
+          {
+            "id": "b9c10aa07dc14f08ab578091d9785218",
+            "stage": "draft",
+            "started": "2026-09-08T08:51:53.169197+00:00",
+            "status": "COMMITTED",
+            "completed": "2026-09-08T08:52:34.759511+00:00",
+            "objects": [
+              "9db0eba7dddc4a07a46d5df7ffdf45d8",
+              "2c63e2129aea492f9545574e2e6a844f"
+            ]
+          },
+          {
+            "id": "f5ac05aeeabc4375902d2021838d1c62",
+            "stage": "critique",
+            "started": "2026-09-08T08:52:35.026444+00:00",
+            "status": "COMMITTED",
+            "completed": "2026-09-08T08:53:18.172721+00:00",
+            "objects": [
+              "77f977b62e004a3ca3454ecc4bddb712",
+              "9db0eba7dddc4a07a46d5df7ffdf45d8",
+              "2c63e2129aea492f9545574e2e6a844f"
+            ]
+          }
+        ],
+        "resumed_from": null,
+        "outcome": "NEEDS_JUDGMENT"
+      },
+      "created": "2026-09-08T08:50:03.113602+00:00",
+      "updated": "2026-09-08T08:53:18.237310+00:00"
+    }
+  ],
+  "diagnostics": [],
+  "run_files": {
+    ".opencontent\\runs\\22d1067008004cc2a8747cc8db9bd843\\request.json": "5619183cc8c7781d8137ec763bdd51bee547505d02beb1a810d62cd4353bfbe1",
+    ".opencontent\\runs\\22d1067008004cc2a8747cc8db9bd843\\response.json": "45308ca8478fade59512c846be8cfd344e23029b9e98bc7573865a4a40cc2eb8",
+    ".opencontent\\runs\\aeed940aacf34eec9bcda8c05f21716c\\request.json": "bd43ff69ed54f699ec7fef2fe0325d254dccc6229131445c6ba6c1da1b438b0e",
+    ".opencontent\\runs\\aeed940aacf34eec9bcda8c05f21716c\\response.json": "d41ff5140d039f0808e4010203cb9c87c27d1ee8916e61f2f9249d71d7d48627",
+    ".opencontent\\runs\\b9c10aa07dc14f08ab578091d9785218\\request.json": "82f2f6c806fbf4390df85794c266fef4e5a5c156974f161db35e4900e21b077f",
+    ".opencontent\\runs\\b9c10aa07dc14f08ab578091d9785218\\response.json": "5187e6d1db1445209360512273130e4bb3714ab85a4abd825f811e8b544e255a",
+    ".opencontent\\runs\\f5ac05aeeabc4375902d2021838d1c62\\request.json": "b45d10b2a2d71ad6a2f7bdc308260581b1812f9289e41876bdd072f832b160db",
+    ".opencontent\\runs\\f5ac05aeeabc4375902d2021838d1c62\\response.json": "1b3bdab2e9b7d6aafb030925aab6071efc9da77b20cef6547089257838ea3e30"
+  },
+  "markdown_files": {
+    "OpenContent\\Artifact\\82c7bb494c1548e6950bd8751a034b7c.md": "ee73e735164b06a036fbdee3953c280f4a2b09f1cef37a36508183a3a2761624",
+    "OpenContent\\Artifact\\9db0eba7dddc4a07a46d5df7ffdf45d8.md": "88ffe6ded5de6597d1bb76ffc807ce20e879dae5a5573fa74ac8a595c394a4c8",
+    "OpenContent\\Claim\\1d63f0f720704720bad23bebf9095f52.md": "08ee310d49643fa1a69a800a5a33f3acc67426e8360b7c4b8081b4b77152f593",
+    "OpenContent\\Claim\\2e8942328c5e410f8cd0800386fdfd92.md": "dac441a92e6681aa5b65713a597e7eb851d2cd24b2e2203fbff552f81216143e",
+    "OpenContent\\Claim\\393c08e853a14af9a6617e66e2d0fdf8.md": "677a462d3f9d6d2a4404bb6fc52bd8c7a69fe7e9ecf8dc76cfaf380867c6e2af",
+    "OpenContent\\Claim\\a317fd20abba470a97de93d46e4ea8c6.md": "a630c24f6a0f70548cae0fb2cb9018d168c8e1555a807a85d256009cc32c9215",
+    "OpenContent\\Claim\\e1de92d7a03d42a8951a19763025abe6.md": "368c9c5c87deee66e74d3a27d39dd72e98383a89f3ed2c46b95ae73f95c33482",
+    "OpenContent\\Claim\\eb255c110e1d4764b1618449cb22b659.md": "42a1f6786bf5030aade76c6fd18bfe2ece6acc24c45c81a62a5fdb5eff942757",
+    "OpenContent\\Evidence\\1f4eeb07c6ce48258eb4c2563ccb044e.md": "f3709f3ccab07b7f600ea526536960d8e7faf34d7ebce2e0288e69fbf1765915",
+    "OpenContent\\Evidence\\212f72c379d245d4bc0ff675f6d9043b.md": "264a209334bc30e7717f38999b568c393d24d68c5e43c905aaa4e1475d5dbcdb",
+    "OpenContent\\Evidence\\55ec1f0cfaa24ef3ad7ccfc5f73f6d29.md": "3060d76452c9e98f6325a15c734f429f0a8105ba79415338094cfeafef4c25ac",
+    "OpenContent\\Evidence\\59e1bf9447eb4168bf36606af48e1cc0.md": "e2bebe6df702425176fce99ec6176f906132911822b39fc0ae4fdbf8ebae839d",
+    "OpenContent\\Evidence\\664b38b4d1554bdaa55ecd4542a4726f.md": "b9824023acdfa408e075601f4727994037b24ac84bf58831c6e5560a8bbd5dcb",
+    "OpenContent\\Evidence\\a818b13c2a464c0a9c0fe2dcecf82a34.md": "aa3802f7c42c7da5c447dbe6fee24ceacc066e3fd46a3c2d01dd283c1ba5104d",
+    "OpenContent\\Idea\\e65ac4d675c84c73a7953c7d719a299d.md": "8fc44895fb989a2c951cc4b2892daf6a44c09b47c56356a19153aa87d442b52f",
+    "OpenContent\\Idea\\fe80387d59a645b7b63d8db6192b2b1a.md": "d97e14c69d7aef3d6030c535668aa1ac2961819ef27cb86b9a07979dd1a9c4c9",
+    "OpenContent\\Knowledge\\653109d3f87040b986070d9964bd4bdb.md": "941d3e7b5ac730d8256621370faa5adf1829cedbce6ef732f02c0d637da8fe09",
+    "OpenContent\\Knowledge\\e6f134f1280343d99b392dc0cecd3c00.md": "b4ec4ec6f0eefeb5a6a0d392261815852016ccf7799ed9fb2d1e90f80cc49c6a",
+    "OpenContent\\Material\\9a34c8363ec64487828e105c6b9bc5f6.md": "261c1df35c34a0f1c36777d0a767ae847780499f2f7becb07f9695b38581f3ae",
+    "OpenContent\\Material\\ca2fa860793e47d7a935b680c0b5f6a7.md": "53cd6a136e1f6bb9a1b9912adcad317119685dbf5700874afa588f483ff2e564",
+    "OpenContent\\Project\\2c63e2129aea492f9545574e2e6a844f.md": "9d4eb9eeb345960929dd66b53576b5359f85613908be9efe32ca86702aeef25c",
+    "OpenContent\\Project\\a88e6acd2ed44bbd9b3ffa2cf7150858.md": "181049045dd7e4b53cbbb25be2e8ab319afac376aaacec38bf4e74d41bf668c6",
+    "OpenContent\\Review\\77f977b62e004a3ca3454ecc4bddb712.md": "928b1b68f1b4df7a7a50a6536f9bb49fe9c615541ff52974e08abb11cbb55753",
+    "OpenContent\\Review\\936adc0fbceb41eb9e158214ff098c75.md": "5d287a56101a945cd62b9d032a0a07fb8683f6c9b0e64bec9af65a6ca7fd37e1",
+    "OpenContent\\Review\\d5381c4e0d854f1abf00fa688652ee4a.md": "1b203c3b9b7c9ccf4545d6fdf117fe2f63e508230b31680e1384a46d3d81b9be",
+    "OpenContent\\Review\\f7bf8797c98447ebbfcb6c4247754b24.md": "432218f8307096f1c7f11fbb33c14afe269d2594a16b4d758bfa39351c9d206f"
+  }
+}

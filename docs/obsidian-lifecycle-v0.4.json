@@ -1,0 +1,59 @@
+{
+  "at": "2026-09-08T13:19:44.154Z",
+  "plugin": "0.4.0",
+  "scope": "Real Obsidian UI and real local HTTP/Markdown; injected WeChat protocol fixture, NO real publication",
+  "checks": [
+    {
+      "name": "new_navigation_visible",
+      "pass": true
+    },
+    {
+      "name": "source_library_reads_captured_note",
+      "pass": true
+    },
+    {
+      "name": "project_plan_saved",
+      "pass": true
+    },
+    {
+      "name": "preview_is_sandboxed",
+      "pass": true
+    },
+    {
+      "name": "preview_shows_account_and_digest",
+      "pass": true
+    },
+    {
+      "name": "unchecked_confirmation_does_not_send",
+      "pass": true
+    },
+    {
+      "name": "draft_round_trip_confirmed",
+      "pass": true
+    },
+    {
+      "name": "publish_requires_separate_confirmation",
+      "pass": true
+    },
+    {
+      "name": "verified_receipt_visible",
+      "pass": true
+    },
+    {
+      "name": "human_lesson_decision_visible",
+      "pass": true
+    },
+    {
+      "name": "feedback_seeds_next_project",
+      "pass": true
+    },
+    {
+      "name": "manual_fallback_clearly_distinct_from_api_verification",
+      "pass": true
+    }
+  ],
+  "project": "da3067b7155a4584b8d033134a2c605a",
+  "publication": "4f7a056a83ab45f895fff615debe76fc",
+  "next_project": "998088616b1542549c6d1e49efb19837",
+  "manual_check_at": "2026-09-08T13:24:48.870Z"
+}

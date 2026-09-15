@@ -1,0 +1,60 @@
+{
+  "at": "2026-09-08T16:47:38.056837+00:00",
+  "version": "0.6.0",
+  "corpus": "Four authored development acceptance memos; not the user Vault and not empirical research.",
+  "provider": "Installed native Codex CLI with existing defaults; no explicit model or reasoning override.",
+  "live_run": {
+    "id": "4d991d1ab1564122b2b60271103a8c8f",
+    "created": "2026-09-08T16:35:36.575836+00:00",
+    "status": "SUCCEEDED",
+    "stages": [
+      "classify",
+      "synthesize"
+    ],
+    "sources": 4,
+    "themes": 4,
+    "accepted": 4,
+    "excluded": 1
+  },
+  "post_run_checks": {
+    "current_schema_validation": "PASS",
+    "create_project_with_two_materials": "PASS",
+    "editorial_brief_persisted_after_reopen": "PASS",
+    "readable_report_saved": "PASS"
+  },
+  "example": {
+    "title": "一条笔记何时才有资格进入草稿？建立“会解释、可核查”的双闸门",
+    "question": "个人知识库中的材料满足什么条件，才能从收藏升级为可用于写作的论据？",
+    "collision": "s1指出解释能力与事实可靠性是两个不能互相替代的验证维度；s2则提供了让事实核查可执行的追溯机制。两者结合后，知识库不再按“是否收藏”管理材料，而可按“是否理解”和“是否有证据”分别标记写作就绪状态。",
+    "outline": [
+      "说明收藏、理解和可信是三个不同状态，以及未经验证的笔记为何会把问题推迟到写作阶段",
+      "设计解释闸门：复述因果链、回应具体反例、显式记录尚未理解的环节",
+      "设计证据闸门：定位原文、标记直接支持或推测、记录需要复核的依赖",
+      "提出可验证实践：比较采用双闸门前后，草稿返工次数、无法定位依据的主张比例和核查耗时"
+    ],
+    "gaps": [
+      "尚需验证双闸门能否减少返工，而非仅增加整理负担",
+      "需要定义可重复执行的“能够解释”和“证据可核查”判定标准"
+    ],
+    "novelty": {
+      "status": "extension",
+      "nearest_project": "b35bb9ba5a1d4663add5ab588b4d7a82",
+      "difference": "已有项目回答如何保存重要主张的原文与出处；本题新增材料进入草稿前的资格判断，并把理解检验与证据检验设为两个独立闸门。"
+    }
+  },
+  "source_titles": [
+    "解释与检验",
+    "证据追溯"
+  ],
+  "excluded": [
+    {
+      "title": "为什么重要主张不能只保存一个来源链接？",
+      "reason": "没有形成新的核心问题或读者价值；它仍是在解释如何给重要主张保存原文与出处，仅增加了“不能只存链接”的表述。"
+    }
+  ],
+  "limits": [
+    "Real model call preceded the readable-report and editorial-brief additions; those were validated against its saved output without repeating the model call.",
+    "Native Obsidian UI interaction not verified in this run.",
+    "Semantic novelty remains model judgment; source-count and quote checks do not prove originality."
+  ]
+}

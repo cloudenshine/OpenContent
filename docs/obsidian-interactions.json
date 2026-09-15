@@ -1,0 +1,26 @@
+{
+  "host": "Obsidian 1.13.7, isolated validation-vault",
+  "method": "Real plugin DOM controls via renderer debugging; real Markdown and Kernel state, not a simulated Obsidian host",
+  "real_project": "2c63e2129aea492f9545574e2e6a844f",
+  "real_project_created_through_ui": true,
+  "vault_material_selected_through_ui": true,
+  "real_codex_pipeline_started_through_ui": true,
+  "synthetic_artifact": "82c7bb494c1548e6950bd8751a034b7c",
+  "synthetic_reject_button_result": "REVIEWING / revision inbox",
+  "synthetic_accept_button_result": "APPROVED / gate approved true",
+  "decision_identity": "自动化软件验收（合成样本）",
+  "real_article_user_approved": false,
+  "external_edit_test": {
+    "at": "2026-09-08T09:01:13.360Z",
+    "editInvalidatedApproval": true,
+    "diffRendered": true,
+    "issues": ["Missing or stale Critic Review"],
+    "originalRestored": true
+  },
+  "native_uninstall_read_test": {
+    "at": "2026-09-08T08:59:02.196Z",
+    "pluginLoaded": false,
+    "unchangedMarkdownFiles": 26,
+    "nativeMetadataTypes": ["Review", "Artifact", "Evidence", "Claim", "Idea", "Knowledge", "Material", "Project"]
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "at": "2026-09-09T10:02:28.345107+00:00",
+  "vault": "F:\\Obsidian_vault",
+  "host": "Obsidian 1.13.7",
+  "window_title": "README - Obsidian_vault - Obsidian 1.13.7",
+  "observed": {
+    "new_home_loaded": true,
+    "home_writing_publish_navigation_visible": true,
+    "current_note_context_visible": true,
+    "ideation_modal_opens": true,
+    "codex_available_in_picker": true
+  },
+  "provider_saved": "codex",
+  "files_still_match_deployment": true,
+  "file_checks": [
+    {
+      "file": "main.js",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "manifest.json",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "styles.css",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/__init__.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/__main__.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/credentials.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/discovery.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/domain.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/handoff.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/ideation.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/jobs.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/kernel.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/lifecycle.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/origins.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/processes.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/providers.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/publishing.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/publishing_adapters.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/server.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/vault.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/opencontent/workbench.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/templates/CONTENT.md",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/doctor.py",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/requirements.txt",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/LICENSE",
+      "matches_deployed_receipt": true
+    },
+    {
+      "file": "kernel-0.8.0/PRIVACY.md",
+      "matches_deployed_receipt": true
+    }
+  ],
+  "remaining": [
+    "资料准备完成状态与后续交互未验证：Windows 会话在检查期间锁屏",
+    "本轮没有发送生成请求或验证模型输出"
+  ],
+  "model_invoked": false,
+  "screen_locked": true
+}

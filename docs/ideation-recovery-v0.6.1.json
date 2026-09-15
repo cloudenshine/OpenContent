@@ -1,0 +1,18 @@
+{
+  "at": "2026-09-09T00:44:59.285663+00:00",
+  "original_failed_run": "c2f32cfa29ee4f21ab045e3dc531e3af",
+  "sources": 60,
+  "stages": [
+    "classify",
+    "synthesize"
+  ],
+  "status": "PASS",
+  "accepted": 6,
+  "excluded": 0,
+  "exact_source_quotes": true,
+  "limits": "Replay of the user-initiated failed snapshot, no project adoption or publishing; native host UI not verified.",
+  "themes": 11,
+  "compared_projects": 1,
+  "semantic_review": "Six candidates inspected. Platform/author-voice and AI-demo/production angles are clearer; historical or engineering analogies need boundary checks. Two history notes in one candidate may share an original source and are not independent corroboration.",
+  "host_ui": "NOT_VERIFIED"
+}

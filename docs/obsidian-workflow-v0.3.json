@@ -1,0 +1,88 @@
+{
+  "at": "2026-09-08T10:44:02.559Z",
+  "obsidian": "1.13.7",
+  "plugin": "0.3.0",
+  "project": "8e2ccb22f2d64892a5fde61a2e552551",
+  "source": "v0.3-原生捕获验收-1788864231557.md",
+  "checks": [
+    {
+      "name": "native_selection_only",
+      "pass": true
+    },
+    {
+      "name": "project_created_from_editor",
+      "pass": true
+    },
+    {
+      "name": "snapshot_preserves_selection_and_source",
+      "pass": true
+    },
+    {
+      "name": "source_note_unchanged",
+      "pass": true
+    },
+    {
+      "name": "duplicate_selection_is_not_readded",
+      "pass": true
+    },
+    {
+      "name": "preview_shows_selected_scope",
+      "pass": true
+    },
+    {
+      "name": "stale_preview_does_not_start_job",
+      "pass": true
+    },
+    {
+      "name": "board_has_continue_queue",
+      "pass": true
+    },
+    {
+      "name": "last_project_survives_reload",
+      "pass": true
+    },
+    {
+      "name": "fixture_is_explicitly_synthetic_and_approved",
+      "pass": true
+    },
+    {
+      "name": "handoff_discloses_local_only",
+      "pass": true
+    },
+    {
+      "name": "approved_file_opened_in_native_editor",
+      "pass": true
+    },
+    {
+      "name": "handoff_does_not_publish",
+      "pass": true
+    },
+    {
+      "name": "real_article_still_requires_human",
+      "pass": true
+    },
+    {
+      "name": "unapproved_article_has_no_handoff_button",
+      "pass": true
+    },
+    {
+      "name": "idle_view_makes_zero_board_requests",
+      "pass": true
+    },
+    {
+      "name": "vault_edit_triggers_refresh",
+      "pass": true
+    }
+  ],
+  "completed_at": "2026-09-08T10:46:14.755Z",
+  "handoff": "OpenContent-Exports/82c7bb494c1548e6950bd8751a034b7c-8e7febb1cb7677d5.md",
+  "idle_window_ms": 6500,
+  "idle_board_requests": 0,
+  "renderer_visibility": "hidden",
+  "idle_window_note": "Requested timer duration; hidden Electron renderer may throttle timers. This is not a foreground performance benchmark.",
+  "installed_plugin_hashes": {
+    "main.js": "9735aa756befdcf541167ea0905db16291d3ca5040fcffef5c86bba06dca292f",
+    "manifest.json": "81818a5c4bcc6e5ece987b995d9f86000b1bc8c4a89bc99e93fe6d60358647b7",
+    "styles.css": "f3fa6ee388a68d1675d0a3aa3fe058d5917f2899546481388c46ce7deb89cc39"
+  }
+}
