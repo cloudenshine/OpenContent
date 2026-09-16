@@ -1,0 +1,22 @@
+{
+  "name": "opencontent",
+  "version": "0.8.0",
+  "description": "A project-centered editorial control plane: provenance, production gates, and human judgment.",
+  "main": "plugin/main.js",
+  "scripts": {
+    "build": "node scripts/bundle_plugin.js",
+    "test": "node --test tests/sidebar.test.cjs tests/ideation-ui.test.cjs tests/doctor-ui.test.cjs tests/writing-ui.test.cjs tests/adversarial-review.test.cjs plugin/engine/domain.test.cjs plugin/engine/pipeline.test.cjs plugin/engine/typography.test.cjs"
+  },
+  "keywords": [
+    "obsidian",
+    "obsidian-plugin",
+    "editorial",
+    "writing",
+    "citations",
+    "fact-checking",
+    "claims",
+    "evidence"
+  ],
+  "author": "cloudenshine",
+  "license": "MIT"
+}
