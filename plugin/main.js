@@ -498,7 +498,9 @@ class Cockpit extends ItemView {
     },'mod-cta');
     sync=()=>{start.disabled=!input.value.trim();start.textContent=check?.checked?'开始写作':'一起构思';scope.textContent=check?.checked?'只使用这篇笔记和你的要求，交给本地写作助手起草。':'先聊清楚想法，需要资料时再添加。';};sync();
     const actions=el(root,'div',undefined,'oc-actions');
-    button(actions,'帮我找选题',()=>this.discoverIdeas());button(actions,'自己选择材料',()=>this.newProject({goal:input.value}));
+    button(actions,'帮我找选题',()=>this.discoverIdeas());
+    button(actions,'自己选择材料',()=>this.newProject({goal:input.value}));
+    button(actions,'🎭 叙事与小说创作',()=>this.newNarrativeProject({goal:input.value}));
     if(data.projects.length)el(root,'h2','最近的文章');
     const priority=p=>data.inbox.some(i=>i.project===p.oc_id)?0:p.oc_id===this.plugin.settings.lastProject?1:p.effective_state==='APPROVED'?3:2;
     for(const p of [...data.projects].sort((a,b)=>priority(a)-priority(b))){
@@ -678,8 +680,26 @@ class Cockpit extends ItemView {
     }
 
     if(p.artifacts.length){
+      if(p.artifacts.length > 1) {
+        const artBar = el(root, 'div', undefined, 'oc-artifact-bar');
+        el(artBar, 'span', '📖 章节 / 稿件切换：', 'oc-muted');
+        const artSelect = el(artBar, 'select');
+        artSelect.setAttribute('aria-label', '选择章节稿件');
+        for(const a of p.artifacts) {
+          const opt = el(artSelect, 'option', a.title);
+          opt.value = a.oc_id;
+          opt.selected = a.oc_id === this.artifact;
+        }
+        artSelect.addEventListener('change', async () => {
+          this.artifact = artSelect.value;
+          await this.render();
+        });
+      }
       const draft=p.artifacts.find(a=>a.oc_id===this.artifact)||p.artifacts[0];this.artifact=draft.oc_id;
-      const preview=el(root,'section',undefined,'oc-draft');el(preview,'h3','当前稿件');
+      const preview=el(root,'section',undefined,'oc-draft');
+      const previewHeader = el(preview, 'div', undefined, 'oc-preview-header');
+      el(previewHeader,'h3', draft.title || '当前稿件');
+      if (p.artifacts.length > 1) el(previewHeader, 'small', `第 ${p.artifacts.indexOf(draft) + 1} / ${p.artifacts.length} 篇`, 'oc-muted');
       const prose=el(preview,'div',undefined,'oc-prose');
       const body=draft.body||detail.objects.find(o=>o.oc_id===draft.oc_id)?.body||'';
       const claims=new Set(draft.derived_from||[]);
@@ -688,6 +708,9 @@ class Cockpit extends ItemView {
       const pending=data.inbox.find(i=>i.artifact===draft.oc_id);
       button(preview,draft.gate?.approved?'查看定稿':pending?.gate.status==='PASS'?'检查并定稿':'查看需要修改的地方',async()=>{this.tab='inspector';await this.render();});
     }
+
+    // 🎭 创意能力包 · 叙事创作控制台 (Narrative Capability Pack)
+    this.renderCapabilityPanel(root, data, p, detail);
     await this.conversation(root,data,p);
     const management=el(root,'details',undefined,'oc-project-details');el(management,'summary','文章设置与资料详情');
     el(management,'h3','写作目标');el(management,'p',p.goal);el(management,'h3','核心观点');el(management,'p',p.thesis||'写作过程中逐步形成');
@@ -719,6 +742,177 @@ class Cockpit extends ItemView {
       }
     }
   }
+  renderCapabilityPanel(root, data, p, detail) {
+    const capPanel = el(root, 'section', undefined, 'oc-capability-panel');
+    const capHeader = el(capPanel, 'div', undefined, 'oc-capability-header');
+    el(capHeader, 'div', '🎭 创意能力包 · 叙事创作 (Narrative Pack)', 'oc-capability-title');
+    
+    // Profile selector bar
+    const profBar = el(capPanel, 'div', undefined, 'oc-profile-bar');
+    el(profBar, 'span', '创作类型 (Profile)：', 'oc-muted');
+    const profSelect = el(profBar, 'select');
+    profSelect.setAttribute('aria-label', '创作类型 Profile');
+    const profiles = [
+      { id: 'general-fiction', name: '通用虚构 (General Fiction)' },
+      { id: 'serial-fiction', name: '连载小说 (Serial Fiction)' },
+      { id: 'narrative-nonfiction', name: '非虚构叙事 (Narrative Nonfiction)' }
+    ];
+    this.currentProfile = this.currentProfile || p.profile || 'general-fiction';
+    for (const pr of profiles) {
+      const opt = el(profSelect, 'option', pr.name);
+      opt.value = pr.id;
+      opt.selected = pr.id === this.currentProfile;
+    }
+    profSelect.addEventListener('change', () => {
+      this.currentProfile = profSelect.value;
+    });
+
+    // 5 Tasks
+    const taskGrid = el(capPanel, 'div', undefined, 'oc-task-grid');
+    const tasks = [
+      { id: 'plan', label: '📝 大纲构思', desc: '构建三幕式/章节大纲、人物动机与核心冲突' },
+      { id: 'write', label: '✍️ 正文起草', desc: '根据大纲与场景目标起草完整正文' },
+      { id: 'continue', label: '⏩ 续写新章', desc: '继承前章状态与伏笔，创作后续章节' },
+      { id: 'revise', label: '🔍 定向改稿', desc: '手术式修改局部缺陷，保留其余正文' },
+      { id: 'critique', label: '🛡️ 独立审读', desc: '独立审计人物可信度、节奏与世界规则' },
+    ];
+    for (const t of tasks) {
+      const tb = button(taskGrid, t.label, () => {
+        this.capabilityTaskModal(p, detail, t);
+      }, 'oc-task-btn');
+      tb.title = t.desc;
+    }
+  }
+  capabilityTaskModal(p, detail, taskInfo) {
+    new FormModal(this.plugin, `任务执行 · ${taskInfo.label}`, (root, modal) => {
+      el(root, 'p', taskInfo.desc, 'oc-muted');
+      const profile = this.currentProfile || 'general-fiction';
+      el(root, 'p', `当前 Profile：${profile}`, 'oc-context-chip');
+      
+      const instruction = field(root, '给本次任务的具体指令', '', true);
+      instruction.placeholder = taskInfo.id === 'plan' ? '例如：设计前三章的冲突大纲，确立主角的核心缺陷' :
+        taskInfo.id === 'continue' ? '例如：从上一章迫降结束处接续写下一章，主角走出舱门发现异常遗迹' :
+        taskInfo.id === 'revise' ? '例如：修改老水手的对话，让他语气更加警惕苍老，不要修改其他段落' :
+        taskInfo.id === 'critique' ? '例如：独立审读这一章的人物动机与剧情节奏' : '例如：撰写第一章紧急迫降场景';
+
+      // Context Preview disclosure
+      const ctxDetails = el(root, 'details', undefined, 'oc-context-preview-details');
+      el(ctxDetails, 'summary', '🔍 查看装配上下文 (Context Preview)');
+      el(ctxDetails, 'p', '装配器只调取与当前任务相关的核心信息，按 P0(核心) / P1(高相关) 优先级预算组织，杜绝全库盲目倾倒。', 'oc-muted');
+      const ctxBox = el(ctxDetails, 'div', undefined, 'oc-context-box');
+      
+      const targetDraft = p.artifacts.find(a => a.oc_id === this.artifact) || p.artifacts[0];
+      const p0Div = el(ctxBox, 'div', undefined, 'oc-p-item');
+      el(p0Div, 'strong', 'P0 核心约束：');
+      el(p0Div, 'div', `目标：${p.goal || '未设定'} | 读者：${p.audience || '大众'}`);
+      if (targetDraft) el(p0Div, 'div', `当前锚点草稿：${targetDraft.title}`);
+
+      const materials = detail.objects.filter(o => o.type === 'Material');
+      const p1Div = el(ctxBox, 'div', undefined, 'oc-p-item');
+      el(p1Div, 'strong', 'P1 关联素材依据：');
+      el(p1Div, 'div', materials.length ? materials.map(m => m.title).join('、') : '无（基于创作大纲）');
+
+      const resultBox = el(root, 'div', undefined, 'oc-candidate-result-box');
+
+      const runBtn = button(root, `启动 ${taskInfo.label}`, async () => {
+        const text = instruction.value.trim();
+        if (!text && taskInfo.id !== 'critique') throw new Error('请填写本次创作任务的具体指令。');
+        runBtn.disabled = true;
+        runBtn.textContent = '正在执行任务…';
+        resultBox.replaceChildren();
+        el(resultBox, 'p', '⏳ 正在隔离工作区中运行任务，请稍候…', 'oc-muted');
+        try {
+          const res = await this.plugin.api('/capabilities/execute', {
+            schema: 'opencontent.creative-task.v1',
+            project: p.oc_id,
+            pack: 'narrative',
+            profile: profile,
+            task: taskInfo.id,
+            instruction: text || '执行常规审读',
+            artifact: targetDraft?.oc_id || undefined
+          });
+          resultBox.replaceChildren();
+          el(resultBox, 'h4', '✅ 任务执行完成');
+          if (res.candidate) {
+            el(resultBox, 'h5', `候选产物：${res.candidate.title || '新草稿'}`);
+            const previewProse = el(resultBox, 'div', undefined, 'oc-prose');
+            el(previewProse, 'p', res.candidate.body);
+            
+            button(resultBox, '采纳为此项目新章节/新稿件', async () => {
+              const newTitle = res.candidate.title || `第 ${p.artifacts.length + 1} 章`;
+              await this.plugin.api('/objects', {
+                project: p.oc_id,
+                type: 'Artifact',
+                title: newTitle,
+                body: res.candidate.body,
+                fields: { derived_from: targetDraft?.derived_from || [], author: 'narrative:writer' },
+                token: detail.token
+              });
+              modal.close();
+              new Notice(`已成功采纳并添加章节：「${newTitle}」！`);
+              await this.render();
+            }, 'mod-cta');
+          }
+          if (res.state_delta) {
+            const deltaBox = el(resultBox, 'details', undefined, 'oc-delta-box');
+            el(deltaBox, 'summary', '📊 查看状态增量 (State Delta)');
+            el(deltaBox, 'pre', JSON.stringify(res.state_delta, null, 2));
+          }
+          if (res.review) {
+            const revBox = el(resultBox, 'details', undefined, 'oc-delta-box');
+            el(revBox, 'summary', '🛡️ 审读问题反馈 (Review)');
+            el(revBox, 'pre', JSON.stringify(res.review, null, 2));
+          }
+        } catch(err) {
+          resultBox.replaceChildren();
+          el(resultBox, 'p', '任务失败: ' + err.message, 'oc-error');
+        } finally {
+          runBtn.disabled = false;
+          runBtn.textContent = `启动 ${taskInfo.label}`;
+        }
+      }, 'mod-cta');
+    }).open();
+  }
+  newNarrativeProject(seed={}) {
+    new FormModal(this.plugin, '创建叙事/小说项目 (Narrative Project)', (root, modal) => {
+      const title = field(root, '故事或小说名称', seed.title || '');
+      const goal = field(root, '核心前提 / 戏剧性冲突', seed.goal || '', true);
+      goal.placeholder = '例如：一艘迷航科研飞船的幸存工程师在遗迹星球寻找归途';
+      
+      const audience = field(root, '目标读者群体', seed.audience || '科幻/叙事小说读者');
+      
+      const profWrap = el(root, 'label', undefined, 'oc-field');
+      el(profWrap, 'span', '创作类型 (Profile)');
+      const profSelect = el(profWrap, 'select');
+      for (const [pId, pName] of [
+        ['general-fiction', '通用虚构 (General Fiction) · 人物与冲突驱动'],
+        ['serial-fiction', '连载小说 (Serial Fiction) · 章节钩子与期望管理'],
+        ['narrative-nonfiction', '非虚构叙事 (Narrative Nonfiction) · 真实史料与严谨证据']
+      ]) {
+        const o = el(profSelect, 'option', pName);
+        o.value = pId;
+      }
+
+      button(root, '创建叙事项目', async () => {
+        const t = title.value.trim() || goal.value.trim().slice(0, 40) || '未命名小说项目';
+        const g = goal.value.trim() || '叙事创作';
+        const a = audience.value.trim() || '大众读者';
+        const proj = await this.plugin.api('/projects', {
+          title: t,
+          goal: g,
+          audience: a
+        });
+        this.selected = proj.oc_id;
+        this.artifact = null;
+        this.currentProfile = profSelect.value;
+        this.tab = 'project';
+        modal.close();
+        new Notice(`已创建叙事项目：「${t}」！`);
+        await this.render();
+      }, 'mod-cta');
+    }).open();
+  }
+
   async startProduction(p,detail,options={}){
     await this.plugin.api('/jobs',{...options,project:p.oc_id,token:detail.token});
     this.startError=null;this.plugin.jobsActive=true;await this.render();
