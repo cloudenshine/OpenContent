@@ -1,0 +1,18 @@
+id: critique
+name: Independent Narrative Critique
+description: Comprehensive structural, pacing, character credibility, and stylistic audit.
+
+steps:
+  - id: audit_character_motivation
+    description: Check whether character choices are organically earned or manipulated for plot convenience.
+  - id: evaluate_pacing_and_stakes
+    description: Inspect tension progression, scene momentum, and resolution of dramatic questions.
+  - id: check_dialogue_and_voice
+    description: Assess dialogue naturalness, subtext, avoid informational info-dumps and cliché expressions.
+  - id: verify_continuity_fidelity
+    description: Identify contradictions with established world rules, timeline, or open threads.
+  - id: generate_structured_critique
+    description: Classify findings into hard/major/minor issues with concrete locations and suggested actions.
+
+outputs:
+  - review: Structured evaluation detailing issues (severity, location, problem, evidence, suggestion) and strengths.

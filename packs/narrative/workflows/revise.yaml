@@ -1,0 +1,17 @@
+id: revise
+name: Targeted Narrative Revision
+description: Execute minimal necessary revision to address specific scene, pacing, or dialogue flaws without rewriting untouched prose.
+
+steps:
+  - id: locate_defect
+    description: Pinpoint exact location, character motivation gap, pacing drag, or dialogue weakness.
+  - id: plan_minimal_change
+    description: Formulate surgical replacement preserving surrounding paragraphs, style, and established facts.
+  - id: apply_modification
+    description: Integrate revision into candidate draft, ensuring seamless paragraph boundaries.
+  - id: verify_preservation
+    description: Confirm untouched sections, key dialogue, and facts remain intact.
+
+outputs:
+  - candidate: Revised prose incorporating targeted adjustments.
+  - proposal: Explicit summary of problems addressed, rationale, and minimal changes applied.

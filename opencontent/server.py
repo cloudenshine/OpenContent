@@ -132,6 +132,25 @@ class Handler(BaseHTTPRequestHandler):
                 return jobs.submit(body["project"], body.get("provider"), body.get("stage"), body.get("resume"), body.get("token"))
             if route == "/cancel":
                 return jobs.cancel(body["id"])
+            if route == "/capabilities":
+                from .capabilities import PackRegistry
+                reg = getattr(k, "_pack_registry", None)
+                if not reg:
+                    reg = PackRegistry()
+                    pack_roots = [Path(__file__).resolve().parent.parent / "packs", k.vault.safe("OpenContent-Packs")]
+                    reg.discover(pack_roots)
+                    k._pack_registry = reg
+                return {"capabilities": reg.list_capabilities()}
+            if route == "/capabilities/execute":
+                from .capabilities import PackRegistry, CapabilityRuntime
+                reg = getattr(k, "_pack_registry", None)
+                if not reg:
+                    reg = PackRegistry()
+                    pack_roots = [Path(__file__).resolve().parent.parent / "packs", k.vault.safe("OpenContent-Packs")]
+                    reg.discover(pack_roots)
+                    k._pack_registry = reg
+                rt = CapabilityRuntime(k, reg)
+                return rt.execute_task(body, body.get("provider"))
             if route == "/shutdown":
                 threading.Thread(target=self.server.shutdown, daemon=True).start()
                 return {"status": "stopping"}

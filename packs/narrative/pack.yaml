@@ -1,0 +1,43 @@
+schema: opencontent.capability-pack.v1
+
+id: narrative
+name: Narrative Creation
+version: 1.0.0
+
+description: >
+  Narrative planning, scene drafting, multi-chapter continuation,
+  targeted revision, and independent critique.
+
+profiles:
+  - general-fiction
+  - serial-fiction
+  - narrative-nonfiction
+
+tasks:
+  - plan
+  - write
+  - continue
+  - revise
+  - critique
+
+runtime:
+  tools: required
+  workspace_write: required
+  session: optional
+  web: optional
+
+workflows:
+  plan: workflows/plan.yaml
+  write: workflows/write.yaml
+  continue: workflows/continue.yaml
+  revise: workflows/revise.yaml
+  critique: workflows/critique.yaml
+
+context:
+  selector: context/selector.py
+
+outputs:
+  - artifact
+  - proposal
+  - state_delta
+  - review

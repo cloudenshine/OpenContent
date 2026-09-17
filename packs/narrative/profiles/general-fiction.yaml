@@ -1,0 +1,26 @@
+id: general-fiction
+name: General Fiction
+description: Character-driven fiction with causal plotting, scene depth, and distinct voice.
+
+tone: immersive narrative
+voice: third-person limited or first-person
+pacing: organic scene-to-sequel rhythm
+
+guidance: >
+  Focus on credible character motivation, causal continuity, and sensory scene staging.
+  Allow characters to make flawed, consequential decisions. Show emotion through physical action
+  and concrete details rather than direct exposition.
+
+invariants:
+  - Character motivations must drive plot turning points.
+  - Scene causality must hold without arbitrary external interventions.
+  - World physics and established rules must remain consistent.
+
+forbidden:
+  - Unmotivated dramatic reversals or unearned resolutions.
+  - Didactic authorial preachment or breaking fourth wall without explicit instruction.
+  - Generic cliché phrases and repetitive emotional summaries.
+
+creative_freedom:
+  - Scene atmosphere, dialogue phrasing, and sensory details.
+  - Metaphor, subtext, and pacing modulation.

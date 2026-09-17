@@ -1,0 +1,26 @@
+id: serial-fiction
+name: Serial Fiction
+description: Serialized narrative with chapter commitments, escalating stakes, and strong continuity.
+
+tone: dynamic, gripping serialized narrative
+voice: third-person limited
+pacing: active chapter arc with hook, escalation, climax, and lingering question
+
+guidance: >
+  Each chapter must fulfill its opening promise while advancing the overarching story arc.
+  Maintain explicit expectation management: track open plot threads, character knowledge states,
+  and physical inventory across chapters. Ensure chapter endings provide forward momentum.
+
+invariants:
+  - Exact continuity with previous chapter events, character wounds, and physical locations.
+  - Open plot threads must either progress or be consciously held.
+  - Stakes must compound rather than arbitrarily reset.
+
+forbidden:
+  - Forgetting critical character knowledge or possessions from earlier chapters.
+  - Ending chapters on flat, inert pauses without emotional or situational momentum.
+  - Arbitrary sudden power spikes or convenient coincidences resolving core tension.
+
+creative_freedom:
+  - Chapter cliffhanger structure and rhythmic pacing.
+  - Encounter staging, secondary character reactions, and tactical details.

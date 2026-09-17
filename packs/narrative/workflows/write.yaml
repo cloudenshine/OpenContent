@@ -1,0 +1,17 @@
+id: write
+name: Narrative Scene Drafting
+description: Draft complete scenes or chapters with immersive dramatization, dialogue, and continuity awareness.
+
+steps:
+  - id: assemble_scene_context
+    description: Load active characters, physical setting, immediate goal, and scene stakes.
+  - id: draft_dramatic_core
+    description: Develop scene progression from opening hook through rising conflict to a consequential outcome.
+  - id: verify_continuity
+    description: Verify character knowledge boundaries, inventory consistency, and temporal progression.
+  - id: generate_state_delta
+    description: Extract state changes, relationship shifts, and newly opened/resolved threads.
+
+outputs:
+  - candidate: Polished Markdown prose for the target scene or chapter.
+  - state_delta: Observed character status updates, timeline progress, and narrative thread changes.

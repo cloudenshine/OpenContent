@@ -1,0 +1,17 @@
+id: continue
+name: Multi-Chapter Continuation
+description: Continue narrative seamlessly from the preceding chapter or artifact snapshot.
+
+steps:
+  - id: resolve_preceding_state
+    description: Inspect ending state of the prior artifact (character location, injuries, immediate hook).
+  - id: advance_timeline
+    description: Bridge temporal gap logically without breaking continuity or dropping active threads.
+  - id: draft_subsequent_installment
+    description: Write the subsequent chapter fulfilling prior promises and introducing new complications.
+  - id: record_delta
+    description: Register new narrative developments and state transitions.
+
+outputs:
+  - candidate: Subsequent chapter prose aligned with the existing canon.
+  - state_delta: Updates to character tracking, inventory, and thread progression.

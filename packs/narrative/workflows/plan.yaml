@@ -1,0 +1,17 @@
+id: plan
+name: Narrative Planning
+description: Structure narrative outlines, scene sequences, character motivations, and thematic arcs.
+
+steps:
+  - id: analyze_intent
+    description: Examine core premise, target audience, dramatic question, and pacing goals.
+  - id: outline_structure
+    description: Formulate three-act or chapter-by-chapter progression with clear turning points.
+  - id: establish_character_arcs
+    description: Define protagonist goal, flaw, opposing forces, and stakes for key figures.
+  - id: map_continuity_anchors
+    description: Identify critical world rules, timeline milestones, and unresolved narrative threads.
+
+outputs:
+  - candidate: Structured narrative outline and chapter beats.
+  - state_delta: Initial character registers, world rules, and open threads.

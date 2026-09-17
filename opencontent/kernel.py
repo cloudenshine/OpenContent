@@ -255,7 +255,7 @@ class Kernel:
             raise Problem("Agent returned unexpected fields; state/approval changes are forbidden")
         
         # Allow benign LLM thought / commentary / reasoning fields, but strictly require all expected schema keys
-        cleaned = {k: v for k, v in result.items() if k in (keys | ({"analysis"} if stage == "research" else set()))}
+        cleaned = {k: v for k, v in result.items() if k in (keys | ({"analysis"} if stage == "research" else {"artifact_id"} if stage == "critique" else set()))}
         if not keys.issubset(cleaned.keys()):
             missing = keys - set(cleaned.keys())
             raise Problem(f"Agent response missing required fields: {', '.join(missing)}")
@@ -350,9 +350,16 @@ class Kernel:
                     make("Artifact", a["title"], a["body"], derived_from=a["claims"], state="DRAFTING", author=provider + ":writer")
                 else:
                     artifacts = linked(objects, pid, "Artifact")
-                    if len(artifacts) != 1:
-                        raise Problem("MVP automated critic requires one artifact per project; use manual review for additional artifacts")
-                    a = deepcopy(artifacts[0])
+                    target_aid = result.get("artifact_id")
+                    if target_aid:
+                        matching = [art for art in artifacts if art["oc_id"] == target_aid]
+                        if not matching:
+                            raise Problem(f"Target artifact '{target_aid}' not found in project '{pid}'")
+                        a = deepcopy(matching[0])
+                    else:
+                        if len(artifacts) != 1:
+                            raise Problem("MVP automated critic requires one artifact per project; use manual review for additional artifacts")
+                        a = deepcopy(artifacts[0])
                     make("Review", "Critic · " + a["title"], result["summary"], artifact=a["oc_id"], mode="critique", origin="agent",
                          reviewed_body=a["body"],
                          reviewer=provider + ":critic", axes=result["axes"], claims_complete=result["claims_complete"],

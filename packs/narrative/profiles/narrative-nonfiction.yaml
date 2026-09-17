@@ -1,0 +1,27 @@
+id: narrative-nonfiction
+name: Narrative Nonfiction
+description: Fact-grounded storytelling combining rigorous source fidelity with compelling dramatic scene craft.
+
+tone: disciplined, vivid, evidence-bound narrative
+voice: observational authorial voice or reported perspective
+pacing: investigative tempo anchored in chronological and thematic milestones
+
+guidance: >
+  Reconstruct scenes, historical events, and character arcs strictly from supplied source materials.
+  Do not invent facts, characters, quotes, or statistics. Distinguish authorial inference or
+  historical interpretation clearly from established facts. Use narrative techniques (pacing,
+  perspective, scene framing) to illuminate true events without fictionalizing them.
+
+invariants:
+  - Every material assertion of fact must be faithful to captured sources.
+  - Speculation, inference, or rival theories must be explicitly labeled.
+  - Direct quotations must be exact excerpts from cited source records.
+
+forbidden:
+  - Fabricating dialogue, emotional inner monologues, or events not grounded in evidence.
+  - Omitting known contradictory evidence or counter-arguments to force a simplistic narrative.
+  - Distorting dates, numbers, or causality to heighten drama.
+
+creative_freedom:
+  - Scene sequencing, thematic framing, and narrative exposition order.
+  - Literary rhythm, sensory setting description based on historical context, and conceptual synthesis.

@@ -12,7 +12,7 @@ bundles={
     f'opencontent-plugin-{version}.zip':[p for p,_ in plugin_files(root)],
     source_name:[root/name for name in ('README.md','PRIVACY.md','LICENSE','NOTICE.md','requirements.txt','Connect-WeChat.cmd','OpenContent — Codex Implementation Charter.md')]
 }
-for directory in ('opencontent','plugin','templates','scripts','tests'):
+for directory in ('opencontent','plugin','templates','scripts','tests','packs'):
     bundles[source_name].extend(p for p in (root/directory).rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc')
 bundles[source_name].extend(root/'docs'/name for name in (
     'PUBLIC-READINESS.md','TRIAL-QUICKSTART.md','BLOCKERS-v0.8.md','trial-forms/first-use.csv','trial-forms/return-use.csv','trial-forms/host-checks.csv','trial-forms/editorial-review.csv','ARCHITECTURE.md','SCHEMA.md','VALIDATION.md','verification.json','runtime-evidence.json',
