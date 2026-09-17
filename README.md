@@ -98,6 +98,9 @@ OpenContent 在已捕获材料内做论证与证据整理，不自动联网抓�
 
 | 主题 | 文档 |
 | --- | --- |
+| 完整使用指南 | [USER-GUIDE](docs/USER-GUIDE.md) |
+| 创意能力包架构 | [CAPABILITY-PACK-ARCHITECTURE](docs/CAPABILITY-PACK-ARCHITECTURE.md) |
+| 叙事能力包 (Narrative) | [NARRATIVE-PACK-v1](docs/NARRATIVE-PACK-v1.md) |
 | 安装与试用 | [TRIAL-QUICKSTART](docs/TRIAL-QUICKSTART.md) |
 | 项目工作台 | [PROJECT-WORKBENCH-v0.5](docs/PROJECT-WORKBENCH-v0.5.md) |
 | 跨资料选题 | [CORPUS-IDEATION-v0.6](docs/CORPUS-IDEATION-v0.6.md) |
