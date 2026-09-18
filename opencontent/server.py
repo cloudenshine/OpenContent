@@ -151,6 +151,24 @@ class Handler(BaseHTTPRequestHandler):
                     k._pack_registry = reg
                 rt = CapabilityRuntime(k, reg)
                 return rt.execute_task(body, body.get("provider"))
+            if route == "/capabilities/mechanisms":
+                cards = []
+                for p in sorted(k.vault.content.rglob("机制卡片/*.md")):
+                    try:
+                        raw = p.read_text(encoding="utf-8")
+                        cards.append({"path": p.relative_to(k.vault.root).as_posix(), "title": p.stem, "content": raw})
+                    except Exception:
+                        pass
+                return {"mechanisms": cards}
+            if route == "/capabilities/market":
+                reports = []
+                for p in sorted(k.vault.content.rglob("Market/*/*.md")):
+                    try:
+                        raw = p.read_text(encoding="utf-8")
+                        reports.append({"path": p.relative_to(k.vault.root).as_posix(), "title": p.stem, "content": raw[:2000]})
+                    except Exception:
+                        pass
+                return {"reports": reports}
             if route == "/shutdown":
                 threading.Thread(target=self.server.shutdown, daemon=True).start()
                 return {"status": "stopping"}

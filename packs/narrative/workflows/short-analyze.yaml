@@ -1,0 +1,19 @@
+id: short-analyze
+name: Short Fiction Deconstruction Pipeline
+description: 5-stage deconstruction pipeline for hit short stories (plot nodes, emotional arcs, reversals, character design, mechanisms).
+
+steps:
+  - id: stage2_plot_nodes
+    description: Extract concise chronological plot nodes from opening explosion to resolute resolution.
+  - id: stage3_emotional_beats
+    description: Trace emotional pacing, pressure accumulation, and cathartic release percentages.
+  - id: stage4_reversals_and_craft
+    description: Analyze narrative reversals, point-of-view misdirections, and concrete evidence anchoring.
+  - id: stage5_character_and_hooks
+    description: Evaluate character stakes, opening sentence hooks, and closing resonance.
+  - id: stage6_mechanism_synthesis
+    description: Synthesize reusable short-form mechanism cards and structure counts into meta.json.
+
+outputs:
+  - artifact: Short story deconstruction report, plot nodes markdown, and techniques markdown.
+  - mechanism_cards: Reusable short-form mechanism cards stored in Vault.

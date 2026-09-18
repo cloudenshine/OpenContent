@@ -1,0 +1,16 @@
+id: long-scan
+name: Long Serialized Fiction Market Scan
+description: Collect, clean, and analyze multi-platform rank snapshots (Qidian, Fanqie, JJWXC, Qimao) for long-form fiction.
+
+steps:
+  - id: collect_raw_ranks
+    description: Ingest real platform ranking data via scrapers or feeds.
+  - id: clean_and_normalize
+    description: Strip marketing noise, clean intros, normalize word counts, tags, and popularity metrics.
+  - id: apply_quality_gate
+    description: Enforce minimum valid sample size (>= 3 per platform), reject invalid or corrupted fields.
+  - id: extract_market_opportunities
+    description: Group recurring tropes, setting combinations, and formulate 3 evidence-grounded creative directions.
+
+outputs:
+  - market_report: Standardized MarketRunLong asset and candidate opportunities.

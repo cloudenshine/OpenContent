@@ -1,0 +1,16 @@
+id: short-scan
+name: Short Fiction Market Scan
+description: Analyze viral short fiction trends (Zhihu, Dianzhong, Heiyan, Qimao Short) focusing on emotional payoffs, shareability, and shelf-life.
+
+steps:
+  - id: collect_short_trends
+    description: Sample trending short stories across viral platforms.
+  - id: evaluate_emotional_hooks
+    description: Extract core emotional triggers (indignation, redemption, revenge, moral dilemmas).
+  - id: audit_saturation_and_shelf_life
+    description: Compute trend shelf-life (30-60 days) and saturation warnings to avoid over-crowded tropes.
+  - id: formulate_short_concepts
+    description: Output 2-3 high-completion short story concepts with clear opening formulas.
+
+outputs:
+  - market_report: Standardized MarketRunShort asset, emotional dynamics map, and rescan deadline.

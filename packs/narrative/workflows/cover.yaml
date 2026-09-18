@@ -1,0 +1,17 @@
+id: cover
+name: Narrative Cover Direction & Generation
+description: Direct and generate genre-specific, platform-compliant book cover artwork with clear typography hierarchy.
+
+steps:
+  - id: analyze_genre_visual_semantics
+    description: Determine color palette, lighting, mood, and focal subject based on story genre and premise.
+  - id: format_platform_spec
+    description: Apply platform dimensions (Fanqie 3:4, Qidian/JJWXC 2:3, Zhihu 16:9) and safe text margin zones.
+  - id: generate_cover_candidates
+    description: Invoke media generation adapter to create 2-3 non-overwriting cover image candidates under Vault attachments.
+  - id: review_and_select
+    description: Present cover candidates side-by-side for author inspection and final acceptance.
+
+outputs:
+  - cover_spec: Structured design specification (palette, composition, typography, prompt).
+  - artifact: Versioned image files saved in Attachments/OpenContent/{project}/covers/.

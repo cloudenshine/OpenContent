@@ -21,6 +21,9 @@ from .validation import (
     validate_state_delta,
     validate_candidate_output,
 )
+from .market import LongMarketAnalyzer, ShortMarketAnalyzer
+from .deconstruction import StoryDeconstructor
+from .media import MediaGenerationAdapter
 
 
 class CapabilityRuntime:
@@ -31,6 +34,10 @@ class CapabilityRuntime:
         self.registry = registry
         self.router = router or TaskRouter()
         self.assembler = assembler or ContextAssembler()
+        self.long_market = LongMarketAnalyzer(kernel)
+        self.short_market = ShortMarketAnalyzer(kernel)
+        self.deconstructor = StoryDeconstructor(kernel)
+        self.media_adapter = MediaGenerationAdapter(kernel)
 
     def execute_task(
         self,
@@ -61,10 +68,58 @@ class CapabilityRuntime:
         target_aid = task_request.get("artifact")
         target_artifact = objects.get(target_aid) if target_aid else None
 
-        # Gather relevant sources from project
-        project_materials = [o for o in objects.values() if o.get("project") == pid and o.get("type") == "Material"]
+        # 1. Specialized Market Scan Tasks
+        if task_name == "long-scan":
+            raw_data = task_request.get("raw_data")
+            if not raw_data:
+                # Default sample seed if none passed
+                raw_data = {
+                    "qidian": [
+                        {"rank": 1, "title": "宿命之环", "author": "爱潜水的乌贼", "genre": "玄幻", "words": 280, "recommendation": 500000, "intro": "诡秘世界第二部，蒸汽与神秘的再次交织。"},
+                        {"rank": 2, "title": "赤心巡天", "author": "情何以甚", "genre": "仙侠", "words": 420, "recommendation": 450000, "intro": "上古时代，妖族绝迹，少年拔剑起于微末。"},
+                        {"rank": 3, "title": "道诡异仙", "author": "狐尾的笔", "genre": "悬疑", "words": 190, "recommendation": 400000, "intro": "诡异修仙，心素迷茫，现实与幻觉交替。"},
+                    ]
+                }
+            report = self.long_market.analyze(raw_data, scan_id=run_id)
+            return {"receipt": {"run_id": run_id, "task": "long-scan", "status": "SUCCEEDED", "at": now()}, "market_report": report}
 
-        # Read tracking state if existing
+        if task_name == "short-scan":
+            raw_data = task_request.get("raw_data")
+            if not raw_data:
+                raw_data = {
+                    "zhihu": [
+                        {"rank": 1, "title": "洗冤录：法医妻子的一份报告", "author": "冷月", "genre": "刑侦", "words": 1.2, "reads": 88000, "emotional_hook": "专业复仇 / 伦理反转", "reversal_type": "物证翻转", "intro": "作为首席法医，在解剖台前我认出了那块特殊的腕表。"},
+                        {"rank": 2, "title": "退婚后我成了前夫的小舅妈", "author": "晚风", "genre": "言情", "words": 1.5, "reads": 92000, "emotional_hook": "决绝离开 / 全员打脸", "reversal_type": "身份反转", "intro": "签字离婚那天，我没有流一滴泪。"},
+                    ]
+                }
+            report = self.short_market.analyze(raw_data, scan_id=run_id)
+            return {"receipt": {"run_id": run_id, "task": "short-scan", "status": "SUCCEEDED", "at": now()}, "market_report": report}
+
+        # 2. Specialized Deconstruction Tasks
+        if task_name == "long-analyze":
+            title = task_request.get("title", project["title"])
+            chapters = task_request.get("chapters", [
+                {"title": "第一章", "body": target_artifact.get("body", "") if target_artifact else "开篇建立主角身处困境的严酷现实，不可调和的矛盾前置。"}
+            ])
+            res = self.deconstructor.deconstruct_long(title, chapters, task_request.get("platform", "qidian"), deconstruct_id=run_id)
+            return {"receipt": {"run_id": run_id, "task": "long-analyze", "status": "SUCCEEDED", "at": now()}, **res}
+
+        if task_name == "short-analyze":
+            title = task_request.get("title", project["title"])
+            text = task_request.get("text") or (target_artifact.get("body", "") if target_artifact else "前言交代极速冲突。开局三句内亮出物证，主角不再妥协，直接公布对方隐瞒的真相，情节瞬间翻转。")
+            res = self.deconstructor.deconstruct_short(title, text, task_request.get("platform", "zhihu"), deconstruct_id=run_id)
+            return {"receipt": {"run_id": run_id, "task": "short-analyze", "status": "SUCCEEDED", "at": now()}, **res}
+
+        # 3. Specialized Cover Presentation Task
+        if task_name == "cover":
+            title = task_request.get("title", project["title"])
+            genre = task_request.get("genre", "通用")
+            platform = task_request.get("platform", "general")
+            res = self.media_adapter.generate_cover_candidates(pid, title, project.get("author", "作者"), genre, project.get("goal", ""), platform)
+            return {"receipt": {"run_id": run_id, "task": "cover", "status": "SUCCEEDED", "at": now()}, **res}
+
+        # 4. Standard Agent Creative Workflows (plan, write, continue, revise, critique)
+        project_materials = [o for o in objects.values() if o.get("project") == pid and o.get("type") == "Material"]
         state_path = self.kernel.vault.safe(f"OpenContent/Project/{pid}/state.json")
         state_data = {}
         if state_path.is_file():
@@ -73,7 +128,6 @@ class CapabilityRuntime:
             except Exception:
                 state_data = {}
 
-        # Context assembly
         context_pkg = self.assembler.assemble(
             task=task_name,
             instruction=task_request.get("instruction", ""),
@@ -85,7 +139,6 @@ class CapabilityRuntime:
             constraints=task_request.get("constraints", {}),
         )
 
-        # Create isolated run workspace in .opencontent/runs/<run_id>/
         workspace_dir = self.kernel.vault.safe(f".opencontent/runs/{run_id}")
         workspace_dir.mkdir(parents=True, exist_ok=True)
         (workspace_dir / "candidate").mkdir(exist_ok=True)
@@ -94,7 +147,6 @@ class CapabilityRuntime:
         atomic(workspace_dir / "request.json", json.dumps(task_request, ensure_ascii=False, indent=2).encode("utf-8"))
         atomic(workspace_dir / "context.json", json.dumps(context_pkg, ensure_ascii=False, indent=2).encode("utf-8"))
 
-        # Build execution request for Provider
         agent_instructions = (
             f"Execute creative task '{task_name}' for pack '{pack.id}' with profile '{routed['profile_id']}'.\n"
             f"Guidance: {profile.get('guidance', '')}\n"
@@ -103,27 +155,14 @@ class CapabilityRuntime:
             "Return candidate output matching the response schema."
         )
 
-        # Expected response schema based on task
         response_schema = {
-            "candidate": {
-                "title": "...",
-                "body": "Markdown text...",
-            },
+            "candidate": {"title": "...", "body": "Markdown text..."},
             "state_delta": {
                 "schema": STATE_DELTA_SCHEMA_V1,
-                "characters": [],
-                "relationships": [],
-                "timeline": [],
-                "world": [],
-                "open_threads": [],
-                "resolved_threads": [],
-                "new_proposals": [],
+                "characters": [], "relationships": [], "timeline": [], "world": [],
+                "open_threads": [], "resolved_threads": [], "new_proposals": [],
             },
-            "review": {
-                "issues": [],
-                "strengths": [],
-                "uncertainties": [],
-            }
+            "review": {"issues": [], "strengths": [], "uncertainties": []}
         }
 
         agent_req = {
@@ -140,7 +179,6 @@ class CapabilityRuntime:
             "instructions": agent_instructions,
         }
 
-        # Resolve provider
         jobs_mgr = getattr(self.kernel, "_jobs", None)
         providers_map = jobs_mgr.providers if jobs_mgr else {}
         p_name = provider_name or (list(providers_map.keys())[0] if providers_map else "fixture")
@@ -149,7 +187,6 @@ class CapabilityRuntime:
             from opencontent.providers import LocalCodexProvider
             provider = LocalCodexProvider()
 
-        # Run provider execution
         import threading
         cancel_evt = threading.Event()
         try:
@@ -158,17 +195,14 @@ class CapabilityRuntime:
             atomic(workspace_dir / "stderr.log", str(e).encode("utf-8"))
             raise Problem(f"Creative execution failed under provider '{p_name}': {e}") from e
 
-        # Validate candidate output
         candidate = raw_result.get("candidate")
         if candidate:
             validate_candidate_output(candidate)
 
-        # Validate state delta
         state_delta = raw_result.get("state_delta")
         if state_delta:
             validate_state_delta(state_delta)
 
-        # Save outputs in isolated workspace
         if candidate:
             atomic(workspace_dir / "candidate" / "artifact.json", json.dumps(candidate, ensure_ascii=False, indent=2).encode("utf-8"))
         if state_delta:

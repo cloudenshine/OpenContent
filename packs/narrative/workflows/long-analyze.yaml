@@ -1,0 +1,15 @@
+id: long-analyze
+name: Long Serialized Fiction Deconstruction
+description: Deep structural deconstruction of long hit fiction (Golden Three Chapters, pacing, mechanism extraction).
+
+steps:
+  - id: golden_three_chapters_audit
+    description: Inspect opening hook, premise establishment, reader contract, and pacing in chapters 1-3.
+  - id: chapter_progression_mapping
+    description: Map escalating stakes, knowledge disparities, and tension cycles across serial installments.
+  - id: extract_creative_mechanisms
+    description: Abstract underlying storytelling mechanisms into reusable cards (Function, Application, Risk, Logic).
+
+outputs:
+  - artifact: Detailed analytical deconstruction report.
+  - mechanism_cards: Reusable Mechanism Cards stored in Vault.

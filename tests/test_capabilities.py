@@ -36,7 +36,7 @@ class CapabilityPackTests(unittest.TestCase):
         self.assertIn("general-fiction", manifest.profiles)
         self.assertIn("serial-fiction", manifest.profiles)
         self.assertIn("narrative-nonfiction", manifest.profiles)
-        self.assertEqual(set(manifest.tasks), {"plan", "write", "continue", "revise", "critique"})
+        self.assertEqual(set(manifest.tasks), {"long-scan", "short-scan", "long-analyze", "short-analyze", "plan", "write", "continue", "revise", "critique", "cover"})
         self.assertEqual(manifest.runtime["workspace_write"], "required")
 
     def test_manifest_validation_rejects_invalid_schema_or_escaping_paths(self):

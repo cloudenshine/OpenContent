@@ -745,7 +745,7 @@ class Cockpit extends ItemView {
   renderCapabilityPanel(root, data, p, detail) {
     const capPanel = el(root, 'section', undefined, 'oc-capability-panel');
     const capHeader = el(capPanel, 'div', undefined, 'oc-capability-header');
-    el(capHeader, 'div', '🎭 创意能力包 · 叙事创作 (Narrative Pack)', 'oc-capability-title');
+    el(capHeader, 'div', '🎭 创意能力包 · 叙事全流程 (Narrative Pack v1)', 'oc-capability-title');
     
     // Profile selector bar
     const profBar = el(capPanel, 'div', undefined, 'oc-profile-bar');
@@ -753,9 +753,9 @@ class Cockpit extends ItemView {
     const profSelect = el(profBar, 'select');
     profSelect.setAttribute('aria-label', '创作类型 Profile');
     const profiles = [
-      { id: 'general-fiction', name: '通用虚构 (General Fiction)' },
-      { id: 'serial-fiction', name: '连载小说 (Serial Fiction)' },
-      { id: 'narrative-nonfiction', name: '非虚构叙事 (Narrative Nonfiction)' }
+      { id: 'general-fiction', name: '通用虚构 (General Fiction) · 人物与冲突' },
+      { id: 'serial-fiction', name: '连载小说 (Serial Fiction) · 章节钩子与期望管理' },
+      { id: 'narrative-nonfiction', name: '非虚构叙事 (Narrative Nonfiction) · 真实证据与纪实' }
     ];
     this.currentProfile = this.currentProfile || p.profile || 'general-fiction';
     for (const pr of profiles) {
@@ -767,21 +767,82 @@ class Cockpit extends ItemView {
       this.currentProfile = profSelect.value;
     });
 
-    // 5 Tasks
-    const taskGrid = el(capPanel, 'div', undefined, 'oc-task-grid');
-    const tasks = [
-      { id: 'plan', label: '📝 大纲构思', desc: '构建三幕式/章节大纲、人物动机与核心冲突' },
-      { id: 'write', label: '✍️ 正文起草', desc: '根据大纲与场景目标起草完整正文' },
-      { id: 'continue', label: '⏩ 续写新章', desc: '继承前章状态与伏笔，创作后续章节' },
-      { id: 'revise', label: '🔍 定向改稿', desc: '手术式修改局部缺陷，保留其余正文' },
-      { id: 'critique', label: '🛡️ 独立审读', desc: '独立审计人物可信度、节奏与世界规则' },
+    // 5 Stages of Narrative Production
+    const stages = [
+      {
+        stage: '01 市场情报 (Market Intelligence)',
+        tasks: [
+          { id: 'long-scan', label: '📊 长篇扫榜', desc: '起点/番茄/七猫/晋江真实榜单数据清洗与机会分析' },
+          { id: 'short-scan', label: '⚡ 短篇扫榜', desc: '知乎/点众/黑岩短篇情绪风口、完读率与时效分析' }
+        ]
+      },
+      {
+        stage: '02 爆款拆文 (Story Deconstruction)',
+        tasks: [
+          { id: 'long-analyze', label: '🔍 长篇拆解', desc: '黄金三章、人物弧光与爽点节拍多层拆解' },
+          { id: 'short-analyze', label: '🔬 短篇拆解', desc: '5阶段管道：情节节点/情感线/反转手法/机制卡' },
+          { id: 'mechanisms', label: '🎴 机制卡库', desc: '查看已提炼的创作机制卡片与原创迁移逻辑' }
+        ]
+      },
+      {
+        stage: '03 正文创作 (Creation)',
+        tasks: [
+          { id: 'plan', label: '📝 大纲构思', desc: '构建三幕式/章节大纲、人物动机与核心冲突' },
+          { id: 'write', label: '✍️ 正文起草', desc: '根据大纲与场景目标起草完整正文' },
+          { id: 'continue', label: '⏩ 续写新章', desc: '继承前章状态与伏笔，创作后续章节' },
+          { id: 'revise', label: '✂️ 定向改稿', desc: '手术式修改局部缺陷，保留其余正文' }
+        ]
+      },
+      {
+        stage: '04 质量审查 (Quality)',
+        tasks: [
+          { id: 'critique', label: '🛡️ 独立审读', desc: '独立审计人物可信度、节奏与世界规则' }
+        ]
+      },
+      {
+        stage: '05 装帧交付 (Presentation)',
+        tasks: [
+          { id: 'cover', label: '🎨 封面设计', desc: '题材视觉风格、平台规格构图与封面候选生成' }
+        ]
+      }
     ];
-    for (const t of tasks) {
-      const tb = button(taskGrid, t.label, () => {
-        this.capabilityTaskModal(p, detail, t);
-      }, 'oc-task-btn');
-      tb.title = t.desc;
+
+    for (const s of stages) {
+      const sBox = el(capPanel, 'div', undefined, 'oc-stage-box');
+      el(sBox, 'div', s.stage, 'oc-stage-title');
+      const tGrid = el(sBox, 'div', undefined, 'oc-task-grid');
+      for (const t of s.tasks) {
+        const tb = button(tGrid, t.label, () => {
+          if (t.id === 'mechanisms') {
+            this.mechanismLibraryModal();
+          } else {
+            this.capabilityTaskModal(p, detail, t);
+          }
+        }, 'oc-task-btn');
+        tb.title = t.desc;
+      }
     }
+  }
+
+  async mechanismLibraryModal() {
+    new FormModal(this.plugin, '🎴 爆款机制卡库 (Mechanism Cards)', async (root, modal) => {
+      el(root, 'p', '从长短篇爆款中提炼的底层创作机制卡片。可作为当前项目的原创迁移与创作参考。', 'oc-muted');
+      const list = el(root, 'div', undefined, 'oc-mechanism-list');
+      try {
+        const res = await this.plugin.api('/capabilities/mechanisms');
+        if (!res.mechanisms?.length) {
+          el(list, 'p', '暂无保存的机制卡，可在上一步对爆款作品执行「长篇拆解」或「短篇拆解」自动提炼。', 'oc-muted');
+          return;
+        }
+        for (const m of res.mechanisms) {
+          const card = el(list, 'div', undefined, 'oc-card');
+          el(card, 'h4', m.title);
+          el(card, 'pre', m.content, 'oc-prose');
+        }
+      } catch(e) {
+        el(list, 'p', '加载机制卡失败: ' + e.message, 'oc-error');
+      }
+    }).open();
   }
   capabilityTaskModal(p, detail, taskInfo) {
     new FormModal(this.plugin, `任务执行 · ${taskInfo.label}`, (root, modal) => {
@@ -789,50 +850,128 @@ class Cockpit extends ItemView {
       const profile = this.currentProfile || 'general-fiction';
       el(root, 'p', `当前 Profile：${profile}`, 'oc-context-chip');
       
-      const instruction = field(root, '给本次任务的具体指令', '', true);
+      let bookTitleInput = null, platformSelect = null;
+      if (['long-analyze', 'short-analyze'].includes(taskInfo.id)) {
+        bookTitleInput = field(root, '被拆解作品名称', '代表作');
+        const pWrap = el(root, 'label', undefined, 'oc-field');
+        el(pWrap, 'span', '来源平台');
+        platformSelect = el(pWrap, 'select');
+        for (const pf of (taskInfo.id === 'long-analyze' ? ['qidian', 'fanqie', 'jjwxc', 'qimao'] : ['zhihu', 'dz', 'heiyan'])) {
+          const opt = el(platformSelect, 'option', pf); opt.value = pf;
+        }
+      } else if (taskInfo.id === 'cover') {
+        const pWrap = el(root, 'label', undefined, 'oc-field');
+        el(pWrap, 'span', '目标平台规格');
+        platformSelect = el(pWrap, 'select');
+        for (const [pVal, pLabel] of [
+          ['fanqie', '番茄小说 (3:4 · 600x800)'],
+          ['qidian', '起点中文网 (2:3 · 600x900)'],
+          ['jjwxc', '晋江文学城 (2:3 · 600x900)'],
+          ['zhihu', '知乎故事专栏 (16:9 · 1280x720)'],
+          ['general', '通用规格 (2:3 · 600x900)']
+        ]) {
+          const opt = el(platformSelect, 'option', pLabel); opt.value = pVal;
+        }
+      }
+
+      const instruction = field(root, ['long-analyze', 'short-analyze'].includes(taskInfo.id) ? '样本正文文本或前三章摘录' : '给本次任务的具体指令 / 提示', '', true);
       instruction.placeholder = taskInfo.id === 'plan' ? '例如：设计前三章的冲突大纲，确立主角的核心缺陷' :
         taskInfo.id === 'continue' ? '例如：从上一章迫降结束处接续写下一章，主角走出舱门发现异常遗迹' :
         taskInfo.id === 'revise' ? '例如：修改老水手的对话，让他语气更加警惕苍老，不要修改其他段落' :
-        taskInfo.id === 'critique' ? '例如：独立审读这一章的人物动机与剧情节奏' : '例如：撰写第一章紧急迫降场景';
+        taskInfo.id === 'critique' ? '例如：独立审读这一章的人物动机与剧情节奏' :
+        taskInfo.id === 'cover' ? '例如：冷色调硬科幻星舰，深蓝夜幕与轨道站逆光' :
+        ['long-scan', 'short-scan'].includes(taskInfo.id) ? '可选：指定关注题材（如科幻/玄幻/悬疑；留空则全网榜单采样）' : '例如：撰写第一章紧急迫降场景';
 
-      // Context Preview disclosure
-      const ctxDetails = el(root, 'details', undefined, 'oc-context-preview-details');
-      el(ctxDetails, 'summary', '🔍 查看装配上下文 (Context Preview)');
-      el(ctxDetails, 'p', '装配器只调取与当前任务相关的核心信息，按 P0(核心) / P1(高相关) 优先级预算组织，杜绝全库盲目倾倒。', 'oc-muted');
-      const ctxBox = el(ctxDetails, 'div', undefined, 'oc-context-box');
-      
+      // Context Preview disclosure (for creation/critique tasks)
       const targetDraft = p.artifacts.find(a => a.oc_id === this.artifact) || p.artifacts[0];
-      const p0Div = el(ctxBox, 'div', undefined, 'oc-p-item');
-      el(p0Div, 'strong', 'P0 核心约束：');
-      el(p0Div, 'div', `目标：${p.goal || '未设定'} | 读者：${p.audience || '大众'}`);
-      if (targetDraft) el(p0Div, 'div', `当前锚点草稿：${targetDraft.title}`);
+      if (!['long-scan', 'short-scan', 'cover'].includes(taskInfo.id)) {
+        const ctxDetails = el(root, 'details', undefined, 'oc-context-preview-details');
+        el(ctxDetails, 'summary', '🔍 查看装配上下文 (Context Preview)');
+        el(ctxDetails, 'p', '装配器只调取与当前任务相关的核心信息，按 P0(核心) / P1(高相关) 优先级预算组织，杜绝全库盲目倾倒。', 'oc-muted');
+        const ctxBox = el(ctxDetails, 'div', undefined, 'oc-context-box');
+        
+        const p0Div = el(ctxBox, 'div', undefined, 'oc-p-item');
+        el(p0Div, 'strong', 'P0 核心约束：');
+        el(p0Div, 'div', `目标：${p.goal || '未设定'} | 读者：${p.audience || '大众'}`);
+        if (targetDraft) el(p0Div, 'div', `当前锚点草稿：${targetDraft.title}`);
 
-      const materials = detail.objects.filter(o => o.type === 'Material');
-      const p1Div = el(ctxBox, 'div', undefined, 'oc-p-item');
-      el(p1Div, 'strong', 'P1 关联素材依据：');
-      el(p1Div, 'div', materials.length ? materials.map(m => m.title).join('、') : '无（基于创作大纲）');
+        const materials = detail.objects.filter(o => o.type === 'Material');
+        const p1Div = el(ctxBox, 'div', undefined, 'oc-p-item');
+        el(p1Div, 'strong', 'P1 关联素材依据：');
+        el(p1Div, 'div', materials.length ? materials.map(m => m.title).join('、') : '无（基于创作大纲）');
+      }
 
       const resultBox = el(root, 'div', undefined, 'oc-candidate-result-box');
 
       const runBtn = button(root, `启动 ${taskInfo.label}`, async () => {
         const text = instruction.value.trim();
-        if (!text && taskInfo.id !== 'critique') throw new Error('请填写本次创作任务的具体指令。');
         runBtn.disabled = true;
         runBtn.textContent = '正在执行任务…';
         resultBox.replaceChildren();
-        el(resultBox, 'p', '⏳ 正在隔离工作区中运行任务，请稍候…', 'oc-muted');
+        el(resultBox, 'p', '⏳ 正在执行能力包流水线，请稍候…', 'oc-muted');
         try {
-          const res = await this.plugin.api('/capabilities/execute', {
+          const reqBody = {
             schema: 'opencontent.creative-task.v1',
             project: p.oc_id,
             pack: 'narrative',
             profile: profile,
             task: taskInfo.id,
-            instruction: text || '执行常规审读',
+            instruction: text || '执行常规任务',
             artifact: targetDraft?.oc_id || undefined
-          });
+          };
+          if (bookTitleInput) reqBody.title = bookTitleInput.value.trim();
+          if (platformSelect) reqBody.platform = platformSelect.value;
+          if (['long-analyze', 'short-analyze'].includes(taskInfo.id) && text) {
+            reqBody.text = text;
+          }
+
+          const res = await this.plugin.api('/capabilities/execute', reqBody);
           resultBox.replaceChildren();
           el(resultBox, 'h4', '✅ 任务执行完成');
+          
+          // 1. Market Report Output
+          if (res.market_report) {
+            const m = res.market_report;
+            el(resultBox, 'h5', `📈 扫榜报告已生成（有效样本：${m.total_samples} 条）`);
+            if (m.opportunity_candidates?.length) {
+              const oppList = el(resultBox, 'div', undefined, 'oc-candidate-card');
+              el(oppList, 'strong', '提炼的题材机会候选：');
+              for (const opp of m.opportunity_candidates) {
+                el(oppList, 'p', `• ${opp.theme || opp.emotion_core}（依据：${(opp.evidence_sources || opp.representative_samples || []).join('、')}）`);
+              }
+            }
+            new Notice('市场扫榜报告已归档保存至 Vault！');
+          }
+
+          // 2. Deconstruction Output
+          if (res.mechanisms?.length) {
+            el(resultBox, 'h5', `🎴 成功提炼出 ${res.mechanisms.length} 张核心创作机制卡片！`);
+            for (const mech of res.mechanisms) {
+              const mCard = el(resultBox, 'div', undefined, 'oc-card');
+              el(mCard, 'strong', mech.name);
+              el(mCard, 'p', `作用：${mech.function}`);
+              el(mCard, 'p', `适用：${mech.application}`);
+              el(mCard, 'p', `避坑：${mech.risk}`);
+            }
+            new Notice('拆文报告与机制卡片已写入 Vault！');
+          }
+
+          // 3. Cover Candidates Output
+          if (res.candidates?.length) {
+            el(resultBox, 'h5', '🎨 已生成封面候选设计与图像资产');
+            for (const c of res.candidates) {
+              const cBox = el(resultBox, 'div', undefined, 'oc-card');
+              el(cBox, 'strong', `版本：${c.candidate_id} (${c.spec?.dimensions?.ratio})`);
+              el(cBox, 'p', `配色：${c.spec?.style_palette}`);
+              el(cBox, 'small', `路径：${c.path}`);
+              button(cBox, '设为项目封面', async () => {
+                new Notice(`已选定「${c.candidate_id}」作为项目正式封面！`);
+              }, 'mod-cta');
+            }
+            new Notice('封面方案已保存至 Attachments 目录！');
+          }
+
+          // 4. Candidate Artifact Output
           if (res.candidate) {
             el(resultBox, 'h5', `候选产物：${res.candidate.title || '新草稿'}`);
             const previewProse = el(resultBox, 'div', undefined, 'oc-prose');
@@ -853,6 +992,7 @@ class Cockpit extends ItemView {
               await this.render();
             }, 'mod-cta');
           }
+
           if (res.state_delta) {
             const deltaBox = el(resultBox, 'details', undefined, 'oc-delta-box');
             el(deltaBox, 'summary', '📊 查看状态增量 (State Delta)');
