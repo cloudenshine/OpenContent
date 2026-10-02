@@ -1,9 +1,11 @@
 import json
+from pathlib import Path
 import secrets
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlsplit
 from .vault import Problem
+from . import __version__
 from . import lifecycle
 from . import discovery, workbench, ideation
 from .publishing import Publishing
@@ -78,7 +80,7 @@ class Handler(BaseHTTPRequestHandler):
             if route == '/sources': return lifecycle.library(k)
             if route == '/publications': return pub.list()
             if route == "/health":
-                return {"version": "0.8.0", "vault": str(k.vault.root), "providers": {name: p.capabilities() for name, p in jobs.providers.items()}}
+                return {"version": __version__, "vault": str(k.vault.root), "providers": {name: p.capabilities() for name, p in jobs.providers.items()}}
             if route == "/board":
                 return {**k.board(), "jobs": jobs.list()}
             if route.startswith("/objects/"):
@@ -149,7 +151,7 @@ class Handler(BaseHTTPRequestHandler):
                     pack_roots = [Path(__file__).resolve().parent.parent / "packs", k.vault.safe("OpenContent-Packs")]
                     reg.discover(pack_roots)
                     k._pack_registry = reg
-                rt = CapabilityRuntime(k, reg)
+                rt = CapabilityRuntime(k, reg, jobs=jobs)
                 return rt.execute_task(body, body.get("provider"))
             if route == "/capabilities/mechanisms":
                 cards = []

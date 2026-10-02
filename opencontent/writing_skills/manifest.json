@@ -1,0 +1,100 @@
+{
+  "id": "opencontent.writing-quality",
+  "version": "1.0.2",
+  "sources": [
+    {
+      "id": "huashu-report",
+      "repository": "https://github.com/alchaincyf/huashu-report",
+      "commit": "bdc08bee5077462e1300431408c5237438a22d00",
+      "license": "MIT",
+      "files": [
+        {
+          "path": "upstream/huashu-report/LICENSE",
+          "sha256": "fe541d94ae0ace6eb7b4b1a97ba73d2d94a1586b021c7b09b665c6c8f73eeeaa",
+          "url": "https://github.com/alchaincyf/huashu-report/blob/bdc08bee5077462e1300431408c5237438a22d00/LICENSE"
+        }
+      ],
+      "references": [
+        {
+          "url": "https://github.com/alchaincyf/huashu-report/blob/bdc08bee5077462e1300431408c5237438a22d00/SKILL.md",
+          "sha256": "52aff66ba989663eb9ce141398941ee8ea90d72a5aa8acbdc9aa7ad5204aa2a5"
+        },
+        {
+          "url": "https://github.com/alchaincyf/huashu-report/blob/bdc08bee5077462e1300431408c5237438a22d00/references/研究深度.md",
+          "sha256": "72257a30035281b8a4dad0e50aa45663e472025ba9b872ad99f023426a3ed4ed"
+        },
+        {
+          "url": "https://github.com/alchaincyf/huashu-report/blob/bdc08bee5077462e1300431408c5237438a22d00/references/行文.md",
+          "sha256": "3a380c9e493ab5aff69bea66b1fc5e07ddf5567283a80edbc1e0c4b1d20b0630"
+        }
+      ],
+      "note": "Research and writing principles adapted; third-party report quotations not redistributed."
+    },
+    {
+      "id": "humanizer-zh",
+      "repository": "https://github.com/op7418/Humanizer-zh",
+      "commit": "f4518a8eab97b8bfebc66a89d34320a89bef6930",
+      "license": "MIT",
+      "files": [
+        {
+          "path": "upstream/humanizer-zh/SKILL.md",
+          "sha256": "95627fd4437d886f98032ccc62d79136e6310f1fc04e354bb86431795ff206df",
+          "url": "https://github.com/op7418/Humanizer-zh/blob/f4518a8eab97b8bfebc66a89d34320a89bef6930/SKILL.md"
+        },
+        {
+          "path": "upstream/humanizer-zh/LICENSE",
+          "sha256": "aa00e74769e1b9d8e7fa7094dbfcca9b129a0ded6dce1cf4da050b99146d2fa7",
+          "url": "https://github.com/op7418/Humanizer-zh/blob/f4518a8eab97b8bfebc66a89d34320a89bef6930/LICENSE"
+        }
+      ]
+    },
+    {
+      "id": "oh-story",
+      "repository": "https://github.com/zenstory-ai/oh-story-claudecode",
+      "commit": "4a50d5583590eb7f207037e35136c1168bc02201",
+      "license": "MIT",
+      "adapted_from": "https://github.com/zenstory-ai/oh-story-claudecode/blob/4a50d5583590eb7f207037e35136c1168bc02201/skills/story-short-write/references/scene-craft.md",
+      "source_sha256": "8838e332778e8f47ea9ecf01ef4bac346842e3e72e6826df72b08e6c0506edd0",
+      "note": "Only scene principles adapted; third-party fiction example and rigid genre rules not reproduced.",
+      "files": [
+        {
+          "path": "upstream/oh-story/LICENSE",
+          "sha256": "52c71355258924a967927780245f70677b38ff7d073c03f9096df33888f34653",
+          "url": "https://github.com/zenstory-ai/oh-story-claudecode/blob/4a50d5583590eb7f207037e35136c1168bc02201/LICENSE"
+        }
+      ]
+    }
+  ],
+  "reference_resources": [
+    {
+      "id": "fiction-observation",
+      "path": "references/fiction-observation.md",
+      "mode": "fiction",
+      "tasks": [
+        "draft",
+        "write",
+        "continue",
+        "revise",
+        "critique"
+      ],
+      "loading": "manual-reference-only; never automatically appended",
+      "sha256": "1376adaf7721170122244dcf1b729d9d64944cd47efdd18f01bd2bb53a1a875e",
+      "provenance": "Locally authored synthetic trial plus user-accepted later rewrite; not an upstream licensed example"
+    },
+    {
+      "id": "evidence-judgment",
+      "path": "references/evidence-judgment.md",
+      "mode": "evidence-bound",
+      "tasks": [
+        "draft",
+        "write",
+        "continue",
+        "revise",
+        "critique"
+      ],
+      "loading": "manual-reference-only; never automatically appended",
+      "sha256": "73e67bc3b2d70888fabdf3dd83691972870d98ee77fb968b83c9a984e3dab7b3",
+      "provenance": "Locally authored synthetic trial plus user-accepted later rewrite; not an upstream licensed example"
+    }
+  ]
+}

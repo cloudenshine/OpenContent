@@ -13,7 +13,8 @@ function setup({note=false,failStart=false,noProvider=false,running=false,create
   const data={projects:[],inbox:[],jobs:running?[{id:'job',project:'p',status:'RUNNING'}]:[],token:'original',diagnostics:[]};
   const app={workspace:{getActiveFile:()=>note?{extension:'md',path:'读书.md',name:'读书.md',basename:'读书'}:null},vault:{adapter:{readBinary:async()=>Buffer.from('selected bytes')}}};
   const sandbox={module:{exports:{}},Buffer,document:{createElement:t=>new Element(t)},require:n=>n==='obsidian'?{Plugin:class{},ItemView:class{constructor(){this.app=app;}},Modal:class{},PluginSettingTab:class{},Notice:class{}}:require(n)};
-  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../plugin/main.js'),'utf8')+'\nmodule.exports.Cockpit=Cockpit;',sandbox);
+  sandbox.window={setTimeout:sandbox.setTimeout||setTimeout,clearTimeout:sandbox.clearTimeout||clearTimeout,setInterval:sandbox.setInterval||setInterval,clearInterval:sandbox.clearInterval||clearInterval};
+vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../plugin/main.js'),'utf8')+'\nmodule.exports.Cockpit=Cockpit;',sandbox);
   const plugin={app,settings:{},remember:async()=>{},api:async(route,body)=>{
     calls.push({route,body});
     if(route==='/providers')return {available:[],active:noProvider?{}:{codex:{}}};

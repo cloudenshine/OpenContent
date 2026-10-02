@@ -115,6 +115,17 @@ def detect_cli():
     for name in candidates:
         located=shutil.which(name+'.exe' if os.name=='nt' else name)
         if located:candidates[name].append(Path(located))
+        if os.name == 'nt':
+            # npm exposes shell wrappers; the adapters must invoke their native payloads.
+            roots = {Path(p).parent for suffix in ('.cmd', '.ps1')
+                     if (p := shutil.which(name + suffix))}
+            for root in sorted(roots):
+                if name == 'codex':
+                    for package in ('codex-win32-x64', 'codex'):
+                        candidates[name].append(root / 'node_modules/@openai' / package /
+                                                'vendor/x86_64-pc-windows-msvc/bin/codex.exe')
+                else:
+                    candidates[name].append(root / 'node_modules/@anthropic-ai/claude-code/bin/claude.exe')
     local=Path(os.environ.get('LOCALAPPDATA',Path.home()/'AppData/Local'))
     candidates['codex'].extend(sorted((local/'OpenAI/Codex/bin').glob('*/codex.exe'),key=lambda p:p.stat().st_mtime,reverse=True))
     candidates['claude'].append(Path.home()/'.local/bin/claude.exe')
@@ -124,7 +135,10 @@ def detect_cli():
 
 def activate_cli(jobs,name,model=None):
     if jobs.running:raise Problem('请等待运行任务结束后切换 CLI',409)
-    selected=next((p for p in detect_cli() if p['name']==name),None)
+    current = jobs.providers.get(name)
+    selected = ({'name': name, 'path': str(current.executable)}
+                if isinstance(current, CodexProvider) and current.executable.is_file()
+                else next((p for p in detect_cli() if p['name']==name),None))
     if not selected:raise Problem('未发现支持的本地原生 CLI；请先安装并在终端登录')
     provider=(CodexProvider if name=='codex' else ClaudeProvider)(selected['path'],timeout=300)
     if model:

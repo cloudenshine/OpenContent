@@ -44,7 +44,7 @@
 
 十二轮均符合预先固定的执行预期：六轮经现有 Codex CLI 完成分类与综合，六轮在模型前因来源不足被拦截。未覆盖模型、推理强度配置。这里的通过是执行通过；没有人工“值得采用”评分、独立作者或宿主点击证据。
 
-实际安装位置：`F:\Obsidian_vault\.obsidian\plugins\opencontent`；内核：`F:\Obsidian_vault\.obsidian\plugins\opencontent\kernel-0.8.0`。新版离线自检、独立 board 读取通过，项目数量 1，诊断 0。领域 Markdown 与 CONTENT.md 哈希不变，除内核运行位置外的插件设置保留。旧版内核留在原目录；回退备份：`F:\Obsidian_vault\.opencontent\install-backups\20260909-151929-714644`。**Obsidian 当前加载的版本未验证**，安装不会强制重新加载用户窗口。
+实际安装位置：`<local-vault>\.obsidian\plugins\opencontent`；内核：`<local-vault>\.obsidian\plugins\opencontent\kernel-0.8.0`。新版离线自检、独立 board 读取通过，项目数量 1，诊断 0。领域 Markdown 与 CONTENT.md 哈希不变，除内核运行位置外的插件设置保留。旧版内核留在原目录；回退备份：`<local-vault>\.opencontent\install-backups\20260909-151929-714644`。**Obsidian 当前加载的版本未验证**，安装不会强制重新加载用户窗口。
 
 
 ## 后续真实宿主冒烟验收（2026-09-09）

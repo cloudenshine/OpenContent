@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-02T06:31:01.893245+00:00",
+  "suite_sha256": "fee25319ba6173da6909e2eb476bbabd5d35bf5b69dbdfc87def341f8106dcb9",
+  "scope": "current concise editorial core versus that same core plus current writing-quality layer; current constitution and fixed authored research identical",
+  "writing_policy_version": "1.0.2",
+  "provider_called": false,
+  "private_vault_used": false,
+  "model_override": false,
+  "human_review": "PENDING",
+  "runs": [],
+  "status": "PREPARED_ONLY",
+  "prepared_requests": 8
+}

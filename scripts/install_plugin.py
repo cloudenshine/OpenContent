@@ -11,17 +11,27 @@ from release_files import installed_files, installed_runtime
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--vault',required=True)
+parser.add_argument('--config-dir',default='.obsidian',help='Existing Vault-relative Obsidian configuration directory')
 parser.add_argument('--configure',action='store_true',help='Use the bundled kernel and this Python, preserving other settings')
 parser.add_argument('--codex')
 parser.add_argument('--live-safe',action='store_true',help='Install into a fresh runtime directory without moving a running kernel')
 args=parser.parse_args()
 root=Path(__file__).resolve().parent.parent
 vault=Path(args.vault).resolve()
-if not vault.is_dir() or not (vault/'.obsidian').is_dir():
-    raise SystemExit('Target must be an existing Obsidian Vault with a .obsidian directory; no new Vault will be created')
-dest=vault/'.obsidian/plugins/opencontent'
+config_relative=Path(args.config_dir)
+if config_relative.is_absolute() or '..' in config_relative.parts or config_relative == Path('.'):
+    raise SystemExit('Configuration directory must be a nonempty Vault-relative path without traversal')
+config_directory=vault/config_relative
+if not config_directory.resolve().is_relative_to(vault):
+    raise SystemExit('Configuration directory escapes Vault')
+if not vault.is_dir() or not config_directory.is_dir():
+    raise SystemExit('Target must be an existing Obsidian Vault with the selected configuration directory; no new Vault will be created')
+dest=config_directory/'plugins/opencontent'
 def inside(p):
-    if not p.resolve().is_relative_to(vault) or p.is_symlink() or p.is_junction():raise SystemExit('Install path escapes Vault or is linked: '+str(p))
+    if not p.is_relative_to(vault) or not p.resolve().is_relative_to(vault):raise SystemExit('Install path escapes Vault: '+str(p))
+    for component in (p,*p.parents):
+        if component==vault:break
+        if component.is_symlink() or component.is_junction():raise SystemExit('Install path is linked: '+str(component))
     return p
 inside(dest);inside(vault/'.opencontent/install-backups')
 runtime=installed_runtime(root)

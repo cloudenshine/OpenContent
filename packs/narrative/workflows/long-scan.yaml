@@ -1,16 +1,16 @@
 id: long-scan
-name: Long Serialized Fiction Market Scan
-description: Collect, clean, and analyze multi-platform rank snapshots (Qidian, Fanqie, JJWXC, Qimao) for long-form fiction.
+name: Long Fiction Ranking Snapshot Analysis
+description: Analyze an explicitly selected, bounded public Qimao daily ranking snapshot or provenance-bearing imported records. Other platforms require imported data; there is no sample fallback.
 
 steps:
-  - id: collect_raw_ranks
-    description: Ingest real platform ranking data via scrapers or feeds.
-  - id: clean_and_normalize
-    description: Strip marketing noise, clean intros, normalize word counts, tags, and popularity metrics.
+  - id: resolve_explicit_input
+    description: Require source_ids (qimao-boy-hot-daily or qimao-girl-hot-daily), raw_data, or a Vault-relative market_input_path. Imports are user-supplied and unverified.
+  - id: collect_or_validate_snapshot
+    description: Respect robots rules; fetch only allowlisted HTTPS pages with size and timeout bounds, rejecting redirects and blocked/changed pages. Require title, positive rank, public URL and timezone-aware observed_at for every record.
   - id: apply_quality_gate
-    description: Enforce minimum valid sample size (>= 3 per platform), reject invalid or corrupted fields.
-  - id: extract_market_opportunities
-    description: Group recurring tropes, setting combinations, and formulate 3 evidence-grounded creative directions.
+    description: Require at least 3 distinct valid records per platform. Reject invalid data or duplicate books/ranks instead of inventing fields or inflating counts.
+  - id: summarize_observed_samples
+    description: Count only supplied genre/tag fields; mark creative directions as hypotheses. Do not claim revenue, completion rate, market saturation or trend lifetime from a snapshot.
 
 outputs:
-  - market_report: Standardized MarketRunLong asset and candidate opportunities.
+  - market_report: Reviewable MarketRunLong v2 report with normalized records, observation timestamps separate from analysis time, source verification status, source snapshots/hashes, quality details and limitations.

@@ -1,0 +1,18 @@
+{
+  "technical": {
+    "B": "baseline",
+    "A": "enhanced"
+  },
+  "tutorial": {
+    "A": "baseline",
+    "B": "enhanced"
+  },
+  "opinion": {
+    "B": "baseline",
+    "A": "enhanced"
+  },
+  "insufficient": {
+    "A": "baseline",
+    "B": "enhanced"
+  }
+}

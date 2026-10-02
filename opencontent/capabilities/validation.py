@@ -1,5 +1,5 @@
 """Security, continuity, and state-delta validators for Capability Tasks."""
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from typing import Dict, Any, List
 from opencontent.vault import Problem
 from .contracts import STATE_DELTA_SCHEMA_V1, CANDIDATE_SCHEMA_V1
@@ -11,15 +11,20 @@ def validate_workspace_path(rel_path: str, workspace_root: Path) -> Path:
     """Ensure relative path does not escape workspace directory."""
     if not isinstance(rel_path, str) or not rel_path.strip():
         raise Problem("Path must be a non-empty string")
-    workspace_root = Path(workspace_root).resolve()
-    target = (workspace_root / rel_path).resolve()
-    if not target.is_relative_to(workspace_root):
+    relative = Path(rel_path)
+    if (relative.is_absolute() or PureWindowsPath(rel_path).drive or "\\" in rel_path
+            or ".." in relative.parts or "\x00" in rel_path):
         raise Problem(f"Path escapes task workspace: '{rel_path}'")
-    for p in (target, *target.parents):
+    workspace_root = Path(workspace_root).resolve()
+    lexical_target = workspace_root / relative
+    for p in (lexical_target, *lexical_target.parents):
         if p == workspace_root:
             break
-        if p.is_symlink():
-            raise Problem(f"Symlinks are forbidden in task workspace: '{rel_path}'")
+        if p.is_symlink() or (hasattr(p, "is_junction") and p.is_junction()):
+            raise Problem(f"Symlinks and junctions are forbidden in task workspace: '{rel_path}'")
+    target = lexical_target.resolve()
+    if not target.is_relative_to(workspace_root):
+        raise Problem(f"Path escapes task workspace: '{rel_path}'")
     return target
 
 

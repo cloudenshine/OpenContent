@@ -7,6 +7,9 @@ def plugin_files(root):
     root=Path(root)
     files=[(root/'plugin'/n,n) for n in ('main.js','manifest.json','styles.css')] + [(p,'engine/'+p.name) for p in sorted((root/'plugin/engine').glob('*.js'))]
     files += [(p,'kernel/opencontent/'+p.relative_to(root/'opencontent').as_posix()) for p in sorted((root/'opencontent').rglob('*.py')) if '__pycache__' not in p.parts]
+    assets = root/'opencontent/writing_skills'
+    if assets.is_dir():
+        files += [(p,'kernel/opencontent/'+p.relative_to(root/'opencontent').as_posix()) for p in sorted(assets.rglob('*')) if p.is_file() and (p.suffix in ('.md', '.json') or p.name == 'LICENSE')]
     if (root/'packs').is_dir():
         files += [(p,'kernel/packs/'+p.relative_to(root/'packs').as_posix()) for p in sorted((root/'packs').rglob('*')) if p.is_file() and '__pycache__' not in p.parts]
     files += [(root/'templates/CONTENT.md','kernel/templates/CONTENT.md'),(root/'scripts/doctor.py','kernel/doctor.py')]

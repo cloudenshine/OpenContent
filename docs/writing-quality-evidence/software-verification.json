@@ -1,0 +1,33 @@
+{
+  "writing_policy_version": "1.0.1",
+  "python": {
+    "command": "PATH=/tmp/opencontent-repair-venv/bin:$PATH python -m unittest discover -s tests",
+    "run": 212,
+    "passed": 209,
+    "errors": 3,
+    "error_tests": [
+      "test_configuration_credentials_encrypted_and_not_returned",
+      "test_draft_only_account_can_create_draft_but_cannot_publish",
+      "test_publish_preview_blocked_after_account_mode_restricted"
+    ],
+    "limitation": "Existing Windows DPAPI credential tests are unsupported on Linux; no production credential code changed."
+  },
+  "writing_quality_tests": {
+    "run": 8,
+    "passed": 8,
+    "live_model": false
+  },
+  "node": {
+    "command": "npm test with existing venv on PATH",
+    "run": 46,
+    "passed": 46
+  },
+  "build": {
+    "command": "npm run build",
+    "passed": true
+  },
+  "diff_check": true,
+  "real_paid_provider_called": false,
+  "windows_obsidian_verified": false,
+  "remote_push_merge_deploy": false
+}

@@ -10,7 +10,7 @@ version=json.loads((root/'plugin'/'manifest.json').read_text(encoding='utf-8'))[
 source_name=f'opencontent-source-{version}.zip'
 bundles={
     f'opencontent-plugin-{version}.zip':[p for p,_ in plugin_files(root)],
-    source_name:[root/name for name in ('README.md','PRIVACY.md','LICENSE','NOTICE.md','requirements.txt','Connect-WeChat.cmd','OpenContent — Codex Implementation Charter.md')]
+    source_name:[root/name for name in ('README.md','PRIVACY.md','LICENSE','NOTICE.md','requirements.txt','package.json','manifest.json','versions.json','Deploy-ToObsidian.ps1','一键部署到Obsidian.cmd','Connect-WeChat.cmd','OpenContent — Codex Implementation Charter.md')]
 }
 for directory in ('opencontent','plugin','templates','scripts','tests','packs'):
     bundles[source_name].extend(p for p in (root/directory).rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc')
@@ -26,6 +26,9 @@ bundles[source_name].extend(root/'docs'/name for name in (
     'obsidian-lifecycle-v0.4.json','lifecycle-runtime-v0.4.json','obsidian-publishing-v0.4.png',
     'market-evidence/market-snapshot.json','market-evidence/ailu-audit-manifest.json'))
 bundles[source_name].append(root/'docs/market-evidence/wechat-api-sources.json')
+bundles[source_name].append(root/'docs/WRITING-QUALITY-INTEGRATION.md')
+bundles[source_name].extend(root/'docs'/name for name in ('NARRATIVE-PRODUCTION-REPAIR-ZH.md', 'narrative-acceptance-results.json'))
+bundles[source_name].extend(p for p in (root/'docs/writing-quality-evidence').rglob('*') if p.is_file() and p.suffix in ('.json', '.md', '.txt'))
 report={}
 for name,files in bundles.items():
     with zipfile.ZipFile(dist/name,'w',zipfile.ZIP_DEFLATED) as archive:

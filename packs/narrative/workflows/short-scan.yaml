@@ -1,16 +1,16 @@
 id: short-scan
-name: Short Fiction Market Scan
-description: Analyze viral short fiction trends (Zhihu, Dianzhong, Heiyan, Qimao Short) focusing on emotional payoffs, shareability, and shelf-life.
+name: Short Fiction Imported Snapshot Analysis
+description: Analyze explicit provenance-bearing short-fiction records. No verified public short-ranking adapter is currently available; requesting one fails visibly instead of substituting long fiction or samples.
 
 steps:
-  - id: collect_short_trends
-    description: Sample trending short stories across viral platforms.
-  - id: evaluate_emotional_hooks
-    description: Extract core emotional triggers (indignation, redemption, revenge, moral dilemmas).
-  - id: audit_saturation_and_shelf_life
-    description: Compute trend shelf-life (30-60 days) and saturation warnings to avoid over-crowded tropes.
-  - id: formulate_short_concepts
-    description: Output 2-3 high-completion short story concepts with clear opening formulas.
+  - id: resolve_explicit_input
+    description: Require raw_data or a Vault-relative market_input_path; label all imported URLs and observation times as user-supplied and unverified.
+  - id: apply_quality_gate
+    description: Require at least 2 distinct valid records per platform, each with title, positive rank, public URL and timezone-aware observed_at. Reject invalid fields and duplicates.
+  - id: summarize_supplied_annotations
+    description: Count explicitly supplied emotional_hook and reversal_type annotations. Missing fields stay unknown; do not invent emotional patterns or promise commercial performance.
+  - id: document_uncertainty
+    description: Treat creative directions as hypotheses. A single snapshot does not establish saturation, completion/share rates or 30-60-day trend shelf-life.
 
 outputs:
-  - market_report: Standardized MarketRunShort asset, emotional dynamics map, and rescan deadline.
+  - market_report: Reviewable MarketRunShort v2 report and normalized records with source verification status, observation timestamps separate from analysis time, field coverage, quality details and limitations.

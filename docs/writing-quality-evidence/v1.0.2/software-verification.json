@@ -1,0 +1,69 @@
+{
+  "writing_policy_version": "1.0.2",
+  "application_version": "0.8.0",
+  "source_base": "bffbf4182c05d9a34544ea8594297acaa0a23426",
+  "cumulative_patch_base": "181dd58",
+  "full_suite_passed": false,
+  "python": {
+    "command": "PATH=/tmp/opencontent-repair-venv/bin:$PATH python scripts/verify.py",
+    "run": 217,
+    "passed": 214,
+    "errors": 3,
+    "failures": 0,
+    "error_tests": [
+      "test_configuration_credentials_encrypted_and_not_returned",
+      "test_draft_only_account_can_create_draft_but_cannot_publish",
+      "test_publish_preview_blocked_after_account_mode_restricted"
+    ],
+    "limitation": "Windows DPAPI unavailable on Linux. These same three tests reproduce on untouched bffbf418; production credential implementation unchanged. Tests were not suppressed or relabeled as passed."
+  },
+  "writing_and_evaluation_tests": {
+    "run": 13,
+    "passed": 13,
+    "live_model": false
+  },
+  "independent_focused_review": {
+    "run": 28,
+    "passed": 28,
+    "code_review": "code-review.md"
+  },
+  "node": {
+    "run": 46,
+    "passed": 46
+  },
+  "build": {
+    "command": "npm run build",
+    "passed": true
+  },
+  "doctor": {
+    "passed": true,
+    "python": "3.12.14",
+    "PyYAML": "6.0.3",
+    "mistune": "3.2.0",
+    "Pillow": "12.3.0",
+    "cli_found": true,
+    "cli_version": "codex-cli 0.159.2",
+    "cli_login": "NOT_CHECKED"
+  },
+  "source_archive_extraction": {
+    "build": true,
+    "writing_tests": 13,
+    "passed": 13,
+    "report": "source-extraction-check.json"
+  },
+  "diff_check": true,
+  "live_cli_model_called": false,
+  "real_paid_provider_called": false,
+  "credentials_read": false,
+  "windows_obsidian_verified": false,
+  "remote_push_merge_deploy": false,
+  "cross_topic_samples": {
+    "count": 3,
+    "kind": "Independent model authoring using production guidance fields and substituted synthetic tasks/output schema",
+    "production_e2e": false,
+    "old_policy_comparator": false,
+    "human_acceptance": false,
+    "report": "transfer-review.md"
+  },
+  "overall": "Implementation, regression and packaging verified within Linux scope; three known Windows-only tests error. No claim of live CLI prose quality or universal improvement."
+}

@@ -18,6 +18,7 @@ sys.path.insert(0, str(ROOT))
 from opencontent.kernel import Kernel
 from opencontent.handoff import reader_body
 from opencontent.providers import CodexProvider, detect_cli
+from opencontent.writing_quality import writing_policy
 
 
 def save(path, data):
@@ -25,15 +26,39 @@ def save(path, data):
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
-def original_constitution():
-    text = (ROOT / "templates/CONTENT.md").read_text(encoding="utf-8")
-    added = ("围绕读者的具体问题组织内容，", "语气服从受众与体裁，", "Voice 与 Utility 的判断须定位正文依据，")
-    return "\n".join(line for line in text.splitlines() if not line.startswith(added)) + "\n"
+def request_sha256(request):
+    return hashlib.sha256(json.dumps(request, ensure_ascii=False, sort_keys=True,
+                                    separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
+def paired_requests(enhanced):
+    """Compare the unchanged concise editorial core with the current added layer.
+
+    Strip the exact known suffix, never just its metadata or editorial_guidance.
+    Fail closed if this is not the current production assembly.
+    """
+    policy = writing_policy("draft")
+    suffix = "\n\n" + policy["instructions"]
+    metadata = enhanced.get("writing_quality", {})
+    if (enhanced.get("stage") != "draft" or metadata.get("version") != policy["version"]
+            or metadata.get("sha256") != policy["sha256"]
+            or not enhanced.get("instructions", "").endswith(suffix)):
+        raise ValueError("Expected a draft request with the exact current writing policy")
+    baseline = deepcopy(enhanced)
+    baseline["instructions"] = baseline["instructions"][:-len(suffix)]
+    baseline.pop("writing_quality")
+    # Re-attach from production code to ensure guidance and all trace fields match.
+    from opencontent.writing_quality import attach_writing_policy
+    if attach_writing_policy(deepcopy(baseline), "draft") != enhanced:
+        raise ValueError("Enhanced request differs from current production assembly")
+    assert baseline["editorial_guidance"] == enhanced["editorial_guidance"]
+    assert baseline["response_schema"] == enhanced["response_schema"]
+    assert request_sha256(baseline) != request_sha256(enhanced)
+    return {"baseline": baseline, "enhanced": deepcopy(enhanced)}
 
 
 def prepare(case, directory):
     k = Kernel(directory)
-    (directory / "CONTENT.md").write_text(original_constitution(), encoding="utf-8")
     pid = k.create_project(case["title"], case["goal"], case["audience"])["oc_id"]
     materials = [k.add(pid, "Material", f"作者编写实验资料 {i+1}", body,
                        {"source": f"fixture:writing/{case['id']}/{i+1}"}, k.vault.token())
@@ -58,7 +83,8 @@ def prepare(case, directory):
 
 
 def runtime_identity(directory):
-    text = (directory / "stderr.log").read_text(encoding="utf-8", errors="replace")
+    path = directory / "stderr.log"
+    text = path.read_text(encoding="utf-8", errors="replace") if path.is_file() else ""
     return {key: match.group(1).strip() for key in ("model", "provider", "reasoning effort")
             if (match := re.search(r"^" + re.escape(key) + r":\s*(.+)$", text, re.M))}
 
@@ -67,19 +93,29 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", required=True)
     parser.add_argument("--phase", choices=("generate", "review"), default="generate")
+    parser.add_argument("--prepare-only", action="store_true", help="Save exact paired requests without calling any provider")
     args = parser.parse_args()
     output = Path(args.output).resolve()
     if not output.is_relative_to(ROOT) or output == ROOT:
         parser.error("Use a new isolated directory inside this workspace")
-    provider = CodexProvider(next(c["path"] for c in detect_cli() if c["name"] == "codex"), timeout=300)
+    provider = None
+    if not args.prepare_only:
+        cli = next((c for c in detect_cli() if c["name"] == "codex"), None)
+        if cli is None:
+            parser.error("No local Codex CLI found; --prepare-only can verify requests offline")
+        provider = CodexProvider(cli["path"], timeout=300)
     if args.phase == "review":
+        if args.prepare_only:
+            parser.error("--prepare-only applies to generation, not review")
         return review(output, provider)
     output.mkdir(parents=True, exist_ok=False)
     suite_raw = (ROOT / "tests/fixtures/writing-quality.json").read_bytes()
     suite = json.loads(suite_raw)
     save(output / "suite.json", suite)
     report = {"at": datetime.now(timezone.utc).isoformat(), "suite_sha256": hashlib.sha256(suite_raw).hexdigest(),
-              "scope": "draft guidance only; fixed authored research, original constitution shared by both arms",
+              "scope": "current concise editorial core versus that same core plus current writing-quality layer; current constitution and fixed authored research identical",
+              "writing_policy_version": writing_policy("draft")["version"],
+              "provider_called": not args.prepare_only,
               "private_vault_used": False, "model_override": False, "human_review": "PENDING", "runs": []}
     save(output / "execution.json", report)
     tasks = []
@@ -90,20 +126,29 @@ def main():
         labels = random.SystemRandom().sample(["A", "B"], 2)
         mapping[case["id"]] = dict(zip(labels, ("baseline", "enhanced")))
         requests = {}
+        production = None
         for label in labels:
             target = directory / label
             shutil.copytree(directory / "seed", target / "vault")
             k = Kernel(target / "vault")
             req = k.request(pid, "draft", [])
-            if mapping[case["id"]][label] == "baseline":
-                req.pop("editorial_guidance")
+            production = req if production is None else production
+            assert req == production, "Seed copies produced unequal inputs"
+            req = paired_requests(req)[mapping[case["id"]][label]]
+            save(target / "request.json", req)
             requests[label] = req
             tasks.append((case, label, k, pid, req, target))
-        comparable = [dict(req) for req in requests.values()]
-        for req in comparable:
-            req.pop("editorial_guidance", None)
-        assert comparable[0] == comparable[1], "Paired inputs differ beyond editorial guidance"
+        save(directory / "pair-manifest.json", {
+            "baseline": "unchanged concise editorial core; no writing-quality layer",
+            "enhanced": writing_policy("draft"),
+            "request_sha256": {label: request_sha256(req) for label, req in requests.items()},
+            "invariants": ["materials", "claims", "constitution", "response_schema", "editorial_guidance"],
+        })
     save(output / "mapping.json", mapping)
+    if args.prepare_only:
+        report.update(status="PREPARED_ONLY", provider_called=False, prepared_requests=len(tasks))
+        save(output / "execution.json", report)
+        return 0
     random.SystemRandom().shuffle(tasks)
 
     def execute(task):

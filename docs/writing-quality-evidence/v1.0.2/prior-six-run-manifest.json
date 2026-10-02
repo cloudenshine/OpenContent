@@ -1,0 +1,91 @@
+{
+  "date_utc": "2026-10-02",
+  "same_briefs": true,
+  "per_condition_isolated_sessions": 1,
+  "pieces_per_condition": 6,
+  "model": "Inherited available model; concrete model identifier not independently inspected",
+  "reasoning_effort": "xhigh",
+  "temperature": null,
+  "seed": null,
+  "baseline": "Original generic writing core for all six genres",
+  "candidate": "Same core plus writing-quality 1.0.1; nonfiction for 01-04, fiction for 05-06",
+  "end_to_end_local_provider_run": false,
+  "original_fiction_routing_reproduced": false,
+  "mapping": {
+    "01": {
+      "A": "baseline",
+      "B": "candidate"
+    },
+    "02": {
+      "A": "candidate",
+      "B": "baseline"
+    },
+    "03": {
+      "A": "baseline",
+      "B": "candidate"
+    },
+    "04": {
+      "A": "candidate",
+      "B": "baseline"
+    },
+    "05": {
+      "A": "candidate",
+      "B": "baseline"
+    },
+    "06": {
+      "A": "baseline",
+      "B": "candidate"
+    }
+  },
+  "scope": "Compare guidance on these samples only; no winner, scores or statistical proof.",
+  "files": [
+    {
+      "path": "briefs.json",
+      "sha256": "47d3b9037da5ad830d4ffa63ac2046cb467f2aa6e6a7184243d0eb1f59b11d2f"
+    },
+    {
+      "path": "baseline-policy.json",
+      "sha256": "86cb8651513556375ec7dec897e966bc72892757a42e1fd856087e15be622b2d"
+    },
+    {
+      "path": "candidate-policy.json",
+      "sha256": "133487b9c4617cd44fa7abf6f255361fbc803a99311f21aa99d5bbb18ac8e4c6"
+    },
+    {
+      "path": "baseline-drafts.json",
+      "sha256": "d2991ed0686919b92f2195bb48d5a25a40bc612d47f5b62639d3f6b1ae391d0f"
+    },
+    {
+      "path": "candidate-drafts.json",
+      "sha256": "e29c89a6d39a6e22b197f13c32b8c041d3b514c12f0eeb6817da145fde504dc7"
+    },
+    {
+      "path": "neutral-comparison.json",
+      "sha256": "87d87dcdd18eefb92f3f36fff5e12bcb9dc1cc40b432ddeee8fe960f9d1e7b17"
+    },
+    {
+      "path": "source-verification.json",
+      "sha256": "86309e079e05c5048d3cfb2353b14a37bcfb25c83d779dc850b3080f61bb4f03"
+    },
+    {
+      "path": "build_documents.py",
+      "sha256": "a530920e752678f0f9d3287b56be845250bb34dd396fc6f0cfd8d67c1bb78fdb"
+    },
+    {
+      "path": "verify_documents.py",
+      "sha256": "675621ac37cd219d60a64b15026388e8793d209dea2c889e688522636e037b25"
+    },
+    {
+      "path": "复现说明.txt",
+      "sha256": "c7cb8212c84c5d164a01109e62b4078a0271e1be6768a539fceeca23a7a3de65"
+    },
+    {
+      "path": "qa/content-verification.json",
+      "sha256": "628493d6242217c08ce39a6f8218aecb86234fa9f338e92709ebb396f4d11c03"
+    },
+    {
+      "path": "qa/delivery-validation.json",
+      "sha256": "eec2deaecda0b3f965ed3409ac140e4bb816c265f3bd1358794da9bb846ec67d"
+    }
+  ]
+}

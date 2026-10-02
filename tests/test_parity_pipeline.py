@@ -43,6 +43,9 @@ class ParityPipelineTests(unittest.TestCase):
                 {"rank": 3, "title": "我不是戏神", "author": "三九音域", "genre": "玄幻", "words": 160, "reads": 800000, "intro": "穿越大夏，以戏入道，台上演戏，台下戏神。"},
             ]
         }
+        for platform, items in raw_data.items():
+            for i, item in enumerate(items):
+                item.update(url=f"https://www.{platform}.com/book/{i+1}", observed_at="2026-09-30T10:00:00Z")
         res = self.rt.execute_task({
             "schema": "opencontent.creative-task.v1",
             "project": self.p,
@@ -68,6 +71,9 @@ class ParityPipelineTests(unittest.TestCase):
                 {"rank": 2, "title": "离婚当天我买下了他的公司", "author": "晚风", "genre": "言情", "words": 1.5, "reads": 92000, "emotional_hook": "决绝离开 / 全员打脸", "reversal_type": "身份反转", "intro": "签字离婚那天，我没有流一滴泪。"},
             ]
         }
+        for platform, items in raw_data.items():
+            for i, item in enumerate(items):
+                item.update(url=f"https://www.{platform}.com/book/{i+1}", observed_at="2026-09-30T10:00:00Z")
         res = self.rt.execute_task({
             "schema": "opencontent.creative-task.v1",
             "project": self.p,
@@ -79,7 +85,7 @@ class ParityPipelineTests(unittest.TestCase):
         self.assertEqual(res["receipt"]["status"], "SUCCEEDED")
         report = res["market_report"]
         self.assertEqual(report["total_samples"], 2)
-        self.assertIn("30天内", report["opportunity_candidates"][0]["rescan_recommended_before"])
+        self.assertEqual(report["source_metadata"]["mode"], "imported")
         vault_md = list(self.k.vault.root.glob("OpenContent/Market/Short/*.md"))
         self.assertEqual(len(vault_md), 1)
 
@@ -127,7 +133,9 @@ class ParityPipelineTests(unittest.TestCase):
         self.assertTrue((self.k.vault.root / "OpenContent/Deconstruction/婚前物证/拆文报告.md").is_file())
 
     def test_cover_director_and_generation_parity(self):
-        """Parity with Oh Story story-cover: genre semantics, platform sizing, multi-version."""
+        """Fixture contract test, not evidence of live image-generation capability."""
+        from test_media_generation import ImageFixtureProvider
+        self.rt.media_adapter.providers = {"image-fixture": ImageFixtureProvider()}
         res_cover = self.rt.execute_task({
             "schema": "opencontent.creative-task.v1",
             "project": self.p,
@@ -139,16 +147,20 @@ class ParityPipelineTests(unittest.TestCase):
             "platform": "fanqie",
         })
         self.assertEqual(res_cover["receipt"]["status"], "SUCCEEDED")
+        self.assertEqual(res_cover["mode"], "fixture")
+        self.assertEqual(res_cover["image_status"], "FIXTURE_GENERATED")
         spec = res_cover["spec"]
         self.assertEqual(spec["dimensions"]["ratio"], "3:4")
         self.assertIn("hard sci-fi", spec["image_generation_prompt"])
         candidates = res_cover["candidates"]
         self.assertEqual(len(candidates), 2)
-        # Verify physical image existence
+        # Verify physical decoding and actual dimensions, not a magic header.
         for c in candidates:
             img_path = self.k.vault.root / c["path"]
             self.assertTrue(img_path.is_file())
-            self.assertTrue(img_path.stat().st_size > 50)
+            self.assertEqual((c["image"]["width"], c["image"]["height"]), (600, 800))
+            self.assertTrue(c["image"]["decoded"])
+            self.assertEqual(c["provenance"]["provider"], "image-fixture")
 
 
 if __name__ == "__main__":

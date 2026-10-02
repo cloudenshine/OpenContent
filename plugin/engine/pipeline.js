@@ -4,8 +4,6 @@
  * Detects topic clusters, extracts candidate materials, and generates ideation prompts.
  */
 
-const fs = require('fs');
-const path = require('path');
 const crypto = require('crypto');
 
 const DEFAULT_FEEDING_DIRS = [
@@ -132,8 +130,6 @@ function clusterNotes(notes, threshold = 0.15) {
 function generateIdeationCandidates(cluster) {
   const sources = cluster.sources.map(s => s.path);
   const titles = cluster.sources.map(s => s.title);
-  const sourceA = cluster.sources[0];
-  const sourceB = cluster.sources[1] || sourceA;
   const folders = Array.from(new Set(cluster.sources.map(s => {
     const parts = s.path.split('/');
     return parts.length > 1 ? parts.slice(0, -1).join('/') : '.';

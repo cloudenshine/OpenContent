@@ -1,6 +1,7 @@
 """Capability Runtime orchestrator for executing creative tasks."""
 import json
 import time
+import re
 from pathlib import Path
 from typing import Dict, Any, Optional
 import uuid
@@ -29,17 +30,43 @@ from .media import MediaGenerationAdapter
 class CapabilityRuntime:
     """Coordinates pack execution, context assembly, isolated workspaces, and receipts."""
 
-    def __init__(self, kernel, registry: PackRegistry, router: TaskRouter = None, assembler: ContextAssembler = None):
+    def __init__(self, kernel, registry: PackRegistry, router: TaskRouter = None, assembler: ContextAssembler = None, jobs=None):
         self.kernel = kernel
+        self.jobs = jobs or getattr(kernel, "_jobs", None)
         self.registry = registry
         self.router = router or TaskRouter()
         self.assembler = assembler or ContextAssembler()
         self.long_market = LongMarketAnalyzer(kernel)
         self.short_market = ShortMarketAnalyzer(kernel)
         self.deconstructor = StoryDeconstructor(kernel)
-        self.media_adapter = MediaGenerationAdapter(kernel)
+        self.media_adapter = MediaGenerationAdapter(kernel, providers=self.jobs.providers if self.jobs else {})
 
-    def execute_task(
+    def execute_task(self, task_request, provider_name=None, run_id=None):
+        run_id = run_id or uuid.uuid4().hex
+        if not isinstance(run_id, str) or not re.fullmatch(r"[A-Za-z0-9_-]{1,80}", run_id):
+            raise Problem("Invalid run_id")
+        workspace = self.kernel.vault.safe(f".opencontent/runs/{run_id}")
+        if not isinstance(task_request, dict):
+            raise Problem("Task request must be an object")
+        try:
+            workspace.mkdir(parents=True, exist_ok=False)
+        except FileExistsError:
+            raise Problem("Run workspace already exists; use a fresh run_id", 409)
+        self._save_specialized_receipt(run_id, task_request, {
+            "run_id": run_id, "task": task_request.get("task"), "status": "RUNNING", "at": now(),
+        })
+        try:
+            return self._execute_task(task_request, provider_name, run_id)
+        except Exception as error:
+            self._save_specialized_receipt(run_id, task_request, {
+                "run_id": run_id, "task": task_request.get("task"), "status": "FAILED",
+                "at": now(), "error": str(error),
+            })
+            if isinstance(error, Problem):
+                raise
+            raise Problem(f"Capability execution failed: {error}") from error
+
+    def _execute_task(
         self,
         task_request: Dict[str, Any],
         provider_name: Optional[str] = None,
@@ -48,6 +75,8 @@ class CapabilityRuntime:
         """Execute a creative task within an isolated run workspace."""
         start_time = time.monotonic()
         run_id = run_id or uuid.uuid4().hex
+        if not isinstance(run_id, str) or not re.fullmatch(r"[A-Za-z0-9_-]{1,80}", run_id):
+            raise Problem("Invalid run_id")
         pid = task_request.get("project")
         if not pid:
             raise Problem("Task request requires 'project' ID")
@@ -68,32 +97,16 @@ class CapabilityRuntime:
         target_aid = task_request.get("artifact")
         target_artifact = objects.get(target_aid) if target_aid else None
 
-        # 1. Specialized Market Scan Tasks
-        if task_name == "long-scan":
-            raw_data = task_request.get("raw_data")
-            if not raw_data:
-                # Default sample seed if none passed
-                raw_data = {
-                    "qidian": [
-                        {"rank": 1, "title": "宿命之环", "author": "爱潜水的乌贼", "genre": "玄幻", "words": 280, "recommendation": 500000, "intro": "诡秘世界第二部，蒸汽与神秘的再次交织。"},
-                        {"rank": 2, "title": "赤心巡天", "author": "情何以甚", "genre": "仙侠", "words": 420, "recommendation": 450000, "intro": "上古时代，妖族绝迹，少年拔剑起于微末。"},
-                        {"rank": 3, "title": "道诡异仙", "author": "狐尾的笔", "genre": "悬疑", "words": 190, "recommendation": 400000, "intro": "诡异修仙，心素迷茫，现实与幻觉交替。"},
-                    ]
-                }
-            report = self.long_market.analyze(raw_data, scan_id=run_id)
-            return {"receipt": {"run_id": run_id, "task": "long-scan", "status": "SUCCEEDED", "at": now()}, "market_report": report}
-
-        if task_name == "short-scan":
-            raw_data = task_request.get("raw_data")
-            if not raw_data:
-                raw_data = {
-                    "zhihu": [
-                        {"rank": 1, "title": "洗冤录：法医妻子的一份报告", "author": "冷月", "genre": "刑侦", "words": 1.2, "reads": 88000, "emotional_hook": "专业复仇 / 伦理反转", "reversal_type": "物证翻转", "intro": "作为首席法医，在解剖台前我认出了那块特殊的腕表。"},
-                        {"rank": 2, "title": "退婚后我成了前夫的小舅妈", "author": "晚风", "genre": "言情", "words": 1.5, "reads": 92000, "emotional_hook": "决绝离开 / 全员打脸", "reversal_type": "身份反转", "intro": "签字离婚那天，我没有流一滴泪。"},
-                    ]
-                }
-            report = self.short_market.analyze(raw_data, scan_id=run_id)
-            return {"receipt": {"run_id": run_id, "task": "short-scan", "status": "SUCCEEDED", "at": now()}, "market_report": report}
+        # Market execution never synthesizes a source when input/retrieval is absent.
+        if task_name in ("long-scan", "short-scan"):
+            from .market_sources import resolve_market_input
+            raw_data, source_metadata = resolve_market_input(task_request, task_name, self.kernel, run_id)
+            analyzer = self.long_market if task_name == "long-scan" else self.short_market
+            report = analyzer.analyze(raw_data, scan_id=run_id, source_metadata=source_metadata)
+            receipt = {"run_id": run_id, "task": task_name, "status": "SUCCEEDED", "at": now(),
+                       "source_mode": source_metadata["mode"], "source_verification": source_metadata["verification"]}
+            self._save_specialized_receipt(run_id, task_request, receipt)
+            return {"receipt": receipt, "market_report": report}
 
         # 2. Specialized Deconstruction Tasks
         if task_name == "long-analyze":
@@ -115,8 +128,12 @@ class CapabilityRuntime:
             title = task_request.get("title", project["title"])
             genre = task_request.get("genre", "通用")
             platform = task_request.get("platform", "general")
-            res = self.media_adapter.generate_cover_candidates(pid, title, project.get("author", "作者"), genre, project.get("goal", ""), platform)
-            return {"receipt": {"run_id": run_id, "task": "cover", "status": "SUCCEEDED", "at": now()}, **res}
+            res = self.media_adapter.generate_cover_candidates(pid, title, project.get("author", "作者"), genre, project.get("goal", ""), platform,
+                provider_name=provider_name, run_id=run_id, instruction=task_request.get("instruction", ""),
+                count=task_request.get("count", 2))
+            receipt = {"run_id": run_id, "task": "cover", "status": "SUCCEEDED", "at": now(), "provider": res["provider"], "execution_mode": res["mode"]}
+            self._save_specialized_receipt(run_id, task_request, receipt)
+            return {"receipt": receipt, **res}
 
         # 4. Standard Agent Creative Workflows (plan, write, continue, revise, critique)
         project_materials = [o for o in objects.values() if o.get("project") == pid and o.get("type") == "Material"]
@@ -179,13 +196,17 @@ class CapabilityRuntime:
             "instructions": agent_instructions,
         }
 
-        jobs_mgr = getattr(self.kernel, "_jobs", None)
+        from opencontent.writing_quality import attach_writing_policy
+        if pack.id == "narrative":
+            attach_writing_policy(agent_req, task_name, fiction=routed["profile_id"] != "narrative-nonfiction")
+        atomic(workspace_dir / "agent-request.json", json.dumps(agent_req, ensure_ascii=False, indent=2).encode("utf-8"))
+
+        jobs_mgr = self.jobs
         providers_map = jobs_mgr.providers if jobs_mgr else {}
-        p_name = provider_name or (list(providers_map.keys())[0] if providers_map else "fixture")
+        p_name = provider_name or next(iter(providers_map), None)
         provider = providers_map.get(p_name)
         if not provider:
-            from opencontent.providers import LocalCodexProvider
-            provider = LocalCodexProvider()
+            raise Problem(f"Creative provider not configured: {p_name or 'none'}", 503)
 
         import threading
         cancel_evt = threading.Event()
@@ -194,6 +215,9 @@ class CapabilityRuntime:
         except Exception as e:
             atomic(workspace_dir / "stderr.log", str(e).encode("utf-8"))
             raise Problem(f"Creative execution failed under provider '{p_name}': {e}") from e
+
+        if not isinstance(raw_result, dict) or not any(raw_result.get(key) for key in ("candidate", "state_delta", "review")):
+            raise Problem("Creative provider returned no candidate, state delta, or review")
 
         candidate = raw_result.get("candidate")
         if candidate:
@@ -223,6 +247,7 @@ class CapabilityRuntime:
             "context_items_count": len(context_pkg.get("provenance", [])),
             "has_candidate": bool(candidate),
             "has_state_delta": bool(state_delta),
+            "writing_quality": agent_req.get("writing_quality"),
         }
         atomic(workspace_dir / "receipt.json", json.dumps(receipt, ensure_ascii=False, indent=2).encode("utf-8"))
 
@@ -233,3 +258,9 @@ class CapabilityRuntime:
             "review": raw_result.get("review"),
             "context": context_pkg,
         }
+
+    def _save_specialized_receipt(self, run_id, request, receipt):
+        workspace = self.kernel.vault.safe(f".opencontent/runs/{run_id}")
+        workspace.mkdir(parents=True, exist_ok=True)
+        atomic(workspace / "request.json", json.dumps(request, ensure_ascii=False, indent=2).encode("utf-8"))
+        atomic(workspace / "receipt.json", json.dumps(receipt, ensure_ascii=False, indent=2).encode("utf-8"))

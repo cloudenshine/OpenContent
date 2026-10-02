@@ -4,7 +4,7 @@ Obsidian 桌面插件：把本地笔记做成可追溯、可审查、由作者�
 
 首页写一句想写什么，即可用当前笔记开始。写作页集中稿件与对话，发布页处理交付与公众号草稿。材料、知识、主张、证据、草稿和审查都保存在 Vault 的 Markdown 里；Python Kernel 负责状态与门禁，外部 CLI（Codex / Claude）负责生成，人工批准才算完成。
 
-当前版本 **0.8.0**，适合桌面作者试用。尚未上架 Obsidian 社区插件目录。MIT 许可。
+当前版本 **0.8.1**，适合桌面作者试用。尚未上架 Obsidian 社区插件目录。MIT 许可。
 
 ## 它做什么
 
@@ -24,10 +24,22 @@ Material → Knowledge / Idea → Claim / Evidence → Artifact → Critic → �
 
 ## 环境要求
 
-- Windows 桌面 [Obsidian](https://obsidian.md/) 1.8+
+- Windows 桌面 [Obsidian](https://obsidian.md/) 1.13.7+（本轮原生验收为1.13.7；更低版本未做原生验收，暂不声明支持）
 - Python 3.12+
-- PyYAML 6.0.3、Mistune 3.2.0（见 `requirements.txt`）
+- PyYAML 6.0.3、Mistune 3.2.0、Pillow 12.3.0（见 `requirements.txt`）
 - 可选：已安装并登录的 Codex 或 Claude 原生 CLI（无 AI 时仍可手动维护材料与审查）
+
+## 社区安装与外部运行时
+
+OpenContent 应用版本为 0.8.1，随附写作策略版本为 1.0.2。两者独立版本化；公开 release 的 tag 必须与应用 manifest 版本一致。
+
+社区安装只取得 main.js、manifest.json、styles.css，不包含 Python 内核。使用完整功能前，请自行准备 Python 3.12+，将本仓库或完整运行时包解压到自己选定的本地目录，再在该目录手工执行 `python -m pip install -r requirements.txt`。插件不会下载、安装或更新自身、Python、依赖或 Agent CLI。
+
+在 OpenContent 的“配置连接”中，将“OpenContent 项目目录”设为上述包含 `opencontent/__main__.py`、`templates/CONTENT.md` 和 `requirements.txt` 的目录，并填写自己的 Python 原生可执行文件路径。先执行环境检查，再保存并连接。缺少内核会报告路径缺失，缺少依赖会报告具体模块；不会把未准备好的环境显示为成功。手工完整 ZIP 安装及安装脚本见下节。
+
+插件仅支持桌面端，会启动本机 Python 子进程，并按用户配置调用本机 Codex/Claude 原生 CLI。AI 功能需要该 CLI 已登录的账户及相应授权，外部服务的费用与使用条件由所选提供方决定。插件会读取用户指定的 Vault 外内核目录、CLI 可执行文件及选定 skill 目录，用于运行内核与装配指令。模型列表发现还可能读取 CLI 的本机配置，以及用户主目录下 `.codex/model-catalogs` 的模型目录缓存；不会把凭据内容展示给插件或装配进写作材料。插件不会安装或更新这些工具。
+
+网络使用包括插件与本机回环内核通信；执行 AI 任务时，选定项目的材料和指令经已有 CLI 发给所选模型提供方，通常为 OpenAI 或 Anthropic；图像生成同样经现有 CLI 已授权工具完成。明确执行七猫市场任务时，内核读取七猫公开榜单。配置并确认微信公众号操作后，内核访问 `api.weixin.qq.com` 的微信官方接口。没有自动发表或模型自动批准。隐私边界见 [PRIVACY.md](PRIVACY.md)。
 
 ## 安装
 
@@ -40,9 +52,11 @@ python -m pip install -r requirements.txt
 python scripts/install_plugin.py --vault "你的 Vault 路径" --configure
 ```
 
+如果在 Obsidian 中使用自定义配置目录，手工安装时添加 `--config-dir "所选 Vault 相对配置目录"`。目录必须已存在且位于该 Vault 内，安装脚本不会创建新 Vault。社区三文件安装使用 Obsidian 提供的配置目录；自定义目录的环境检查需要此版本的完整运行时。
+
 然后在 Obsidian 中关闭安全模式，启用社区插件 **OpenContent**。首次打开会离线检查 Python、依赖、内核和 Vault 写权限；通过后 Kernel 才在本机回环启动。
 
-安装脚本会把界面文件和 `kernel-0.8.0/` 写入 `.obsidian/plugins/opencontent/`，替换前备份到 `.opencontent/install-backups/`。`--configure` 使用随包内核，并保留其他项目与账号设置。不要同时为同一 Vault 再手动启动一份 Kernel。
+安装脚本会把界面文件和 `kernel-0.8.1/` 写入 `.obsidian/plugins/opencontent/`，替换前备份到 `.opencontent/install-backups/`。`--configure` 使用随包内核，并保留其他项目与账号设置。不要同时为同一 Vault 再手动启动一份 Kernel。
 
 试用包与演示仓库见 [独立试用说明](docs/TRIAL-QUICKSTART.md)。
 
@@ -86,11 +100,11 @@ python scripts/verify.py
 python scripts/doctor.py --runtime .
 ```
 
-当前自动套件覆盖 Node 语法、39 项前端/引擎测试、Python 编译与 112 项内核测试。架构见 [ARCHITECTURE](docs/ARCHITECTURE.md)。
+自动套件覆盖前端/引擎测试、Python 内核与写作策略测试；实际数量以所选提交的运行日志为准。架构见 [ARCHITECTURE](docs/ARCHITECTURE.md)。
 
 ## 当前范围
 
-OpenContent 在已捕获材料内做论证与证据整理，不自动联网抓取。公众号链路需要本机配置账号，模拟协议通过不代表已经发表。自动 Critic 目前限定每个项目一个 Artifact；额外稿件用人工审查。
+OpenContent 的论证与证据整理使用已捕获材料。Narrative 长篇市场任务另提供明确选择的七猫公开日榜采集；其他市场来源支持带来源的 JSON 导入，短篇尚无自动采集适配器。详见 [市场与封面修复验收](docs/NARRATIVE-PRODUCTION-REPAIR-ZH.md)。公众号链路需要本机配置账号，模拟协议通过不代表已经发表。自动 Critic 目前限定每个项目一个 Artifact；额外稿件用人工审查。
 
 尚未完成：社区插件目录上架、无 Python 的一键分发、多产物自动审查、大规模 Vault / 移动端 / 团队验收。已知缺口与发布标准见 [公开发布准备度](docs/PUBLIC-READINESS.md)。
 

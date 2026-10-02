@@ -8,7 +8,8 @@ function setup(behavior){
   const sandbox={module:{exports:{}},setTimeout,clearTimeout,require:name=>name==='obsidian'?{Plugin:class{},ItemView:class{},Modal:class{},PluginSettingTab:class{},Notice:class{}}:name==='child_process'?{spawn:(exe,args,options)=>{
     call={exe,args,options};child=new EventEmitter();child.stdout=new EventEmitter();child.stderr=new EventEmitter();child.kill=()=>{child.killed=true;child.emit('close',null);};queueMicrotask(()=>behavior(child));return child;
   }}:require(name)};
-  vm.runInNewContext(source,sandbox);const p=new sandbox.module.exports();p.settings={kernelPath:base,python:'C:/Python312/python.exe',codex:'C:/AI CLI/codex.exe'};p.app={vault:{adapter:{getBasePath:()=>base}}};
+  sandbox.window={setTimeout:sandbox.setTimeout||setTimeout,clearTimeout:sandbox.clearTimeout||clearTimeout,setInterval:sandbox.setInterval||setInterval,clearInterval:sandbox.clearInterval||clearInterval};
+vm.runInNewContext(source,sandbox);const p=new sandbox.module.exports();p.settings={kernelPath:base,python:'C:/Python312/python.exe',codex:'C:/AI CLI/codex.exe'};p.app={vault:{configDir:'.obsidian',adapter:{getBasePath:()=>base}}};
   return {p,base,call:()=>call,child:()=>child,close:()=>fs.rmSync(base,{recursive:true,force:true})};
 }
 const report=passed=>({schema:1,passed,checks:[{status:passed?'PASS':'FAIL',message:passed?'环境正常':'缺少依赖',action:passed?'':'安装 requirements.txt'}]});

@@ -1,11 +1,10 @@
 {
   "id": "opencontent",
   "name": "OpenContent",
-  "version": "0.8.0",
-  "minAppVersion": "1.8.0",
-  "description": "A project-centered editorial control plane: provenance, production gates, and human judgment.",
+  "version": "0.8.1",
+  "minAppVersion": "1.13.7",
+  "description": "Develop articles from local notes with traceable sources and human approval.",
   "author": "cloudenshine",
   "authorUrl": "https://github.com/cloudenshine",
-  "fundingUrl": "",
   "isDesktopOnly": true
 }

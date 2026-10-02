@@ -30,6 +30,7 @@ def main():
     serve = sub.add_parser("serve")
     serve.add_argument("--port", type=int, default=0)
     serve.add_argument("--codex")
+    serve.add_argument("--model", help="Preserve the explicitly selected model at Kernel startup")
     serve.add_argument("--agent-timeout", type=int, default=180)
     serve.add_argument("--skill-root", action="append", default=[])
     args = parser.parse_args()
@@ -50,6 +51,9 @@ def main():
         providers = {"codex": CodexProvider(args.codex, args.agent_timeout)} if args.codex else {}
         jobs = Jobs(k, providers, args.skill_root)
         jobs.provider_notice=bootstrap_cli(jobs)
+        if args.model:
+            for provider in jobs.providers.values():
+                provider.model = args.model
         server = Server(k, jobs, args.port)
         connection = {"url": f"http://127.0.0.1:{server.server_port}", "token": server.token, "vault": str(k.vault.root)}
         print(json.dumps(connection), flush=True)

@@ -1,333 +1,299 @@
-"""Market Intelligence Module for Long and Short Narrative Scans.
-Implements distinct models for Long-form and Short-form market analyses.
+"""Evidence-bounded market summaries of explicit, provenance-bearing snapshots.
+
+These are descriptive sample counts, not causal commercial or trend predictions.
+Unknown fields remain unknown. Invalid records never become plausible defaults.
 """
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from collections import Counter
+from datetime import datetime, timedelta, timezone
+import ipaddress
 import json
-from pathlib import Path
+import math
 import re
-from typing import Dict, List, Any, Optional
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 import uuid
 
-from opencontent.vault import Problem, atomic, now, digest
+from opencontent.vault import Problem, atomic, digest, now
+from .market_sources import MAX_INPUT_BYTES, validate_scan_id
 
 
-# ----------------------------------------------------------------------
-# Platform Cleaners & Normalizers
-# ----------------------------------------------------------------------
-
-def clean_intro(text: str, max_len: int = 200) -> str:
-    """Clean book introduction: strip marketing noise, tags, excessive whitespace."""
+def clean_intro(text, max_len=200):
     if not isinstance(text, str):
         return ""
     cleaned = re.sub(r"【.*?】|\[.*?\]|（.*?）", "", text)
     cleaned = re.sub(r"求收藏|求月票|求推荐|QQ群|官方群|加群|防盗|书友群", "", cleaned)
-    cleaned = re.sub(r"\s+", " ", cleaned).strip()
-    return cleaned[:max_len]
+    return re.sub(r"\s+", " ", cleaned).strip()[:max_len]
 
 
-def normalize_record(raw: Dict[str, Any], platform: str) -> Dict[str, Any]:
-    """Normalize a raw book record from platform into standard market schema."""
-    title = str(raw.get("title", "")).strip()
-    if not title:
-        raise Problem(f"Platform '{platform}' record missing title")
-    
-    author = str(raw.get("author", "未知作者")).strip()
-    genre = str(raw.get("genre", "综合")).strip()
-    rank = int(raw.get("rank", 999))
-    status = str(raw.get("status", "连载")).strip()
-    
-    words = raw.get("words", 0)
+def _text(value, field, *, required=False, max_len=500):
+    if value is None and not required:
+        return None
+    if not isinstance(value, str) or (required and not value.strip()) or len(value) > max_len:
+        raise Problem(f"Market record {field} must be {'a nonempty' if required else 'a'} bounded string")
+    # Font-obfuscated, replacement or control text is not silently decoded or guessed.
+    if any((ord(c) < 32 and c not in '\n\r\t') or 0xE000 <= ord(c) <= 0xF8FF or c == '\ufffd' for c in value):
+        raise Problem(f"Market record {field} contains unreadable or control characters")
+    return value.strip() or None
+
+
+def _number(value, field):
+    if value is None:
+        return None
     try:
-        words = float(words)
-    except (ValueError, TypeError):
-        words = 0.0
+        valid = not isinstance(value, bool) and isinstance(value, (int, float)) and math.isfinite(value) and value >= 0
+    except (OverflowError, ValueError):
+        valid = False
+    if not valid:
+        raise Problem(f"Market record {field} must be a finite nonnegative JSON number")
+    return value
 
-    score_or_recom = raw.get("recommendation", raw.get("reads", raw.get("likes", 0)))
+
+def _url(value, field="url"):
+    value = _text(value, field, required=True, max_len=2000)
     try:
-        score_or_recom = float(score_or_recom)
-    except (ValueError, TypeError):
-        score_or_recom = 0.0
+        parts = urlsplit(value)
+        if parts.scheme not in ("http", "https") or not parts.hostname or parts.username or parts.password or parts.port not in (None, 80, 443):
+            raise ValueError()
+        host = parts.hostname.lower()
+        if any(c.isspace() for c in value) or "\\" in value or host == "localhost" or host.endswith((".localhost", ".local", ".internal")):
+            raise ValueError()
+        try:
+            address = ipaddress.ip_address(host)
+        except ValueError:
+            if "." not in host or not re.fullmatch(r"[a-z0-9.-]+", host):
+                raise ValueError()
+        else:
+            if not address.is_global:
+                raise ValueError()
+        query = urlencode(sorted((k, v) for k, v in parse_qsl(parts.query, keep_blank_values=True)
+                                 if not k.lower().startswith("utm_") and k.lower() not in ("fbclid", "gclid")))
+        return urlunsplit((parts.scheme.lower(), parts.netloc.lower(), parts.path.rstrip("/") or "/", query, ""))
+    except ValueError as exc:
+        raise Problem(f"Market record {field} must be a public HTTP(S) URL without credentials") from exc
 
-    intro = clean_intro(raw.get("intro", ""))
 
-    return {
-        "platform": platform,
-        "rank": rank,
-        "title": title,
-        "author": author,
-        "genre": genre,
-        "status": status,
-        "words_ten_thousand": round(words, 2),
-        "popularity_metric": score_or_recom,
-        "intro": intro,
-        "tags": [t.strip() for t in raw.get("tags", []) if isinstance(t, str) and t.strip()],
-        "url": str(raw.get("url", "")).strip(),
+def _observed_at(value):
+    value = _text(value, "observed_at", required=True, max_len=80)
+    try:
+        stamp = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        if stamp.tzinfo is None or stamp.utcoffset() is None:
+            raise ValueError()
+        stamp = stamp.astimezone(timezone.utc)
+        if stamp > datetime.now(timezone.utc) + timedelta(minutes=5):
+            raise ValueError()
+    except ValueError as exc:
+        raise Problem("Market record observed_at must be an ISO-8601 observation timestamp with timezone, not a future analysis time") from exc
+    return stamp.isoformat()
+
+
+def normalize_record(raw, platform):
+    if not isinstance(raw, dict):
+        raise Problem(f"Platform '{platform}' record must be an object")
+    title = _text(raw.get("title"), "title", required=True, max_len=300)
+    rank = raw.get("rank")
+    if isinstance(rank, bool) or not isinstance(rank, int) or not 1 <= rank <= 1_000_000:
+        raise Problem("Market record rank must be a positive integer")
+    tags = raw.get("tags", [])
+    if not isinstance(tags, list) or len(tags) > 32:
+        raise Problem("Market record tags must be a bounded array of strings")
+    tags = list(dict.fromkeys(_text(t, "tag", required=True, max_len=100) for t in tags))
+    metric = raw.get("metric")
+    legacy_metrics = [key for key in ("recommendation", "reads", "likes") if key in raw and raw[key] is not None]
+    for key in legacy_metrics:
+        _number(raw[key], key)
+    if metric is not None:
+        if not isinstance(metric, dict):
+            raise Problem("Market record metric must be an object")
+        value = _number(metric.get("value"), "metric.value")
+        if value is None:
+            raise Problem("Market record metric.value is required")
+        metric = {"name": _text(metric.get("name"), "metric.name", required=True, max_len=100), "value": value,
+                  "unit": _text(metric.get("unit"), "metric.unit", max_len=100),
+                  "source_label": _text(metric.get("source_label"), "metric.source_label", max_len=100)}
+    elif legacy_metrics:
+        key = legacy_metrics[0]
+        metric = {"name": key, "value": raw[key], "unit": "source_defined", "source_label": key}
+    intro = _text(raw.get("intro"), "intro", max_len=10000)
+    record = {
+        "platform": platform, "rank": rank, "title": title,
+        "author": _text(raw.get("author"), "author", max_len=200),
+        "genre": _text(raw.get("genre"), "genre", max_len=100),
+        "status": _text(raw.get("status"), "status", max_len=100),
+        "words_ten_thousand": _number(raw.get("words"), "words (万字)"),
+        "popularity_metric": metric["value"] if metric else None,
+        "metric": metric, "intro": clean_intro(intro) if intro else None, "intro_raw": intro,
+        "tags": tags, "url": _url(raw.get("url")),
+        "observed_at": _observed_at(raw.get("observed_at")),
+        "source_id": _text(raw.get("source_id"), "source_id", max_len=100),
+        "source_url": _url(raw["source_url"], "source_url") if raw.get("source_url") is not None else None,
+        "emotional_hook": _text(raw.get("emotional_hook"), "emotional_hook", max_len=300),
+        "reversal_type": _text(raw.get("reversal_type"), "reversal_type", max_len=300),
     }
+    return record
 
 
-# ----------------------------------------------------------------------
-# Long Market Analyzer (起点、番茄、七猫、晋江)
-# ----------------------------------------------------------------------
+def _validate_records(raw_data, minimum):
+    try:
+        encoded = json.dumps(raw_data, ensure_ascii=False, allow_nan=False).encode("utf-8")
+    except (TypeError, ValueError, RecursionError) as exc:
+        raise Problem("Market data must contain finite JSON values") from exc
+    if len(encoded) > MAX_INPUT_BYTES or not isinstance(raw_data, dict) or not 1 <= len(raw_data) <= 8:
+        raise Problem("Market data must be a nonempty bounded platform-to-records object (up to 8 platforms, 2 MB)")
+    records, quality, seen_urls, seen_titles, seen_ranks = [], {}, set(), set(), set()
+    for platform, items in raw_data.items():
+        _text(platform, "platform", required=True, max_len=100)
+        if not isinstance(items, list) or not minimum <= len(items) <= 200:
+            raise Problem(f"Platform '{platform}' needs {minimum}-200 distinct valid records; insufficient/invalid input")
+        normalized = []
+        for i, item in enumerate(items):
+            try:
+                record = normalize_record(item, platform)
+            except Problem as exc:
+                raise Problem(f"Platform '{platform}', record {i + 1}: {exc}") from exc
+            url_key = record["url"].split("://", 1)[1]
+            title_key = (platform, record["title"].casefold(), (record["author"] or "").casefold())
+            rank_key = (platform, record["source_id"], record["rank"])
+            if url_key in seen_urls or title_key in seen_titles or rank_key in seen_ranks:
+                raise Problem(f"Platform '{platform}', record {i + 1}: duplicate book URL/title or rank would inflate the quality gate")
+            seen_urls.add(url_key)
+            seen_titles.add(title_key)
+            seen_ranks.add(rank_key)
+            normalized.append(record)
+        quality[platform] = {"total_collected": len(items), "valid_samples": len(normalized),
+                             "anomalies_count": 0, "duplicates_count": 0, "quality_status": "PASS",
+                             "scope": "input_snapshot_only"}
+        records.extend(normalized)
+    if len(records) > 1000:
+        raise Problem("Market data exceeds the total sample limit")
+    return records, quality, encoded
 
-class LongMarketAnalyzer:
-    """Market analyzer for long serialized fiction (focusing on retention, progression, and paid/traffic patterns)."""
+
+def _counts(records, field, list_field=False):
+    counts = Counter()
+    for r in records:
+        for value in (r[field] if list_field else [r[field]]):
+            if value:
+                counts[value] += 1
+    return sorted(counts.items(), key=lambda x: (-x[1], x[0]))
+
+
+def _evidence(records):
+    return [{k: r[k] for k in ("platform", "title", "url", "observed_at", "rank", "source_id")} for r in records[:5]]
+
+
+class _MarketAnalyzer:
+    kind = "long"
+    minimum = 3
 
     def __init__(self, kernel):
         self.kernel = kernel
 
-    def analyze(
-        self,
-        raw_platform_data: Dict[str, List[Dict[str, Any]]],
-        scan_id: Optional[str] = None,
-    ) -> Dict[str, Any]:
-        scan_id = scan_id or uuid.uuid4().hex
-        captured_at = now()
-        
-        normalized_records = []
-        quality_reports = {}
-        total_valid = 0
+    def analyze(self, raw_platform_data, scan_id=None, source_metadata=None):
+        scan_id = uuid.uuid4().hex if scan_id is None else scan_id
+        validate_scan_id(scan_id)
+        records, quality, raw_bytes = _validate_records(raw_platform_data, self.minimum)
+        analyzed_at = now()
+        source_metadata = dict(source_metadata or {
+            "mode": "imported", "verification": "user_supplied_unverified", "sources": [],
+            "warning": "用户提供的记录、网址和观测时间未联网核验。",
+        })
+        # Inputs and results are reviewable for both analyzers, with separate clocks.
+        records_path = f".opencontent/runs/market-{scan_id}-records.json"
+        input_path = f".opencontent/runs/market-{scan_id}-input.json"
+        report_json_path = f".opencontent/runs/market-{scan_id}-report.json"
+        report_path = f"OpenContent/Market/{self.kind.title()}/{scan_id}.md"
+        source_metadata.update({"input_path": input_path, "input_sha256": digest(raw_bytes)})
+        observations = [r["observed_at"] for r in records]
+        report = {
+            "schema": f"opencontent.market-{self.kind}.v2", "scan_id": scan_id,
+            "analyzed_at": analyzed_at, "observed_at_range": {"earliest": min(observations), "latest": max(observations)},
+            "platforms": list(raw_platform_data), "total_samples": len(records), "quality_reports": quality,
+            "source_metadata": source_metadata, "records": records, "records_path": records_path,
+            "report_path": report_path, "report_json_path": report_json_path,
+            "limitations": [
+                "仅为输入快照的描述性统计，样本量门禁不等于统计代表性或事实核验。",
+                "平台指标口径不同，未跨平台比较或合并热度、阅读量与推荐数。",
+                "单次榜单快照不能证明完读率、转发率、营收、市场饱和度或趋势寿命。",
+                "机会方向是待作者验证的创作假设，不是商业表现保证；缺失字段保持未知。",
+            ],
+        }
+        if self.kind == "long":
+            self._long_analysis(report, records)
+        else:
+            self._short_analysis(report, records)
+        # Resolve all destinations before the first write, including direct analyzer calls.
+        destinations = [self.kernel.vault.safe(p) for p in (input_path, records_path, report_json_path, report_path)]
+        atomic(destinations[0], raw_bytes)
+        atomic(destinations[1], json.dumps(records, ensure_ascii=False, indent=2).encode("utf-8"))
+        atomic(destinations[2], json.dumps(report, ensure_ascii=False, indent=2).encode("utf-8"))
+        atomic(destinations[3], self._markdown(report).encode("utf-8"))
+        return report
 
-        for platform, items in raw_platform_data.items():
-            valid_items = []
-            anomalies = []
-            for item in items:
-                try:
-                    norm = normalize_record(item, platform)
-                    valid_items.append(norm)
-                except Exception as e:
-                    anomalies.append({"item": item, "error": str(e)})
-
-            # Quality gate: check sample size
-            is_sufficient = len(valid_items) >= 3
-            quality_reports[platform] = {
-                "total_collected": len(items),
-                "valid_samples": len(valid_items),
-                "anomalies_count": len(anomalies),
-                "quality_status": "PASS" if is_sufficient else "INSUFFICIENT_DATA",
-            }
-            if not is_sufficient:
-                quality_reports[platform]["warning"] = "样本量不足3条，无法提炼稳健模式"
-
-            normalized_records.extend(valid_items)
-            total_valid += len(valid_items)
-
-        if total_valid < 3:
-            raise Problem(f"长篇扫榜有效样本总量不足（仅 {total_valid} 本），触发质量门禁阻断。")
-
-        # Extract repeating tropes and genre distribution
-        genre_counts = {}
-        trope_frequency = {}
-        for r in normalized_records:
-            g = r["genre"]
-            genre_counts[g] = genre_counts.get(g, 0) + 1
-            for tag in r["tags"]:
-                trope_frequency[tag] = trope_frequency.get(tag, 0) + 1
-
-        top_genres = sorted(genre_counts.items(), key=lambda x: -x[1])
-        top_tropes = sorted(trope_frequency.items(), key=lambda x: -x[1])[:8]
-
-        # Formulate 3 opportunity candidates grounded in evidence
-        candidates = []
-        for i in range(min(3, len(top_genres))):
-            primary_g = top_genres[i][0]
-            matched_books = [b["title"] for b in normalized_records if b["genre"] == primary_g][:3]
-            candidates.append({
-                "direction_id": f"long-opp-{i+1}",
-                "theme": f"{primary_g}方向创新切口",
-                "core_appeal": f"针对 {primary_g} 读者群体，结合热门元素 {', '.join([t[0] for t in top_tropes[:2]])}",
-                "evidence_sources": matched_books,
-                "commercial_logic": "番茄侧完读率高 / 起点侧世界观扩展性强",
-                "risk_assessment": "若无前三章紧凑因果线，容易在中期出现叙事疲劳",
+    @staticmethod
+    def _long_analysis(report, records):
+        genres, tropes = _counts(records, "genre"), _counts(records, "tags", True)
+        report.update({"top_genres": genres, "top_tropes": tropes[:8], "opportunity_candidates": [],
+                       "field_coverage": {"genre": sum(bool(r["genre"]) for r in records),
+                                          "tags": sum(bool(r["tags"]) for r in records)}})
+        for i, (genre, count) in enumerate(genres[:3], 1):
+            matched = [r for r in records if r["genre"] == genre]
+            report["opportunity_candidates"].append({
+                "direction_id": f"long-opp-{i}", "classification": "creative_hypothesis",
+                "theme": f"{genre}：可进一步研究的创作方向",
+                "core_appeal": f"本次样本中有 {count} 本标为「{genre}」；可先比较这些作品的开篇与差异点。",
+                "evidence_sources": [r["title"] for r in matched[:5]], "evidence": _evidence(matched),
+                "commercial_logic": "未知；现有快照不支持商业因果判断。",
+                "risk_assessment": "样本选择偏差与同质化风险需另行验证。",
             })
 
-        report = {
-            "schema": "opencontent.market-long.v1",
-            "scan_id": scan_id,
-            "captured_at": captured_at,
-            "platforms": list(raw_platform_data.keys()),
-            "total_samples": total_valid,
-            "quality_reports": quality_reports,
-            "top_genres": top_genres,
-            "top_tropes": top_tropes,
-            "opportunity_candidates": candidates,
-        }
+    @staticmethod
+    def _short_analysis(report, records):
+        emotions, reversals = _counts(records, "emotional_hook"), _counts(records, "reversal_type")
+        report.update({"top_emotions": emotions, "top_reversals": reversals, "opportunity_candidates": [],
+                       "trend_shelf_life": "未知；需要跨期观测，不能从单次快照推出30/60天有效期。",
+                       "field_coverage": {"emotional_hook": sum(bool(r["emotional_hook"]) for r in records),
+                                          "reversal_type": sum(bool(r["reversal_type"]) for r in records)}})
+        for i, (emotion, count) in enumerate(emotions[:3], 1):
+            matched = [r for r in records if r["emotional_hook"] == emotion]
+            report["opportunity_candidates"].append({
+                "direction_id": f"short-opp-{i}", "classification": "creative_hypothesis",
+                "emotion_core": emotion, "sample_count": count,
+                "opening_formula": "尚未分析原文开篇；需阅读并核验对应作品后形成写作方案。",
+                "saturation_risk": "未知；当前样本不足以估计全市场饱和程度。",
+                "shelf_life_days": None, "rescan_recommended_before": None,
+                "representative_samples": [r["title"] for r in matched[:5]], "evidence": _evidence(matched),
+            })
 
-        # Persist as reviewable asset in Vault
-        vault_path = self.kernel.vault.safe(f"OpenContent/Market/Long/{scan_id}.md")
-        vault_path.parent.mkdir(parents=True, exist_ok=True)
-        
-        md_content = f"""---
-scan_id: {scan_id}
-type: MarketRunLong
-captured_at: {captured_at}
-total_samples: {total_valid}
----
-
-# 长篇网文市场扫榜报告（{scan_id[:8]}）
-
-- **采集时间**：{captured_at}
-- **覆盖平台**：{', '.join(raw_platform_data.keys())}
-- **有效样本总数**：{total_valid}
-
-## 一、数据质量门禁报告
-
-{json.dumps(quality_reports, ensure_ascii=False, indent=2)}
-
-## 二、热门题材与核心元素分布
-
-- **高频题材**：{', '.join([f'{g} ({c}本)' for g, c in top_genres])}
-- **跨平台重复热词/标签**：{', '.join([f'{t} ({c}次)' for t, c in top_tropes])}
-
-## 三、机会方向建议（基于真实样本）
-
-"""
-        for c in candidates:
-            md_content += f"""### {c['theme']}
-- **读者吸引力**：{c['core_appeal']}
-- **榜单代表样本**：{', '.join(c['evidence_sources'])}
-- **商业模型考量**：{c['commercial_logic']}
-- **创作风险提示**：{c['risk_assessment']}
-
-"""
-
-        atomic(vault_path, md_content.encode("utf-8"))
-        atomic(self.kernel.vault.safe(f".opencontent/runs/market-{scan_id}-records.json"),
-               json.dumps(normalized_records, ensure_ascii=False, indent=2).encode("utf-8"))
-
-        return report
+    @staticmethod
+    def _markdown(report):
+        label = "长篇" if "market-long" in report["schema"] else "短篇"
+        meta = report["source_metadata"]
+        lines = [f"# {label}市场样本报告（{report['scan_id']}）", "",
+                 f"- 分析时间：{report['analyzed_at']}",
+                 f"- 来源观测时间：{report['observed_at_range']['earliest']} 至 {report['observed_at_range']['latest']}",
+                 f"- 输入方式：{meta['mode']} / {meta['verification']}",
+                 f"- 有效样本：{report['total_samples']}（{', '.join(report['platforms'])}）",
+                 f"- {meta.get('warning', '')}", "", "## 事实边界", ""]
+        lines.extend(f"- {item}" for item in report["limitations"])
+        lines.extend(["", "## 来源与采集凭据", ""])
+        for source in meta.get("sources", []):
+            lines.append(f"- {source['label']}：{source['url']}；观测 {source['observed_at']}；SHA-256 {source['sha256']}；快照 {source['snapshot_path']}")
+        if not meta.get("sources"):
+            lines.append("- 导入数据未联网核验，逐条来源网址与用户提供的观测时间见下。")
+        lines.extend(["", "## 逐条样本与观测时间", ""])
+        for r in report["records"]:
+            title = r["title"].replace("[", "\\[").replace("]", "\\]")
+            lines.append(f"- {r['platform']} #{r['rank']} [{title}]({r['url']})；观测 {r['observed_at']}；题材 {r['genre'] or '未知'}")
+        summary = {k: v for k, v in report.items() if k in ("quality_reports", "top_genres", "top_tropes", "top_emotions", "top_reversals", "field_coverage", "opportunity_candidates", "trend_shelf_life")}
+        lines.extend(["", "## 描述性统计与待验证创作假设", "", "```json", json.dumps(summary, ensure_ascii=False, indent=2), "```", "",
+                      f"完整标准化记录：{report['records_path']}", f"机器可读报告：{report['report_json_path']}", ""])
+        return "\n".join(lines)
 
 
-# ----------------------------------------------------------------------
-# Short Market Analyzer (知乎盐选、点众、黑岩、七猫短篇)
-# ----------------------------------------------------------------------
+class LongMarketAnalyzer(_MarketAnalyzer):
+    """Long-fiction snapshot counts; requires three unique valid books per platform."""
 
-class ShortMarketAnalyzer:
-    """Market analyzer for short fiction (focusing on emotions, virality, completion rate, shelf-life)."""
 
-    def __init__(self, kernel):
-        self.kernel = kernel
-
-    def analyze(
-        self,
-        raw_platform_data: Dict[str, List[Dict[str, Any]]],
-        scan_id: Optional[str] = None,
-    ) -> Dict[str, Any]:
-        scan_id = scan_id or uuid.uuid4().hex
-        captured_at = now()
-
-        normalized_records = []
-        quality_reports = {}
-        total_valid = 0
-
-        for platform, items in raw_platform_data.items():
-            valid_items = []
-            anomalies = []
-            for item in items:
-                try:
-                    norm = normalize_record(item, platform)
-                    # Short specific: extract emotional tone
-                    norm["emotional_hook"] = str(item.get("emotional_hook", "强烈情感反差")).strip()
-                    norm["reversal_type"] = str(item.get("reversal_type", "信息差反转")).strip()
-                    valid_items.append(norm)
-                except Exception as e:
-                    anomalies.append({"item": item, "error": str(e)})
-
-            is_sufficient = len(valid_items) >= 2
-            quality_reports[platform] = {
-                "total_collected": len(items),
-                "valid_samples": len(valid_items),
-                "anomalies_count": len(anomalies),
-                "quality_status": "PASS" if is_sufficient else "INSUFFICIENT_DATA",
-            }
-            normalized_records.extend(valid_items)
-            total_valid += len(valid_items)
-
-        if total_valid < 2:
-            raise Problem(f"短篇扫榜有效样本量不足（仅 {total_valid} 本），触发门禁阻断。")
-
-        # Emotional analysis & Viral drivers
-        emotions_map = {}
-        reversals_map = {}
-        for r in normalized_records:
-            emo = r.get("emotional_hook", "共鸣")
-            rev = r.get("reversal_type", "反转")
-            emotions_map[emo] = emotions_map.get(emo, 0) + 1
-            reversals_map[rev] = reversals_map.get(rev, 0) + 1
-
-        top_emotions = sorted(emotions_map.items(), key=lambda x: -x[1])
-        top_reversals = sorted(reversals_map.items(), key=lambda x: -x[1])
-
-        # Formulate short fiction opportunities with explicit shelf-life and saturation risk
-        candidates = [
-            {
-                "direction_id": f"short-opp-1",
-                "emotion_core": "不公压抑 → 决绝离开 → 全员悔恨",
-                "opening_formula": "开局三句内亮出无法调和的伦理或利益背叛，主角果断切割",
-                "saturation_risk": "高（市面同类追妻/世情模式偏多，必须在职业细节或物证逻辑上做差异化）",
-                "shelf_life_days": 30,
-                "rescan_recommended_before": "30天内",
-                "representative_samples": [b["title"] for b in normalized_records[:2]],
-            },
-            {
-                "direction_id": f"short-opp-2",
-                "emotion_core": "专业身份反差 → 隐形暗算揭露 → 认知重构",
-                "opening_formula": "利用严谨行业知识（法医/金融/刑侦）作为证据链，步步逼近真相",
-                "saturation_risk": "中偏低（具备真实行业质感的作品稀缺，完读与转发率高）",
-                "shelf_life_days": 60,
-                "rescan_recommended_before": "60天内",
-                "representative_samples": [b["title"] for b in normalized_records[1:3] if len(normalized_records) > 2] or [normalized_records[0]["title"]],
-            }
-        ]
-
-        report = {
-            "schema": "opencontent.market-short.v1",
-            "scan_id": scan_id,
-            "captured_at": captured_at,
-            "platforms": list(raw_platform_data.keys()),
-            "total_samples": total_valid,
-            "quality_reports": quality_reports,
-            "top_emotions": top_emotions,
-            "top_reversals": top_reversals,
-            "opportunity_candidates": candidates,
-            "trend_shelf_life": "短篇趋势具有高时效性，建议每月复扫验证",
-        }
-
-        # Persist as reviewable asset in Vault
-        vault_path = self.kernel.vault.safe(f"OpenContent/Market/Short/{scan_id}.md")
-        vault_path.parent.mkdir(parents=True, exist_ok=True)
-
-        md_content = f"""---
-scan_id: {scan_id}
-type: MarketRunShort
-captured_at: {captured_at}
-total_samples: {total_valid}
-shelf_life: 30-60天
----
-
-# 短篇网文市场扫榜报告（{scan_id[:8]}）
-
-- **采集时间**：{captured_at}
-- **短篇平台**：{', '.join(raw_platform_data.keys())}
-- **有效样本**：{total_valid}
-- **特别提示**：短篇为情绪交付驱动，本报告附带趋势时效与饱和度警告。
-
-## 一、情绪图谱与反转手法统计
-
-- **主流情绪触发点**：{', '.join([f'{e} ({c}篇)' for e, c in top_emotions])}
-- **核心反转模式**：{', '.join([f'{r} ({c}篇)' for r, c in top_reversals])}
-
-## 二、短篇选题与情绪切口建议
-
-"""
-        for c in candidates:
-            md_content += f"""### 方向：{c['emotion_core']}
-- **开头前置公式**：{c['opening_formula']}
-- **市场饱和风险**：{c['saturation_risk']}
-- **趋势有效周期**：{c['shelf_life_days']} 天（建议在 {c['rescan_recommended_before']} 重新复扫）
-- **参考样本**：{', '.join(c['representative_samples'])}
-
-"""
-
-        atomic(vault_path, md_content.encode("utf-8"))
-        return report
+class ShortMarketAnalyzer(_MarketAnalyzer):
+    """Short-fiction snapshot counts; missing annotations remain unknown."""
+    kind = "short"
+    minimum = 2

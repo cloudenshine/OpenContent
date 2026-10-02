@@ -1,0 +1,29 @@
+{
+  "scope": "Source archive extracted outside checkout; build and writing-focused tests only",
+  "checks": [
+    {
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "output": "\n> opencontent@0.8.0 build\n> node scripts/bundle_plugin.js\n\nValidated and synchronized community release files for v0.8.0\nnpm warn Unknown env config \"http-proxy\". This will stop working in the next major version of npm.\n"
+    },
+    {
+      "command": [
+        "/tmp/opencontent-repair-venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_writing*.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "output": "test_control_rejects_stale_or_tampered_metadata_and_nonwriting_input (test_writing_evaluation.WritingEvaluationTests.test_control_rejects_stale_or_tampered_metadata_and_nonwriting_input) ... ok\ntest_control_removes_entire_current_layer_but_preserves_every_other_field (test_writing_evaluation.WritingEvaluationTests.test_control_removes_entire_current_layer_but_preserves_every_other_field) ... ok\ntest_missing_process_log_does_not_hide_original_failure (test_writing_evaluation.WritingEvaluationTests.test_missing_process_log_does_not_hide_original_failure) ... ok\ntest_all_narrative_tasks_reach_provider_with_correct_profile_and_saved_hash (test_writing_quality.WritingQualityTests.test_all_narrative_tasks_reach_provider_with_correct_profile_and_saved_hash) ... ok\ntest_codex_and_claude_adapters_serialize_applied_policy_to_stdin (test_writing_quality.WritingQualityTests.test_codex_and_claude_adapters_serialize_applied_policy_to_stdin) ... ok\ntest_composed_guidance_hash_and_concise_core_are_preserved (test_writing_quality.WritingQualityTests.test_composed_guidance_hash_and_concise_core_are_preserved) ... ok\ntest_excluded_tasks_have_no_writing_policy (test_writing_quality.WritingQualityTests.test_excluded_tasks_have_no_writing_policy) ... ok\ntest_generic_production_injects_only_draft_and_critique (test_writing_quality.WritingQualityTests.test_generic_production_injects_only_draft_and_critique) ... ok\ntest_installed_runtime_contains_working_policy_and_attribution (test_writing_quality.WritingQualityTests.test_installed_runtime_contains_working_policy_and_attribution) ... ok\ntest_missing_policy_asset_fails_before_provider (test_writing_quality.WritingQualityTests.test_missing_policy_asset_fails_before_provider) ... ok\ntest_references_are_hashed_genre_scoped_and_not_default_instructions (test_writing_quality.WritingQualityTests.test_references_are_hashed_genre_scoped_and_not_default_instructions) ... ok\ntest_versioned_assets_and_licenses_match_manifest (test_writing_quality.WritingQualityTests.test_versioned_assets_and_licenses_match_manifest) ... ok\ntest_workbench_revision_only_and_preserves_protocol (test_writing_quality.WritingQualityTests.test_workbench_revision_only_and_preserves_protocol) ... ok\n\n----------------------------------------------------------------------\nRan 13 tests in 0.226s\n\nOK\n"
+    }
+  ]
+}

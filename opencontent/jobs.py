@@ -143,6 +143,8 @@ class Jobs:
                     raise Problem("Vault changed while queued; no material sent to Agent", 409)
                 atomic(workspace / "request.json", json.dumps(request, ensure_ascii=False).encode("utf-8"))
                 attempt = {"id": run_id, "stage": stage, "started": now(), "status": "RUNNING"}
+                if request.get("writing_quality"):
+                    attempt["writing_quality"] = request["writing_quality"]
                 detail["attempts"].append(attempt)
                 self.update(uid, "RUNNING", {**detail, "stage": stage})
                 if previous:

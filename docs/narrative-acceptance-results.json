@@ -1,0 +1,56 @@
+{
+  "baseline": "181dd58079948b679b8d6c229a13623f5a0c5c42",
+  "live_market": {
+    "passed": true,
+    "receipt": {
+      "run_id": "76ccb9d31b5a4e92b0f0f42106444853",
+      "task": "long-scan",
+      "status": "SUCCEEDED",
+      "at": "2026-10-01T14:45:41.960794+00:00",
+      "source_mode": "live",
+      "source_verification": "retrieved_public_page"
+    },
+    "samples": 20,
+    "source_metadata": {
+      "mode": "live",
+      "verification": "retrieved_public_page",
+      "sources": [
+        {
+          "source_id": "qimao-boy-hot-daily",
+          "platform": "qimao",
+          "label": "七猫男生大热日榜（首页）",
+          "url": "https://www.qimao.com/paihang/boy/hot/date/",
+          "observed_at": "2026-10-01T14:45:41.937788+00:00",
+          "ranking_period": "昨日（来源页面标注，未提供精确发布时刻）",
+          "sha256": "41adde2a32f37aab76b47ee206f85db67e0edc8a798577f840d7fe0416434a1f",
+          "snapshot_path": ".opencontent/runs/market-76ccb9d31b5a4e92b0f0f42106444853-qimao-boy-hot-daily.html",
+          "total_collected": 20,
+          "robots_sha256": "3dc364450528de4649e0746eac2be407ee5566f18df193a18f9367d5ca2d2d6a"
+        }
+      ],
+      "warning": "仅统计指定公开榜单首页快照；未核验平台指标计算方式，不代表全平台或跨期趋势。",
+      "input_path": ".opencontent/runs/market-76ccb9d31b5a4e92b0f0f42106444853-input.json",
+      "input_sha256": "a94cc9c98aa3aa8bc6ecd605c08088f9daa2e39dd7fb12c22a43605a9d7c0b7b"
+    },
+    "evidence_retention": "Temporary acceptance Vault removed after check; URL/time/content hashes and normalized response were observed, raw snapshot is not distributed."
+  },
+  "live_cover": {
+    "status": "NOT_RUN",
+    "reason": "CLI executable detected, but authentication and runtime image-generation tool availability unverified; no live model call made."
+  },
+  "verification": {
+    "aggregate_passed": false,
+    "changed_during_checks": [],
+    "node_tests": 46,
+    "python_tests": 204,
+    "python_passed": 201,
+    "python_errors": 3,
+    "platform_errors": [
+      "test_configuration_credentials_encrypted_and_not_returned",
+      "test_draft_only_account_can_create_draft_but_cannot_publish",
+      "test_publish_preview_blocked_after_account_mode_restricted"
+    ],
+    "baseline_reproduced": true,
+    "earlier_transient_failure": "test_timeout_owns_descendants failed once; independent and final reruns passed."
+  }
+}

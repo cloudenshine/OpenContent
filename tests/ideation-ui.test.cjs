@@ -25,7 +25,8 @@ function setup({failed=false,running=false,noProvider=false,history=false}={}){
   class Modal{constructor(){this.contentEl=new Element();modal=this;}open(){this.onOpen();}close(){this.onClose();this.contentEl.isConnected=false;}}
   const sandbox={module:{exports:{}},document:{createElement:tag=>new Element(tag)},setTimeout:fn=>timers.push(fn),clearTimeout(){},require:name=>name==='obsidian'?{Plugin:class{},ItemView:class{},PluginSettingTab:class{},Modal,Notice:class{}}:require(name)};
   const source=fs.readFileSync(path.join(__dirname,'../plugin/main.js'),'utf8');
-  vm.runInNewContext(source+'\nmodule.exports.Cockpit=Cockpit;',sandbox);
+  sandbox.window={setTimeout:sandbox.setTimeout||setTimeout,clearTimeout:sandbox.clearTimeout||clearTimeout,setInterval:sandbox.setInterval||setInterval,clearInterval:sandbox.clearInterval||clearInterval};
+vm.runInNewContext(source+'\nmodule.exports.Cockpit=Cockpit;',sandbox);
   const plugin={settings:{ideationFolders:[],ideationLimit:24},saveData:async data=>{saved=data;},api:async(route,body)=>{
     calls.push({route,body});
     if(route==='/ideation/scope')return {folders:[{path:'Research',notes:2},{path:'Private',notes:5}]};

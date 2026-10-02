@@ -1,11 +1,14 @@
 {
   "name": "opencontent",
-  "version": "0.8.0",
-  "description": "A project-centered editorial control plane: provenance, production gates, and human judgment.",
+  "version": "0.8.1",
+  "description": "Develop articles from local notes with traceable sources and human approval.",
   "main": "plugin/main.js",
   "scripts": {
     "build": "node scripts/bundle_plugin.js",
-    "test": "node --test tests/sidebar.test.cjs tests/ideation-ui.test.cjs tests/doctor-ui.test.cjs tests/writing-ui.test.cjs tests/adversarial-review.test.cjs plugin/engine/domain.test.cjs plugin/engine/pipeline.test.cjs plugin/engine/typography.test.cjs"
+    "test": "node --test tests/capabilities-ui.test.cjs tests/sidebar.test.cjs tests/ideation-ui.test.cjs tests/doctor-ui.test.cjs tests/writing-ui.test.cjs tests/adversarial-review.test.cjs plugin/engine/domain.test.cjs plugin/engine/pipeline.test.cjs plugin/engine/typography.test.cjs",
+    "lint": "eslint plugin package.json",
+    "lint:compat": "eslint --config eslint.compat.config.mjs plugin",
+    "lint:controls": "node scripts/check_lint_controls.mjs"
   },
   "keywords": [
     "obsidian",
@@ -18,5 +21,11 @@
     "evidence"
   ],
   "author": "cloudenshine",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "9.39.5",
+    "eslint-plugin-obsidianmd": "0.4.2",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.0"
+  }
 }

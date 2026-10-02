@@ -1,0 +1,74 @@
+{
+  "baseline": "unchanged concise editorial core; no writing-quality layer",
+  "enhanced": {
+    "id": "opencontent.writing-quality",
+    "version": "1.0.2",
+    "task": "draft",
+    "mode": "evidence-bound",
+    "modules": [
+      "substance.md",
+      "voice.md"
+    ],
+    "sources": [
+      {
+        "id": "huashu-report",
+        "repository": "https://github.com/alchaincyf/huashu-report",
+        "commit": "bdc08bee5077462e1300431408c5237438a22d00",
+        "license": "MIT",
+        "files": [
+          {
+            "path": "upstream/huashu-report/LICENSE",
+            "sha256": "fe541d94ae0ace6eb7b4b1a97ba73d2d94a1586b021c7b09b665c6c8f73eeeaa",
+            "url": "https://github.com/alchaincyf/huashu-report/blob/bdc08bee5077462e1300431408c5237438a22d00/LICENSE"
+          }
+        ],
+        "references": [
+          {
+            "url": "https://github.com/alchaincyf/huashu-report/blob/bdc08bee5077462e1300431408c5237438a22d00/SKILL.md",
+            "sha256": "52aff66ba989663eb9ce141398941ee8ea90d72a5aa8acbdc9aa7ad5204aa2a5"
+          },
+          {
+            "url": "https://github.com/alchaincyf/huashu-report/blob/bdc08bee5077462e1300431408c5237438a22d00/references/研究深度.md",
+            "sha256": "72257a30035281b8a4dad0e50aa45663e472025ba9b872ad99f023426a3ed4ed"
+          },
+          {
+            "url": "https://github.com/alchaincyf/huashu-report/blob/bdc08bee5077462e1300431408c5237438a22d00/references/行文.md",
+            "sha256": "3a380c9e493ab5aff69bea66b1fc5e07ddf5567283a80edbc1e0c4b1d20b0630"
+          }
+        ],
+        "note": "Research and writing principles adapted; third-party report quotations not redistributed."
+      },
+      {
+        "id": "humanizer-zh",
+        "repository": "https://github.com/op7418/Humanizer-zh",
+        "commit": "f4518a8eab97b8bfebc66a89d34320a89bef6930",
+        "license": "MIT",
+        "files": [
+          {
+            "path": "upstream/humanizer-zh/SKILL.md",
+            "sha256": "95627fd4437d886f98032ccc62d79136e6310f1fc04e354bb86431795ff206df",
+            "url": "https://github.com/op7418/Humanizer-zh/blob/f4518a8eab97b8bfebc66a89d34320a89bef6930/SKILL.md"
+          },
+          {
+            "path": "upstream/humanizer-zh/LICENSE",
+            "sha256": "aa00e74769e1b9d8e7fa7094dbfcca9b129a0ded6dce1cf4da050b99146d2fa7",
+            "url": "https://github.com/op7418/Humanizer-zh/blob/f4518a8eab97b8bfebc66a89d34320a89bef6930/LICENSE"
+          }
+        ]
+      }
+    ],
+    "sha256": "2936ddd0d9c14dc7efacd2d6e055b160d9ac8dd4031ad471aee4b65ec936554f",
+    "instructions": "本次写稿或续写：完成有实质内容的草稿，再精修语言；检查不应出现在读者正文中。\n\n## 按问题选用的研究写作补充\n以下只在当前内容需要时使用，不是必填章节。先找材料中会改变读者理解、选择或操作的具体观察，再围绕它组织内容；不要先选一个人人赞同的结论，再让材料逐项作陪。材料不足以支持新判断时，清楚解释已有信息即可，不硬造深意、机制或反方。\n需要表态的文章，把判断落在具体对象、适用条件和后果上：据此会采用、暂缓或改变什么，为什么值得承担相应代价；若有真正会改变判断的反证或缺口，就让它约束结论。教程靠步骤和验收解决问题，介绍或旁白靠有用的信息与组织成立，不必都写成立场评论。\n细节要做实际工作：帮助辨认对象、解释关系、执行操作或检验判断。换到另一题仍能原样成立的漂亮句子，若没有增加意思就删；不能为追求独特感添加未经提供的经历、数据或见闻。\n比较数字或跨源发现前，检查对象、时间、分母、样本和分析层次是否一致；缺失时保留限制，不补数。只有给定材料确有基线或已有研究时，才说明新发现印证、修正或补充了什么，不假装做过外部研究。\n提出因果判断时，分清观察、候选解释与已有证据；如确有竞争解释，交代现有材料能否区分。选择会改变读者理解或决定的限制，放在对应结论附近；无关的工具过程不进入正文。\n\n## 最后一轮：保留意思与声音\n先有论点、证据或场景，最后才精修。对照初稿保护独立信息、否定、比较对象、归因、条件、时间、完成状态和真正的不确定性。不能把计划写成已完成、相关写成因果、可能写成确定。\n声线样稿只供借鉴表达习惯，不移植经历、数据或立场；没有样稿时保持原语域。保留有内容的个性与语气，不把文字统一磨成稳妥、礼貌却无差别的说明。不因某个词、标点或句长改稿；有用的术语、排比、比喻可以保留，不用虚构细节换取具体感，不用 AI 检测分数评判。\n精修不扩大定向改稿范围，不动受保护的引文、Claim 原句/ID、代码、链接目标与数据。只交付响应协议所需成品，意见进既有 review/reply 字段，不附改写仪式或自评分。"
+  },
+  "request_sha256": {
+    "A": "618d9aff8ab3fb4e8ae38183b19f5e62dbea24c9bdc04758cbd071cf00097c05",
+    "B": "aa946882dfabfe15a1ea4f7ebcead3c090351d6824be8d5941c955abac668c71"
+  },
+  "invariants": [
+    "materials",
+    "claims",
+    "constitution",
+    "response_schema",
+    "editorial_guidance"
+  ]
+}

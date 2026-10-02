@@ -6,6 +6,7 @@ const source=fs.readFileSync(require('node:path').join(__dirname,'../plugin/main
 const sandbox={module:{exports:{}},require:name=>name==='obsidian'?{
   Plugin:class{},ItemView:class{},Modal:class{},PluginSettingTab:class{},Notice:class{}
 }:require(name)};
+sandbox.window={setTimeout:sandbox.setTimeout||setTimeout,clearTimeout:sandbox.clearTimeout||clearTimeout,setInterval:sandbox.setInterval||setInterval,clearInterval:sandbox.clearInterval||clearInterval};
 vm.runInNewContext(source,sandbox);
 const Plugin=sandbox.module.exports;
 test('opening an existing note reuses its tab; a new note never splits the editor',async()=>{
@@ -56,7 +57,7 @@ test('unloading prevents queued panel creation',async()=>{
 test('missing checkout falls back to the kernel installed beside the plugin',()=>{
   const os=require('node:os'),path=require('node:path');const base=fs.mkdtempSync(path.join(os.tmpdir(),'oc-runtime-'));
   try{const bundled=path.join(base,'.obsidian/plugins/opencontent/kernel');fs.mkdirSync(path.join(bundled,'opencontent'),{recursive:true});fs.writeFileSync(path.join(bundled,'opencontent/__main__.py'),'');
-    const p=new Plugin();p.settings={kernelPath:path.join(base,'removed-checkout')};p.app={vault:{adapter:{getBasePath:()=>base}}};
+    const p=new Plugin();p.settings={kernelPath:path.join(base,'removed-checkout')};p.app={vault:{configDir:'.obsidian',adapter:{getBasePath:()=>base}}};
     assert.equal(p.runtimeDirectory(),bundled);
     fs.unlinkSync(path.join(bundled,'opencontent/__main__.py'));assert.throws(()=>p.runtimeDirectory(),/运行内核缺失/);
   }finally{fs.rmSync(base,{recursive:true,force:true});}
@@ -68,7 +69,7 @@ test('managed old runtime follows current plugin version while explicit checkout
   try{
     const pluginDir=path.join(base,'.obsidian/plugins/opencontent');const old=path.join(pluginDir,'kernel'),fresh=path.join(pluginDir,'kernel-0.8.0'),custom=path.join(base,'checkout');
     for(const folder of [old,fresh,custom]){fs.mkdirSync(path.join(folder,'opencontent'),{recursive:true});fs.writeFileSync(path.join(folder,'opencontent/__main__.py'),'');}
-    const p=new Plugin();p.settings={kernelPath:old};p.manifest={version:'0.8.0'};p.app={vault:{adapter:{getBasePath:()=>base}}};
+    const p=new Plugin();p.settings={kernelPath:old};p.manifest={version:'0.8.0'};p.app={vault:{configDir:'.obsidian',adapter:{getBasePath:()=>base}}};
     assert.equal(p.runtimeDirectory(),fresh);p.settings.kernelPath=custom;assert.equal(p.runtimeDirectory(),custom);
   }finally{fs.rmSync(base,{recursive:true,force:true});}
 });

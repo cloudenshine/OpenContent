@@ -23,7 +23,7 @@
 
 真实宿主第一次测试关闭弹窗时使用了旧选择器，观察实际 DOM 后改为当前 `.modal-header-button`；这是验收脚本修正。随后出现保存后异步切换与后台刷新重叠，增加渲染合并，同时让验收等待可操作按钮出现。完整脚本在最终源码上重新通过，未以单元测试替代宿主交互。
 
-早期 UI 测试产生的临时 Project/Material 已移到独立验收 Vault 的 `_Validation-History/v0.3/`，保留内容；源笔记仍在。活动列表保留真实待判断项目、合成批准样本和最终捕获样本。迁移清单保存在工作区 `docs/ui-fixture-archive.json`。没有触碰用户的 `F:\Obsidian_vault`。
+早期 UI 测试产生的临时 Project/Material 已移到独立验收 Vault 的 `_Validation-History/v0.3/`，保留内容；源笔记仍在。活动列表保留真实待判断项目、合成批准样本和最终捕获样本。迁移清单保存在工作区 `docs/ui-fixture-archive.json`。没有触碰用户的 `<local-vault>`。
 
 ![继续工作队列](obsidian-continue-v0.3.png)
 

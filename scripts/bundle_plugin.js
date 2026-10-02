@@ -15,6 +15,12 @@ if (mainJs.includes("require('./engine/") || mainJs.includes("require('../plugin
   throw new Error('plugin/main.js still requires external engine modules');
 }
 
+const packageVersion = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version;
+const kernelVersion = fs.readFileSync(path.join(root, 'opencontent', '__init__.py'), 'utf8').match(/__version__ = "([^"]+)"/)?.[1];
+if (packageVersion !== manifest.version || kernelVersion !== manifest.version) {
+  throw new Error('Application package, plugin manifest and kernel versions must match');
+}
+
 const outDir = path.join(root, 'dist', 'community');
 fs.mkdirSync(outDir, { recursive: true });
 fs.writeFileSync(path.join(outDir, 'main.js'), mainJs);
@@ -23,7 +29,9 @@ fs.copyFileSync(path.join(pluginDir, 'styles.css'), path.join(outDir, 'styles.cs
 
 // Also ensure root manifest.json and versions.json are synchronized
 fs.writeFileSync(path.join(root, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
-const versions = { [manifest.version]: manifest.minAppVersion };
+const versionsFile = path.join(root, 'versions.json');
+const versions = fs.existsSync(versionsFile) ? JSON.parse(fs.readFileSync(versionsFile, 'utf8')) : {};
+versions[manifest.version] = manifest.minAppVersion;
 fs.writeFileSync(path.join(root, 'versions.json'), JSON.stringify(versions, null, 2) + '\n');
 
 console.log(`Validated and synchronized community release files for v${manifest.version}`);

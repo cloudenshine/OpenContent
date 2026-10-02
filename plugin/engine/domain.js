@@ -261,7 +261,7 @@ function gate(objects, artifact, policies = {}, errors = []) {
     if (headings.some(h => !text.includes('## ' + h))) {
       issues.push('CONTENT.md is missing required sections');
     }
-    const secMatch = text.match(/## Forbidden Patterns\s*\n(.*?)(?=\n## |\Z)/s);
+    const secMatch = text.match(/## Forbidden Patterns\s*\n(.*?)(?=\n## |$)/s);
     if (secMatch) {
       const words = (secMatch[1].match(/^-\s+(.+)$/gm) || []).map(w => w.replace(/^-\s+/, '').trim());
       for (const w of words) {

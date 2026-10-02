@@ -6,6 +6,14 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const domain = require('./domain.js');
 
+test('domain.gate: forbidden patterns at the end of a policy still block the draft', () => {
+  const project = { type: 'Project', title: 'P', goal: 'G', audience: 'A', thesis: 'T', state: 'DRAFTING', oc_id: 'p1' };
+  const artifact = { type: 'Artifact', title: 'A', project: 'p1', body: 'Disallowed phrase appears in this synthetic draft. '.repeat(3), oc_id: 'a1' };
+  const policy = '## Audience\nA\n## Voice\nV\n## Editorial Principles\nE\n## Evidence Policy\nE\n## Citation Policy\nC\n## Originality Standard\nO\n## Quality Gates\nQ\n## Forbidden Patterns\n- Disallowed phrase\n';
+  const result = domain.gate({ p1: project, a1: artifact }, artifact, { 'CONTENT.md': policy });
+  assert.ok(result.issues.includes('Forbidden pattern: Disallowed phrase'));
+});
+
 test('domain.validate: project requires goal, audience and valid state', () => {
   assert.throws(() => domain.validate({ type: 'Project', title: 'P1' }, {}), /goal cannot be empty/);
   assert.throws(() => domain.validate({ type: 'Project', title: 'P1', goal: 'G' }, {}), /audience cannot be empty/);

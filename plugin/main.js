@@ -1,5 +1,5 @@
 /* Thin desktop cockpit. All domain rules and long-running work live in the Kernel. */
-const {Plugin, ItemView, Modal, Setting, PluginSettingTab, Notice, requestUrl, FileSystemAdapter} = require('obsidian');
+const {Plugin, ItemView, Modal, Setting, PluginSettingTab, Notice, requestUrl, FileSystemAdapter, sanitizeHTMLToDom} = require('obsidian');
 const {spawn} = require('child_process');
 const path = require('path');
 const fs = require('fs');
@@ -136,8 +136,6 @@ function clusterNotes(notes, threshold = 0.15) {
 function generateIdeationCandidates(cluster) {
   const sources = cluster.sources.map(s => s.path);
   const titles = cluster.sources.map(s => s.title);
-  const sourceA = cluster.sources[0];
-  const sourceB = cluster.sources[1] || sourceA;
   const folders = Array.from(new Set(cluster.sources.map(s => {
     const parts = s.path.split('/');
     return parts.length > 1 ? parts.slice(0, -1).join('/') : '.';
@@ -336,6 +334,32 @@ function field(parent, label, value='', multiline=false) {
   input.setAttribute('aria-label',label); return input;
 }
 
+function publicationPreviewDocument(content, doc=document) {
+  const allowed=new Set(['section','div','p','span','h1','h2','h3','h4','h5','h6','strong','b','em','i','u','s','del','ul','ol','li','blockquote','pre','code','table','thead','tbody','tfoot','tr','td','th','br','hr']);
+  const blocked=new Set(['script','style','iframe','frame','object','embed','meta','link','base','form','input','button','svg','math','template','noscript','video','audio','source','picture','img']);
+  const container=doc.createElement('div');
+  const copy=(node,parent)=>{
+    if(node.nodeType===3){parent.appendChild(doc.createTextNode(node.textContent||''));return;}
+    if(node.nodeType!==1)return;
+    const tag=node.localName.toLowerCase();
+    if(blocked.has(tag))return;
+    let target=parent;
+    if(allowed.has(tag)){
+      target=doc.createElement(tag);
+      if(tag==='td'||tag==='th')for(const name of ['colspan','rowspan']){
+        const value=node.getAttribute(name);
+        if(/^[1-9][0-9]?$/.test(value||'')&&Number(value)<=20)target.setAttribute(name,value);
+      }
+      parent.appendChild(target);
+    }
+    for(const child of node.childNodes)copy(child,target);
+  };
+  for(const node of sanitizeHTMLToDom(String(content||'')).childNodes)copy(node,container);
+  // Only allowlisted nodes created above are serialized. Untrusted attributes,
+  // URLs, metadata, styles, scripts and nested browsing contexts never survive.
+  return '<!doctype html><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'"><style>body{font:16px/1.8 sans-serif;padding:16px;overflow-wrap:anywhere}table{border-collapse:collapse}td,th{border:1px solid #bbb;padding:6px}</style>'+container.innerHTML;
+}
+
 class FormModal extends Modal {
   constructor(plugin, title, build) { super(plugin.app); this.plugin=plugin; this.formTitle=title; this.buildForm=build; }
   onOpen() { this.contentEl.empty(); this.contentEl.addClass('oc-modal'); el(this.contentEl,'h2',this.formTitle); this.buildForm(this.contentEl,this); }
@@ -374,7 +398,7 @@ class Cockpit extends ItemView {
       await this.render();
     };
     const modeHint = el(modeBar, 'span', isExpert ? '已展开完整证明链与对抗审核' : '轻量3步：选题 → 论据 → 正文', 'oc-muted');
-    modeHint.style.fontSize = '11px';
+    modeHint.classList.add('oc-mode-hint');
     const current=['project','conversation','inspector','inbox'].includes(this.tab)?'project':this.tab;
     for(const [id,title] of [['board','首页'],['project','写作'],['publishing','发布']]){
       const b=button(nav,title,async()=>{this.tab=id;await this.render();},id===current?'mod-cta':'');
@@ -423,7 +447,7 @@ class Cockpit extends ItemView {
     if (pipelineEngine && this.app?.vault) {
       const feedBanner = el(root, 'section', undefined, 'oc-pipeline-banner');
       const feedHeader = el(feedBanner, 'div', undefined, 'oc-pipeline-header');
-      const feedTitle = el(feedHeader, 'div', '⚡ 灵感自动喂养管道 (Auto-Feeding)', 'oc-pipeline-title');
+      el(feedHeader, 'div', '⚡ 灵感自动喂养管道', 'oc-pipeline-title');
       const scanBtn = button(feedHeader, '扫描新灵感', async () => {
         try {
           scanBtn.textContent = '正在挖掘灵感…';
@@ -553,12 +577,12 @@ class Cockpit extends ItemView {
         }
         if(!result.candidates.length)el(list,'p','没有匹配笔记，可改写目标关键词，或先创建空项目。');
       }catch(e){snapshot=null;status.textContent=e.message;}};
-      goal.addEventListener('input',()=>{clearTimeout(timer);snapshot=null;serial++;timer=setTimeout(refresh,500);});
+      goal.addEventListener('input',()=>{window.clearTimeout(timer);snapshot=null;serial++;timer=window.setTimeout(refresh,500);});
       button(root,'刷新推荐',refresh);
       button(root,'创建并捕获所选材料',async()=>{
         if(!snapshot)throw new Error('请等待材料推荐刷新完成。');
         const p=await this.plugin.api('/projects/selected',{title:title.value.trim()||goal.value.trim().slice(0,60),goal:goal.value,audience:audience.value,selected:[...chosen.values()],token:snapshot.token});
-        clearTimeout(timer);this.selected=p.oc_id;this.tab='project';modal.close();await this.render();
+        window.clearTimeout(timer);this.selected=p.oc_id;this.tab='project';modal.close();await this.render();
       },'mod-cta');refresh();
     }).open();
   }
@@ -594,7 +618,7 @@ class Cockpit extends ItemView {
         const statusNames={QUEUED:'等待开始',RUNNING:'正在处理',SUCCEEDED:'候选已生成',FAILED:'本次失败',CANCELLED:'已取消',INTERRUPTED:'任务中断'};
         el(list,'h3',statusNames[r.status]||r.status);el(list,'p',`${r.stage==='classify'?'阶段 1/2：归纳主题与观点':'阶段 2/2：组合角度并检查重复'}${pending?` · 已用 ${seconds} 秒`:''}`);
         if(r.direction)el(list,'p','本次方向：'+r.direction,'oc-muted');
-        if(pending){button(list,'取消这次综合',()=>this.plugin.api('/cancel',{id:r.id}));setTimeout(()=>show().catch(e=>el(list,'p',e.message,'oc-error')),1500);return;}
+        if(pending){button(list,'取消这次综合',()=>this.plugin.api('/cancel',{id:r.id}));window.setTimeout(()=>show().catch(e=>el(list,'p',e.message,'oc-error')),1500);return;}
         if(r.status!=='SUCCEEDED'){
           el(list,'p',r.error||'本次未完成。','oc-error');
           el(list,'p','重试会检查资料版本，并复用仍有效的分类。资料或项目有变化时，请刷新范围重新生成。');
@@ -751,7 +775,7 @@ class Cockpit extends ItemView {
     const profBar = el(capPanel, 'div', undefined, 'oc-profile-bar');
     el(profBar, 'span', '创作类型 (Profile)：', 'oc-muted');
     const profSelect = el(profBar, 'select');
-    profSelect.setAttribute('aria-label', '创作类型 Profile');
+    profSelect.setAttribute('aria-label', '创作类型');
     const profiles = [
       { id: 'general-fiction', name: '通用虚构 (General Fiction) · 人物与冲突' },
       { id: 'serial-fiction', name: '连载小说 (Serial Fiction) · 章节钩子与期望管理' },
@@ -850,7 +874,25 @@ class Cockpit extends ItemView {
       const profile = this.currentProfile || 'general-fiction';
       el(root, 'p', `当前 Profile：${profile}`, 'oc-context-chip');
       
-      let bookTitleInput = null, platformSelect = null;
+      let bookTitleInput = null, platformSelect = null, marketMode = null, marketInput = null, genreInput = null;
+      if (['long-scan', 'short-scan'].includes(taskInfo.id)) {
+        const sourceWrap = el(root, 'label', undefined, 'oc-field');
+        el(sourceWrap, 'span', '市场数据来源');
+        marketMode = el(sourceWrap, 'select');
+        marketMode.setAttribute('aria-label', '市场数据来源');
+        if (taskInfo.id === 'long-scan') {
+          const live = el(marketMode, 'option', '实时采集：七猫男频日热榜（仅此榜单）');
+          live.value = 'qimao-boy-hot-daily';
+        }
+        const imported = el(marketMode, 'option', '导入采集快照 JSON（用户提供，未联网核验）');
+        imported.value = 'import';
+        marketMode.value = taskInfo.id === 'long-scan' ? 'qimao-boy-hot-daily' : 'import';
+        marketInput = field(root, '采集快照 JSON', '', true);
+        marketInput.placeholder = '{"qimao": [{"title": "真实书名", "url": "https://www.qimao.com/shuku/作品编号/", "observed_at": "带时区的实际采集时间", "rank": 1}]}';
+        marketInput.disabled = marketMode.value !== 'import';
+        marketMode.addEventListener('change', () => { marketInput.disabled = marketMode.value !== 'import'; });
+        el(root, 'p', '长篇至少3条、短篇至少2条不同作品；每条需来源 URL 和 observed_at。无数据、站点阻断或解析失败会报错，不会使用演示样本。短篇暂不支持自动采集。', 'oc-muted');
+      }
       if (['long-analyze', 'short-analyze'].includes(taskInfo.id)) {
         bookTitleInput = field(root, '被拆解作品名称', '代表作');
         const pWrap = el(root, 'label', undefined, 'oc-field');
@@ -860,6 +902,8 @@ class Cockpit extends ItemView {
           const opt = el(platformSelect, 'option', pf); opt.value = pf;
         }
       } else if (taskInfo.id === 'cover') {
+        genreInput = field(root, '封面题材', '通用');
+        el(root, 'p', '使用已启用且支持生图的本地 CLI；需真实图像文件通过解码、尺寸及证据校验。未配置或不支持生图时会失败。', 'oc-muted');
         const pWrap = el(root, 'label', undefined, 'oc-field');
         el(pWrap, 'span', '目标平台规格');
         platformSelect = el(pWrap, 'select');
@@ -880,7 +924,7 @@ class Cockpit extends ItemView {
         taskInfo.id === 'revise' ? '例如：修改老水手的对话，让他语气更加警惕苍老，不要修改其他段落' :
         taskInfo.id === 'critique' ? '例如：独立审读这一章的人物动机与剧情节奏' :
         taskInfo.id === 'cover' ? '例如：冷色调硬科幻星舰，深蓝夜幕与轨道站逆光' :
-        ['long-scan', 'short-scan'].includes(taskInfo.id) ? '可选：指定关注题材（如科幻/玄幻/悬疑；留空则全网榜单采样）' : '例如：撰写第一章紧急迫降场景';
+        ['long-scan', 'short-scan'].includes(taskInfo.id) ? '可选：记录本次采集目的；统计覆盖选定榜单或导入快照，不代表全网趋势' : '例如：撰写第一章紧急迫降场景';
 
       // Context Preview disclosure (for creation/critique tasks)
       const targetDraft = p.artifacts.find(a => a.oc_id === this.artifact) || p.artifacts[0];
@@ -919,6 +963,17 @@ class Cockpit extends ItemView {
             instruction: text || '执行常规任务',
             artifact: targetDraft?.oc_id || undefined
           };
+          if (marketMode) {
+            if (marketMode.value === 'import') {
+              if (!marketInput.value.trim()) throw new Error('请提供真实采集快照 JSON');
+              try { reqBody.raw_data = JSON.parse(marketInput.value); }
+              catch { throw new Error('采集快照必须是有效 JSON'); }
+              if (!reqBody.raw_data || Array.isArray(reqBody.raw_data) || typeof reqBody.raw_data !== 'object') throw new Error('采集快照必须是按平台分组的 JSON 对象');
+            } else {
+              reqBody.source_ids = [marketMode.value];
+            }
+          }
+          if (genreInput) reqBody.genre = genreInput.value.trim() || '通用';
           if (bookTitleInput) reqBody.title = bookTitleInput.value.trim();
           if (platformSelect) reqBody.platform = platformSelect.value;
           if (['long-analyze', 'short-analyze'].includes(taskInfo.id) && text) {
@@ -927,11 +982,14 @@ class Cockpit extends ItemView {
 
           const res = await this.plugin.api('/capabilities/execute', reqBody);
           resultBox.replaceChildren();
-          el(resultBox, 'h4', '✅ 任务执行完成');
+          if (res.receipt?.status !== 'SUCCEEDED') throw new Error(res.receipt?.error || '任务未返回成功回执');
+          el(resultBox, 'h4', res.mode === 'fixture' ? '🧪 测试夹具执行完成（非真实生图）' : '✅ 任务执行完成');
           
           // 1. Market Report Output
           if (res.market_report) {
             const m = res.market_report;
+            el(resultBox, 'p', `来源模式：${res.receipt.source_mode}；核验范围：${res.receipt.source_verification}`, 'oc-context-chip');
+            if (m.source_metadata) el(resultBox, 'pre', JSON.stringify(m.source_metadata, null, 2));
             el(resultBox, 'h5', `📈 扫榜报告已生成（有效样本：${m.total_samples} 条）`);
             if (m.opportunity_candidates?.length) {
               const oppList = el(resultBox, 'div', undefined, 'oc-candidate-card');
@@ -940,7 +998,7 @@ class Cockpit extends ItemView {
                 el(oppList, 'p', `• ${opp.theme || opp.emotion_core}（依据：${(opp.evidence_sources || opp.representative_samples || []).join('、')}）`);
               }
             }
-            new Notice('市场扫榜报告已归档保存至 Vault！');
+            new Notice('市场扫榜报告已保存至仓库。');
           }
 
           // 2. Deconstruction Output
@@ -953,22 +1011,23 @@ class Cockpit extends ItemView {
               el(mCard, 'p', `适用：${mech.application}`);
               el(mCard, 'p', `避坑：${mech.risk}`);
             }
-            new Notice('拆文报告与机制卡片已写入 Vault！');
+            new Notice('拆文报告与机制卡片已写入仓库。');
           }
 
           // 3. Cover Candidates Output
           if (res.candidates?.length) {
-            el(resultBox, 'h5', '🎨 已生成封面候选设计与图像资产');
+            el(resultBox, 'h5', res.mode === 'fixture' ? '测试图像资产：仅用于验收，不可当作生产封面' : '🎨 已生成封面候选设计与图像资产');
             for (const c of res.candidates) {
               const cBox = el(resultBox, 'div', undefined, 'oc-card');
               el(cBox, 'strong', `版本：${c.candidate_id} (${c.spec?.dimensions?.ratio})`);
               el(cBox, 'p', `配色：${c.spec?.style_palette}`);
               el(cBox, 'small', `路径：${c.path}`);
-              button(cBox, '设为项目封面', async () => {
-                new Notice(`已选定「${c.candidate_id}」作为项目正式封面！`);
-              }, 'mod-cta');
+              if (c.image) el(cBox, 'p', `已解码：${c.image.format} · ${c.image.width}×${c.image.height} · ${c.image.bytes} 字节`);
+              el(cBox, 'p', '候选图像尚未设为正式封面，请在 Vault 中打开检查并人工选用。', 'oc-muted');
+              if (c.provenance) el(cBox, 'pre', JSON.stringify(c.provenance, null, 2));
+              el(cBox, 'small', '文件解码、尺寸与哈希由内核核验；生图工具名称为提供方声明，画面质量需作者审阅。');
             }
-            new Notice('封面方案已保存至 Attachments 目录！');
+            new Notice('封面方案已保存至附件目录。');
           }
 
           // 4. Candidate Artifact Output
@@ -1126,9 +1185,8 @@ class Cockpit extends ItemView {
     el(root,'h2',a.title);
     // 门禁盾牌与五轴雷达可视化 (Gate & Radar)
     const gateStatus = detail.gate?.status || 'WARN';
-    const isApproved = Boolean(detail.gate?.approved);
     const shieldBox = el(root, 'div', undefined, 'oc-gate-shield ' + (gateStatus === 'PASS' ? 'pass' : 'fail'));
-    shieldBox.innerHTML = '<span>' + (gateStatus === 'PASS' ? '🛡️ 门禁已通过 (PASS)' : '⚠️ 门禁未通过 / 需修订 (WARN/FAIL)') + '</span>';
+    el(shieldBox, 'span', gateStatus === 'PASS' ? '🛡️ 门禁已通过 (PASS)' : '⚠️ 门禁未通过 / 需修订 (WARN/FAIL)');
     
     // 五轴质量雷达展示卡片 (Five-Axes Radar)
     if (detail.gate?.axes) {
@@ -1164,7 +1222,7 @@ class Cockpit extends ItemView {
 
       const previewBox = el(typoPanel, 'div', undefined, 'oc-rendered-preview-box');
       const renderedHtml = typographyEngine.renderArticleHtml(a.body || '', currentTheme, a.title || '');
-      previewBox.innerHTML = renderedHtml;
+      previewBox.replaceChildren(sanitizeHTMLToDom(renderedHtml));
 
       if (detail.gate.approved) {
         button(typoPanel, '📋 复制已批准成品 (富文本)', async () => {
@@ -1173,7 +1231,7 @@ class Cockpit extends ItemView {
             const readerMarkdown = handoffRes.article || a.body || '';
             const finalHtml = typographyEngine.renderArticleHtml(readerMarkdown, currentTheme);
             const ok = await typographyEngine.copyRichTextToClipboard(finalHtml, readerMarkdown);
-            if (ok) new Notice('✅ 已复制已批准成品富文本到剪贴板，内部 Claim 标记已剔除！');
+            if (ok) new Notice('✅ 已复制已批准成品富文本到剪贴板，内部主张标记已剔除。');
             else new Notice('⚠️ 剪贴板 API 暂不可用，可直接打开正文复制');
           } catch(err) {
             new Notice('正式交付复制失败: ' + err.message);
@@ -1305,7 +1363,7 @@ class Cockpit extends ItemView {
       el(root,'p','摘要：'+pub.payload.digest);
       el(root,'p',pub.action==='draft'?'本次会在微信账号中创建草稿。':'本次会调用微信发表接口。请先在微信后台核对排版及封面；这不是群发操作。',pub.action==='publish'?'oc-error':'');
       const frame=el(root,'iframe');frame.title='公众号正文预览';frame.className='oc-publish-preview';frame.setAttribute('sandbox','');
-      frame.srcdoc='<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'"><style>body{font:16px/1.8 sans-serif;padding:16px;overflow-wrap:anywhere}table{border-collapse:collapse}td,th{border:1px solid #bbb;padding:6px}</style>'+pub.payload.content;
+      frame.srcdoc=publicationPreviewDocument(pub.payload.content,frame.ownerDocument);
       const reviewer=field(root,'本次投递确认人',this.plugin.settings.reviewer);
       const label=el(root,'label');const agree=el(label,'input');agree.type='checkbox';el(label,'span','我已核对账号、标题、正文、摘要及封面，确认执行本次操作');
       button(root,pub.action==='draft'?'确认送入草稿箱':'确认发表',async()=>{
@@ -1462,7 +1520,7 @@ class Cockpit extends ItemView {
       for(const brief of turn.illustrations||[]){const b=el(card,'details');el(b,'summary','配图方案 · '+brief.placement);el(b,'pre',brief.prompt,'oc-prose');button(b,'复制配图指令',()=>navigator.clipboard.writeText(brief.prompt));}
       if(turn.image_status==='BRIEF_ONLY')el(card,'p','本轮仅完成配图方案，没有生成图片。','oc-muted');
       for(const asset of turn.images||[]){const file=this.app.vault.getAbstractFileByPath(asset.path);if(file){const img=el(card,'img');img.src=this.app.vault.getResourcePath(file);img.alt=asset.alt;img.className='oc-generated-image';}
-        el(card,'p',asset.placement+' · '+asset.path);button(card,'复制图片 Markdown',()=>navigator.clipboard.writeText(`![${asset.alt.replace(/[\[\]]/g,'')}](${asset.path})`));}
+        el(card,'p',asset.placement+' · '+asset.path);button(card,'复制图片 Markdown',()=>navigator.clipboard.writeText(`![${asset.alt.replace(/[[\]]/g,'')}](${asset.path})`));}
     }
     const mode=el(composer,'select');mode.setAttribute('aria-label','想做什么');
     const modeValue=!p.artifacts.length&&this.chatMode==='revise'?'discuss':this.chatMode||'discuss';
@@ -1488,14 +1546,14 @@ class Cockpit extends ItemView {
 
 class Settings extends PluginSettingTab{
   constructor(app,plugin){super(app,plugin);this.plugin=plugin;}
-  display(){const root=this.containerEl;root.empty();el(root,'h2','OpenContent · 本地 Kernel');
+  display(){const root=this.containerEl;root.empty();new Setting(root).setName('本地运行内核').setHeading();
     for(const [key,title,desc]of [['kernelPath','项目目录','包含 opencontent/ 与 templates/ 的目录'],['python','Python 可执行文件','Python 3.12+，需安装 requirements.txt'],['codex','Codex 原生可执行文件','可留空；无 Agent 时核心仍可用'],['skillRoots','Skill 发现路径','每行一个目录或 SKILL.md；仅把主动选择的技能提供给 Agent'],['reviewer','默认决定人','本地署名；不是团队身份认证']]){
       new Setting(root).setName(title).setDesc(desc).addText(t=>t.setValue(this.plugin.settings[key]).onChange(async v=>{this.plugin.settings[key]=v;await this.plugin.saveData(this.plugin.settings);}));
     }
         // 从本地 Codex / Claude 智能发现的大模型下拉选择菜单
     const modelSetting = new Setting(root)
-      .setName('选择大模型 (AI Model Selection)')
-      .setDesc('自动检测本地 Codex / Claude 账户拥有的全部大模型列表。');
+      .setName('选择模型')
+      .setDesc('读取已有 CLI 提供的模型列表；列表不保证账户已获授权。');
 
     (async () => {
       let modelsList = [];
@@ -1504,7 +1562,7 @@ class Settings extends PluginSettingTab{
           const res = await this.plugin.api('/models');
           modelsList = res.models || [];
         }
-      } catch(e) {}
+      } catch { el(root,'p','模型列表暂不可用，连接后可重试；下列默认项不代表当前账户已授权。','oc-muted'); }
 
       if (!modelsList.length) {
         // Fallback common models
@@ -1539,14 +1597,14 @@ class Settings extends PluginSettingTab{
                 await this.plugin.api('/providers/activate', { name: activeName, model: v });
                 new Notice('已将模型切换为: ' + (v || '系统默认'));
               }
-            } catch(e) {}
+            } catch { new Notice('模型即时切换失败，请检查连接后重试；保存的选择将在重新连接时使用。'); }
           }
         });
       });
     })();
 
     new Setting(root).setName('检查本地环境').setDesc('离线检查 Python、依赖、内核和目录权限；不读取笔记和密钥。').addButton(b=>b.setButtonText('开始检查').onClick(()=>this.plugin.checkEnvironment()));
-    new Setting(root).setName('启动 Kernel').setDesc('后台进程运行任务，不阻塞 Obsidian 编辑。').addButton(b=>b.setButtonText('启动 / 连接').onClick(async()=>{try{await this.plugin.startKernel();new Notice('OpenContent Kernel 已连接');}catch(e){new Notice(e.message);}}));
+    new Setting(root).setName('启动内核').setDesc('后台进程运行任务，不阻塞 Obsidian 编辑。').addButton(b=>b.setButtonText('启动 / 连接').onClick(async()=>{try{await this.plugin.startKernel();new Notice('本地内核已连接');}catch(e){new Notice(e.message);}}));
   }
 }
 
@@ -1556,7 +1614,7 @@ module.exports=class OpenContentPlugin extends Plugin{
     this.registerView(VIEW,leaf=>new Cockpit(leaf,this));
     this.app.workspace.onLayoutReady(()=>{if(!this.unloading)this.open().catch(e=>new Notice(e.message,10000));});
     this.addRibbonIcon('workflow','OpenContent',()=>this.open());
-    for(const [id,name,tab]of [['board','Production Board','board'],['inbox','Judgment Inbox','inbox'],['project','Project View','project'],['inspector','Content Inspector','inspector']])this.addCommand({id:'open-'+id,name,callback:()=>this.open(tab)});
+    for(const [id,name,tab]of [['board','Production board','board'],['inbox','Judgment inbox','inbox'],['project','Project view','project'],['inspector','Content inspector','inspector']])this.addCommand({id:'open-'+id,name,callback:()=>this.open(tab)});
     this.addCommand({id:'open-sources',name:'材料库',callback:()=>this.open('sources')});
     this.addCommand({id:'open-publishing',name:'发布与反馈',callback:()=>this.open('publishing')});
     this.addCommand({id:'open-conversation',name:'项目指令台：讨论、改稿与配图',callback:()=>this.open('conversation')});
@@ -1586,7 +1644,7 @@ module.exports=class OpenContentPlugin extends Plugin{
       const leaves=this.app.workspace.getLeavesOfType(VIEW);
       if(!this.connection||this.polling||!leaves.length||(!this.refreshNeeded&&!this.jobsActive))return;
       this.polling=true;this.refreshNeeded=false;
-      try{const data=await this.api('/board');this.jobsActive=data.jobs.some(j=>['RUNNING','QUEUED'].includes(j.status));const signature=JSON.stringify([data.token,data.jobs.map(j=>[j.id,j.status,j.updated])]);if(this.signature!==signature){for(const leaf of leaves)await leaf.view.render();}this.signature=signature;}catch(e){this.refreshNeeded=true;}finally{this.polling=false;}
+      try{const data=await this.api('/board');this.jobsActive=data.jobs.some(j=>['RUNNING','QUEUED'].includes(j.status));const signature=JSON.stringify([data.token,data.jobs.map(j=>[j.id,j.status,j.updated])]);if(this.signature!==signature){for(const leaf of leaves)await leaf.view.render();}this.signature=signature;}catch {this.refreshNeeded=true;}finally{this.polling=false;}
     },2000));
   }
   async remember(project,artifact){
@@ -1616,7 +1674,7 @@ module.exports=class OpenContentPlugin extends Plugin{
               if (m.id === this.settings.preferredModel) opt.selected = true;
             }
           }
-        } catch(e) {}
+        } catch { el(root,'p','模型列表暂不可用，请保留当前选择，连接后重试。','oc-muted'); }
       })();
       el(root,'p','需要 Python 3.12+、PyYAML 6.0.3 和 Mistune 3.2.0。留空项目目录时使用插件附带内核；依赖清单位于插件 kernel/requirements.txt。AI 工具需先登录。','oc-muted');
       button(root,'检查当前填写的环境',()=>this.checkEnvironment({kernelPath:directory.value.trim(),python:python.value.trim(),codex:codex.value.trim()}));
@@ -1648,25 +1706,25 @@ module.exports=class OpenContentPlugin extends Plugin{
               new Notice('已应用设置！当前模型: ' + (newModel || '系统默认'));
               await this.open();
               return;
-            } catch(e) {}
+            } catch { el(root,'p','即时应用设置失败，正在尝试重新连接。','oc-muted'); }
           }
           // If kernel path or python changed, perform graceful hot restart
           try {
             await this.api('/shutdown', {});
-          } catch(e) {}
+          } catch { el(root,'p','旧连接无法关闭，将仅停止本插件持有的内核进程。','oc-muted'); }
           this.connection = null;
           if (this.child) {
-            try { this.child.kill(); } catch(e) {}
+            try { this.child.kill(); } catch { throw new Error('旧内核无法停止，请保存并正常重开 Obsidian 后重试。'); }
             this.child = null;
           }
-          await new Promise(r => setTimeout(r, 600));
+          await new Promise(r => window.setTimeout(r, 600));
         }
 
         await this.startKernel();
         const health = await this.api('/health');
         const activeName = Object.keys(health.providers)[0];
         if (activeName && this.settings.preferredModel) {
-          try { await this.api('/providers/activate', { name: activeName, model: this.settings.preferredModel }); } catch(e) {}
+          await this.api('/providers/activate', { name: activeName, model: this.settings.preferredModel });
         }
         modal.close();
         new Notice(Object.keys(health.providers).length ? '已连接，当前模型: ' + (this.settings.preferredModel || '系统默认') : '连接正常，可无 AI 管理材料与审查。');
@@ -1740,7 +1798,7 @@ module.exports=class OpenContentPlugin extends Plugin{
   async openNote(notePath){
     if(!notePath)throw new Error('该溯源对象不存在');
     let file=this.app.vault.getAbstractFileByPath(notePath);
-    for(let retry=0;!file&&retry<10;retry++){await new Promise(resolve=>setTimeout(resolve,100));file=this.app.vault.getAbstractFileByPath(notePath);}
+    for(let retry=0;!file&&retry<10;retry++){await new Promise(resolve=>window.setTimeout(resolve,100));file=this.app.vault.getAbstractFileByPath(notePath);}
     if(!file)throw new Error('文件已保存，Vault 尚未索引，请稍后打开：'+notePath);
     const workspace=this.app.workspace;
     const existing=workspace.getLeavesOfType('markdown').find(leaf=>leaf.view.file?.path===notePath);
@@ -1750,14 +1808,14 @@ module.exports=class OpenContentPlugin extends Plugin{
     await workspace.revealLeaf(this.editorLeaf);
   }
   async startKernel(){
-    if(this.connection){try{await this.api('/health');return;}catch(e){this.connection=null;}}
+    if(this.connection){try{await this.api('/health');return;}catch {this.connection=null;}}
     if(this.starting)return this.starting;
     this.starting=this.launch();try{return await this.starting;}finally{this.starting=null;}
   }
   runtimeDirectory(settings=this.settings){
     const configured=settings.kernelPath?.trim();
     const base=this.app.vault.adapter.getBasePath();
-    const directory=this.manifest?.dir||path.join(this.app.vault.configDir||'.obsidian','plugins','opencontent');
+    const directory=this.manifest?.dir||path.join(this.app.vault.configDir,'plugins','opencontent');
     const pluginDir=path.resolve(base,directory);
     const valid=p=>fs.existsSync(path.join(p,'opencontent','__main__.py'));
     const managed=configured&&path.dirname(path.resolve(configured)).toLowerCase()===pluginDir.toLowerCase()&&/^kernel(?:-\d+\.\d+\.\d+)?$/.test(path.basename(configured));
@@ -1792,12 +1850,14 @@ module.exports=class OpenContentPlugin extends Plugin{
     if(!settings.python?.trim())throw new Error('请先填写 Python 3.12+ 的可执行文件路径。');
     if(this.unloading)throw new Error('插件正在关闭，请重新启用后检查。');
     const args=[script,'--runtime',runtime,'--vault',this.app.vault.adapter.getBasePath()];
+    if(this.app.vault.configDir)args.push('--config-dir',this.app.vault.configDir);
+    if(this.manifest?.version)args.push('--expected-version',this.manifest.version);
     if(settings.codex?.trim())args.push('--codex',settings.codex.trim());
     return new Promise((resolve,reject)=>{
       const child=spawn(settings.python.trim(),args,{cwd:runtime,windowsHide:true,shell:false,stdio:['ignore','pipe','pipe']});
       this.doctors||=new Set();this.doctors.add(child);let output='',done=false;
-      const finish=(error,result)=>{if(done)return;done=true;clearTimeout(timer);this.doctors.delete(child);error?reject(error):resolve(result);};
-      const timer=setTimeout(()=>{finish(new Error('环境检查超时，请检查 Python 路径后重试。'));child.kill();},15000);
+      const finish=(error,result)=>{if(done)return;done=true;window.clearTimeout(timer);this.doctors.delete(child);error?reject(error):resolve(result);};
+      const timer=window.setTimeout(()=>{finish(new Error('环境检查超时，请检查 Python 路径后重试。'));child.kill();},15000);
       child.stdout.on('data',data=>{output+=data.toString();if(output.length>65536){finish(new Error('环境检查输出异常，请重新安装插件。'));child.kill();}});
       child.stderr.on('data',()=>{});
       child.on('error',()=>finish(new Error('无法启动所选 Python。请安装 Python 3.12+，并在连接设置中填写可执行文件的完整路径。')));
@@ -1807,7 +1867,7 @@ module.exports=class OpenContentPlugin extends Plugin{
           if(![0,1].includes(code)||report.schema!==1||typeof report.passed!=='boolean'||!Array.isArray(report.checks)||report.checks.length===0||report.checks.some(c=>!['PASS','FAIL','WARN','NOT_CHECKED'].includes(c.status)||typeof c.message!=='string'||typeof c.action!=='string'))throw new Error();
           if(report.passed!==(code===0)||report.passed!==!report.checks.some(c=>c.status==='FAIL'))throw new Error();
           finish(null,report);
-        }catch(e){finish(new Error('环境检查未返回有效结果，请重新安装完整插件包并检查 Python 路径。'));}
+        }catch {finish(new Error('环境检查未返回有效结果，请重新安装完整插件包并检查 Python 路径。'));}
       });
     });
   }
@@ -1821,21 +1881,29 @@ module.exports=class OpenContentPlugin extends Plugin{
     const base=this.app.vault.adapter.getBasePath();
     const args=['-m','opencontent','--vault',base,'serve'];
     if(this.settings.codex)args.push('--codex',this.settings.codex);
+    if(this.settings.preferredModel?.trim())args.push('--model',this.settings.preferredModel.trim());
     for(const root of this.settings.skillRoots.split('\n').map(s=>s.trim()).filter(Boolean))args.push('--skill-root',root);
     const child=spawn(this.settings.python,args,{cwd:runtime,windowsHide:true,shell:false,stdio:['ignore','pipe','pipe']});this.child=child;
-    let out='',err='';
+    let out='',err='',handshakeStarted=false;
     return await new Promise((resolve,reject)=>{
-      const timer=setTimeout(()=>{child.kill();reject(new Error('Kernel 启动超时：'+err.slice(-1000)));},15000);
+      const timer=window.setTimeout(()=>{child.kill();reject(new Error('Kernel 启动超时：'+err.slice(-1000)));},15000);
       child.stderr.on('data',data=>{err=(err+data.toString()).slice(-4000);});
-      child.on('error',e=>{clearTimeout(timer);reject(new Error('无法启动 Python，请检查可执行文件配置：'+e.message));});
-      child.on('exit',code=>{clearTimeout(timer);if(this.child===child){this.connection=null;this.child=null;}reject(new Error('Kernel 已退出 '+code+' '+err));});
-      child.stdout.on('data',data=>{out+=data.toString();const line=out.split('\n')[0];if(!out.includes('\n'))return;
-        try{const conn=JSON.parse(line);if(!/^http:\/\/127\.0\.0\.1:\d+$/.test(conn.url)||conn.vault.toLowerCase()!==base.toLowerCase()||typeof conn.token!=='string'||conn.token.length<32)throw new Error('Kernel 返回了错误的 Vault / endpoint');this.connection=conn;clearTimeout(timer);resolve();}catch(e){clearTimeout(timer);child.kill();reject(e);}
+      child.on('error',e=>{window.clearTimeout(timer);reject(new Error('无法启动 Python，请检查可执行文件配置：'+e.message));});
+      child.on('exit',code=>{window.clearTimeout(timer);if(this.child===child){this.connection=null;this.child=null;}reject(new Error('Kernel 已退出 '+code+' '+err));});
+      child.stdout.on('data',async data=>{out+=data.toString();const line=out.split('\n')[0];if(!out.includes('\n')||handshakeStarted)return;handshakeStarted=true;
+        try{
+          const conn=JSON.parse(line);
+          if(!/^http:\/\/127\.0\.0\.1:\d+$/.test(conn.url)||conn.vault.toLowerCase()!==base.toLowerCase()||typeof conn.token!=='string'||conn.token.length<32)throw new Error('内核返回了错误的仓库或连接地址。');
+          this.connection=conn;
+          const health=await this.api('/health');
+          if(this.manifest?.version&&health.version!==this.manifest.version)throw new Error('内核实际版本与插件不一致，请选择同版本运行时。');
+          window.clearTimeout(timer);resolve();
+        }catch(e){window.clearTimeout(timer);this.connection=null;child.kill();reject(e);}
       });
     });
   }
   async api(route,body){
-    if(!this.connection)throw new Error('请启动 Kernel');
+    if(!this.connection)throw new Error('请启动内核');
     const response=await requestUrl({url:this.connection.url+route,method:body===undefined?'GET':'POST',headers:{Authorization:'Bearer '+this.connection.token,'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),throw:false});
     if(response.status>=400)throw new Error(response.json.error||'Kernel 请求失败');return response.json;
   }
@@ -1844,6 +1912,6 @@ module.exports=class OpenContentPlugin extends Plugin{
     if(this.connection)this.api('/shutdown',{}).catch(()=>{});
     for(const child of this.doctors||[])child.kill();
     // Cooperative shutdown cancels owned agent process groups; no global process kill.
-    this.app.workspace.detachLeavesOfType(VIEW);
+    // Obsidian owns view restoration when the plugin is disabled.
   }
 };

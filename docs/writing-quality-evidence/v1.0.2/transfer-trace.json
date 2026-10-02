@@ -1,0 +1,125 @@
+{
+  "kind": "cross-topic transfer authoring trial, not a quality score or live CLI result",
+  "source_path": "production-prompts.json",
+  "source_file_sha256": "16d5c9a61ff7c65c452bae871a47745578d431f265ae39c35c75a12bcf4a3dfd",
+  "source_kind": "exact requests captured from current production assembly; fixture provider, no live model output",
+  "generation_route": {
+    "execution": "Current assistant authored these three new samples from the selected captured production prompt fields and the substituted task inputs.",
+    "no_live_cli_caveat": "No OpenContent live CLI or production provider execution was run. These are transfer samples informed by the captured production prompt assembly, not evidence of end-to-end CLI output or all production quality gates passing.",
+    "claim_protocol_caveat": "The requested samples.json delivery schema replaces the captured provider response schemas. Fixture Claim IDs, project/token/material metadata, and formal state_delta records were not transplanted. The synthetic nonfiction examples are labeled hypothetical and have no invented Claim IDs, source citations, or external research.",
+    "sources_excluded": [
+      "Approved samples",
+      "Prior writing output",
+      "Old examples",
+      "External browsing",
+      "External services"
+    ],
+    "scope": "Check whether the final writing1.0.2 guidance can produce usable new-topic writing across these three tasks; do not infer global superiority from these samples."
+  },
+  "hash_encoding": {
+    "strings": "SHA-256 of exact UTF-8 string bytes",
+    "objects": "SHA-256 of UTF-8 JSON serialized with ensure_ascii=False, sort_keys=True, separators=(comma,colon)",
+    "source_file": "SHA-256 of raw source file bytes"
+  },
+  "request_mapping": {
+    "draft": {
+      "instructions_sha256_utf8": "f3b69e1b4547cea897199849b5b5b084fdadcc114cc956f6290b2e2a7b844a26",
+      "field_hashes": {
+        "instructions": "f3b69e1b4547cea897199849b5b5b084fdadcc114cc956f6290b2e2a7b844a26",
+        "editorial_guidance": "433a6f050789f98f60cd3b5523dcb19fa85d1623b0d1f641208002e927e733bc",
+        "constitution": "6937f4fb8c3615ef0e960538f8d28eb0a702bedb6f0ed804a1d8aa60299602c9"
+      },
+      "applied_guidance_bundle_sha256": "7eb1177048ccada97e1ebfa313ef5ca56a5a572da2f9388d330193824e7e5a39",
+      "captured_writing_quality_version": "1.0.2",
+      "captured_writing_quality_mode": "evidence-bound",
+      "captured_writing_quality_prompt_sha256": "236b989f1ca704ad4eaac6c71de01cca5da2e5591d71369e064dececf242481f",
+      "field_presence_note": "Use the captured draft instructions, editorial_guidance, and CONTENT.md constitution. Synthetic transfer inputs replace the fixture project and material data."
+    },
+    "narrative/general-fiction/write": {
+      "instructions_sha256_utf8": "79230c8e202c8782f69220ac21deccbff1e066377a501c90ac383075384d08f6",
+      "field_hashes": {
+        "instructions": "79230c8e202c8782f69220ac21deccbff1e066377a501c90ac383075384d08f6",
+        "editorial_guidance": null,
+        "constitution": null,
+        "context.must_preserve": "065c0c2337da98d29c8db88f0e76b3d55ba6b8be25e394997310c380872096e2",
+        "context.must_not_do": "edf365090372b22484e29045a39cfc5166f52df99fceedc27386ea2e63a83e71",
+        "context.style": "d6c94a4ad307e014170e4702c2043b1e8d51a52dd7cc0bc3a0155e70afb457be",
+        "context.freedom": "69d9977c2fdeeac67f8e4cf8c9ce7b40aabab2d6bc0d622c89ec93bf2950c4cc"
+      },
+      "applied_guidance_bundle_sha256": "b17da4b37fa0c8b15fff287693b95927c070c5a4e4e1261ee034cf2e70087191",
+      "captured_writing_quality_version": "1.0.2",
+      "captured_writing_quality_mode": "fiction",
+      "captured_writing_quality_prompt_sha256": "b74ef565502e241231b96dea61632579813b24ef3bb105632523571ffa2f9254",
+      "field_presence_note": "Narrative general-fiction/write has no top-level editorial_guidance or constitution; null means absent, not invented or imported from nonfiction."
+    }
+  },
+  "substituted_task_inputs": [
+    {
+      "id": "cafe_hours_analysis",
+      "request_key": "draft",
+      "mode": "evidence-bound",
+      "style": "Calm, incisive analysis",
+      "given_facts": "Hypothetical cafe: five weekdays, two extra hours per night, additional sales 600 yuan in total, extra labor 400 yuan, electricity 50 yuan, ingredient costs unknown, owner already exhausted, no weekend data.",
+      "constraints": "Recommend a concrete bounded next action. Do not present known sales minus known costs as net profit or causal evidence. Label hypothetical."
+    },
+    {
+      "id": "library_margin_notes_tutorial",
+      "request_key": "draft",
+      "mode": "evidence-bound",
+      "style": "Plain practical tutorial, warm and direct",
+      "given_facts": "Hypothetical community-library loan: three handwritten marginal notes discovered, reader unsure whether they predated borrowing, library rule forbids erasing/altering books and directs condition disputes to the desk.",
+      "constraints": "Explain what to do before returning. Do not invent legal consequences, moralizing, or an awkward story."
+    },
+    {
+      "id": "kitchen_spoon_fiction",
+      "request_key": "narrative/general-fiction/write",
+      "mode": "fiction",
+      "style": "Quiet, restrained family scene",
+      "given_facts": "Fictional adult daughter helps father pack kitchen before a move. One ordinary bent spoon: father wants to discard it, daughter wants it for her own practical reason.",
+      "constraints": "Show distinct wants through action, end with a concrete decision. No tragedy, dementia, secret inheritance, reconciliation monologue, nostalgia cliche, or forced twist."
+    }
+  ],
+  "checks": {
+    "scope": "Facts, required content, consistency, and length only; no numeric quality scores or global comparative rating.",
+    "length_counting": "Count Chinese Han characters in body only using Unicode ranges U+3400-U+4DBF and U+4E00-U+9FFF; titles, punctuation, and whitespace excluded.",
+    "samples": [
+      {
+        "id": "cafe_hours_analysis",
+        "body_han_characters": 510,
+        "body_nonwhitespace_characters": 559,
+        "length_requirement_met": true,
+        "body_sha256_utf8": "3b31a81a5a46d6593a9e085c3480d257aadcc70ec9b449dce4c7489edf65540e"
+      },
+      {
+        "id": "library_margin_notes_tutorial",
+        "body_han_characters": 513,
+        "body_nonwhitespace_characters": 565,
+        "length_requirement_met": true,
+        "body_sha256_utf8": "3035ae86f9b9c6ee2599720548d7b7a54fa5c036ac73964e233fc3709e652073"
+      },
+      {
+        "id": "kitchen_spoon_fiction",
+        "body_han_characters": 454,
+        "body_nonwhitespace_characters": 544,
+        "length_requirement_met": true,
+        "body_sha256_utf8": "b21dd22347f625ab77bf84a94c35186068a4f7dc8561119958c6e39914fec1dc"
+      }
+    ],
+    "facts_and_constraints": [
+      "Cafe retains all supplied values, marks the example hypothetical, computes 600 - 400 - 50 = 150 only as a balance before ingredient and other uncounted incremental costs, names missing comparison/weekend data, and does not call the balance net profit or claim causality.",
+      "Cafe proposed further trial is explicitly conditional and bounded: two weeks, same two weekdays per week, one extra hour, with staffing and early-stop conditions; proposed steps are not reported as performed.",
+      "Library retains three notes and uncertainty about their origin; no erasing or modification is advised; contact with the service desk precedes ordinary return processing; photos are not portrayed as proof of prior condition.",
+      "Fiction maintains one bent spoon through packing, rinsing, setting aside, and the daughter taking it home for filling small plant pots; the ending states a practical transfer decision."
+    ]
+  },
+  "deliverables": {
+    "samples_json": "transfer-samples.json",
+    "samples_json_sha256": "4bc521356d040de97f9d252a035b4ca61f4a16160cb8ccc63df0cf5d8685f7e3"
+  },
+  "task_brief": {
+    "path": "transfer-briefs.md",
+    "sha256": "2e29e9ebc63f2437eb8e01220f6cdf14c6a69eef7af62ad342179cc07c346a6e",
+    "note": "Reader-facing task specification; all authoring constraints retained. Operational coordination text omitted."
+  },
+  "packaging_normalization": "Paths made relative and reader-facing task brief supplied; sample bodies and captured instruction hashes unchanged."
+}

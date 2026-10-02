@@ -27,7 +27,7 @@ class DoctorTests(unittest.TestCase):
             run=subprocess.run([str(exe),str(ROOT/'scripts/doctor.py'),'--runtime',str(ROOT)],capture_output=True,text=True,timeout=20,env={**os.environ,'PYTHONPATH':''})
             self.assertEqual(run.returncode,1,run.stderr);report=json.loads(run.stdout);self.assertFalse(report['passed'])
             failed={c['name']:c for c in report['checks'] if c['status']=='FAIL'}
-            self.assertIn('PyYAML',failed);self.assertIn('mistune',failed);self.assertIn('pip install',failed['PyYAML']['action'])
+            self.assertIn('PyYAML',failed);self.assertIn('mistune',failed);self.assertIn('Pillow',failed);self.assertIn('pip install',failed['Pillow']['action']);self.assertIn('pip install',failed['PyYAML']['action'])
     def test_invalid_vault_missing_runtime_and_permission_failure(self):
         with tempfile.TemporaryDirectory() as tmp:
             report=doctor.diagnose(tmp,tmp);self.assertFalse(report['passed'])
@@ -39,4 +39,16 @@ class DoctorTests(unittest.TestCase):
     def test_wrong_dependency_version_is_not_reported_supported(self):
         with patch.object(doctor.importlib.metadata,'version',return_value='0.0'):
             report=doctor.diagnose(ROOT)
-        self.assertFalse(report['passed']);self.assertEqual(len([c for c in report['checks'] if c['status']=='FAIL']),2)
+        self.assertFalse(report['passed']);self.assertEqual(len([c for c in report['checks'] if c['status']=='FAIL']),3)
+
+    def test_plugin_runtime_version_mismatch_is_actionable_before_startup(self):
+        current=json.loads((ROOT/'manifest.json').read_text(encoding='utf-8'))['version']
+        valid=doctor.diagnose(ROOT,expected_version=current)
+        self.assertEqual(next(c for c in valid['checks'] if c['name']=='kernel-version')['status'],'PASS')
+        invalid=doctor.diagnose(ROOT,expected_version='9.9.9')
+        self.assertFalse(invalid['passed'])
+        mismatch=next(c for c in invalid['checks'] if c['name']=='kernel-version')
+        self.assertEqual(mismatch['status'],'FAIL')
+        self.assertIn('同版本',mismatch['action'])
+        self.assertFalse(invalid['network_used'])
+        self.assertFalse(invalid['credentials_read'])

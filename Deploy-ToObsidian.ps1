@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([Parameter(Position = 0)][string]$Vault = 'F:\Obsidian_vault')
+param([Parameter(Position = 0, Mandatory = $true)][string]$Vault)
 $ErrorActionPreference = 'Stop'
 $python = (Get-Command python -ErrorAction Stop).Source
 & $python (Join-Path $PSScriptRoot 'scripts/install_plugin.py') --vault $Vault --configure --live-safe

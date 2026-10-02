@@ -53,6 +53,9 @@ def request(k,pid,instruction,mode,skills,uid):
             'If the image tool saves to its own output directory, you may copy only the generated output into this run directory. '
             'return images=[] and explain the missing capability; do not substitute text/SVG for a real generated image. '
             'Do not install software, read credentials or access other Vault content. No new agents or delegation.'}
+    from .writing_quality import attach_writing_policy
+    if mode == 'revise':
+        attach_writing_policy(result, 'revise')
     if len(json.dumps(result,ensure_ascii=False).encode())>700_000:raise Problem('项目上下文过大，请减少材料或拆分项目')
     save(k,pid,{'id':uid,'created':now(),'mode':mode,'instruction':instruction,'status':'RUNNING','input_token':result['token']})
     return result

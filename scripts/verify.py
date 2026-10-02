@@ -8,9 +8,9 @@ root=Path(__file__).resolve().parent.parent
 checks=[]
 files=[p for directory in ('opencontent','plugin','tests','templates','scripts','packs') for p in (root/directory).rglob('*') if p.is_file() and '__pycache__' not in p.parts]
 before={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
-commands=[['node','--check','plugin/main.js'],['node','--test','tests/sidebar.test.cjs','tests/ideation-ui.test.cjs','tests/doctor-ui.test.cjs','tests/writing-ui.test.cjs','tests/adversarial-review.test.cjs','plugin/engine/domain.test.cjs','plugin/engine/pipeline.test.cjs','plugin/engine/typography.test.cjs'],[sys.executable,'-m','compileall','-q','opencontent'],[sys.executable,'-m','unittest','discover','-s','tests','-v']]
+commands=[['node','--check','plugin/main.js'],['node','--test','tests/capabilities-ui.test.cjs','tests/sidebar.test.cjs','tests/ideation-ui.test.cjs','tests/doctor-ui.test.cjs','tests/writing-ui.test.cjs','tests/adversarial-review.test.cjs','plugin/engine/domain.test.cjs','plugin/engine/pipeline.test.cjs','plugin/engine/typography.test.cjs'],[sys.executable,'-m','compileall','-q','opencontent'],[sys.executable,'-m','unittest','discover','-s','tests','-v']]
 for command in commands:
-    result=subprocess.run(command,cwd=root,capture_output=True,text=True,encoding='utf-8',errors='replace')
+    result=subprocess.run(command,cwd=root,env={**__import__('os').environ,'PYTHON':sys.executable},capture_output=True,text=True,encoding='utf-8',errors='replace')
     checks.append({'command':command,'exit_code':result.returncode,'output':result.stdout+result.stderr})
     print(('PASS ' if result.returncode==0 else 'FAIL ')+ ' '.join(command),flush=True)
     if result.returncode:print(result.stdout+result.stderr)
