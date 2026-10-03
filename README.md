@@ -28,7 +28,7 @@ Obsidian 桌面插件：把本地笔记做成可追溯、可审查、由作者�
 
 首页写一句想写什么，即可用当前笔记开始。写作页集中稿件与对话，发布页处理交付与公众号草稿。材料、知识、主张、证据、草稿和审查都保存在 Vault 的 Markdown 里；Python Kernel 负责状态与门禁，外部 CLI（Codex / Claude）负责生成，人工批准才算完成。
 
-当前版本 **0.8.2**，适合桌面作者试用。尚未上架 Obsidian 社区插件目录。MIT 许可。
+当前版本 **0.8.2**，适合桌面作者试用。已在 [Obsidian 社区插件目录](https://community.obsidian.md/plugins/opencontent) 公开列出；当前健康、审核与安装状态请以该页面为准。MIT 许可。
 
 ## 它做什么
 
@@ -130,7 +130,7 @@ python scripts/doctor.py --runtime .
 
 OpenContent 的论证与证据整理使用已捕获材料。Narrative 长篇市场任务另提供明确选择的七猫公开日榜采集；其他市场来源支持带来源的 JSON 导入，短篇尚无自动采集适配器。详见 [市场与封面修复验收](docs/NARRATIVE-PRODUCTION-REPAIR-ZH.md)。公众号链路需要本机配置账号，模拟协议通过不代表已经发表。自动 Critic 目前限定每个项目一个 Artifact；额外稿件用人工审查。
 
-尚未完成：社区插件目录上架、无 Python 的一键分发、多产物自动审查、大规模 Vault / 移动端 / 团队验收。已知缺口与发布标准见 [公开发布准备度](docs/PUBLIC-READINESS.md)。
+尚未完成：无 Python 的一键分发、多产物自动审查、大规模 Vault / 移动端 / 团队验收。已知缺口与发布标准见 [公开发布准备度](docs/PUBLIC-READINESS.md)。
 
 ## 文档
 
