@@ -1,10 +1,34 @@
 # OpenContent
 
+## English overview
+
+OpenContent is a desktop plugin for turning local notes into articles with traceable sources, review records, and a final decision by the author. It captures material, extracts knowledge and claims, drafts an article, reviews it, and proposes targeted revisions. The author must approve the current article before it can be exported as a finished work. Drafts and review records are stored as Markdown in the vault.
+
+### Requirements and setup
+
+- Obsidian desktop 1.13.7 or later on Windows; earlier versions and other operating systems have not been verified in the native acceptance run.
+- Python 3.12 or later and the dependencies listed in `requirements.txt`.
+- For AI features, an existing authenticated Codex or Claude native CLI. Manual material and review workflows remain available without an AI provider.
+
+The community plugin download contains `main.js`, `manifest.json`, and `styles.css`; it does **not** contain the Python kernel. Download and extract the repository or the complete runtime archive to a local directory of your choice, then manually run `python -m pip install -r requirements.txt` in that directory. In the plugin connection settings, select the directory containing `opencontent/__main__.py`, `templates/CONTENT.md`, and `requirements.txt`, and provide the path to your Python executable. Run the environment check before saving the connection. When using the complete runtime archive, enter its extracted `kernel` subdirectory for dependency installation and select that same subdirectory as the project directory. The plugin does not download, install, or update itself, Python, its dependencies, or the agent CLIs.
+
+### Usage and disclosures
+
+Open a note and describe the intended article on the Home page. Use Writing to inspect the source material, generate and review a draft, and apply proposed revisions. Review the evidence and the current text, then explicitly approve the article before exporting it as a finished work. The plugin does not automatically approve or publicly publish articles.
+
+The plugin starts a local Python process and communicates with it over loopback. It reads the user-selected runtime, CLI executable, and skill directories outside the vault. Model discovery may also read local CLI configuration and model catalog caches under `.codex/model-catalogs`; credentials are not displayed in the plugin or added to writing material. AI tasks send the selected project material and instructions through the existing CLI to the chosen provider, normally OpenAI or Anthropic. AI and image features require that provider's existing account authorization and may incur provider charges under its terms.
+
+Vault enumeration is used to build the local material-directory list and the user-selected ideation scope; a list of file paths is not automatically sent to a model. Selected excerpts are sent only when the user starts the corresponding AI task. Clipboard support writes article text, rich text, image Markdown, or image prompts when the user clicks a copy button; the plugin does not read the system clipboard. The Python and CLI executables are launched as configured local processes (`shell: false` for the plugin process launch), rather than by interpreting a command string as a shell script. These local processes still have the current user's file access; this is not a complete sandbox guarantee.
+
+Explicit Qimao market tasks fetch public rankings from Qimao. WeChat operations use `api.weixin.qq.com` only after configuration and confirmation. See [PRIVACY.md](PRIVACY.md) for data handling and [NOTICE.md](NOTICE.md) for third-party notices. OpenContent is licensed under [MIT](LICENSE).
+
+The current application release is 0.8.2, with writing policy 1.0.2. A GitHub release does not certify approval or availability in the Obsidian community directory; use the directory entry to check its current review and installation status. The three original Windows symbolic-link tests could not create their test objects because of WinError 1314; separate junction regressions passed, and do not replace those symbolic-link tests. Platform-wide market collection, mobile use, and a runtime-free installation have not been verified.
+
 Obsidian 桌面插件：把本地笔记做成可追溯、可审查、由作者最终批准的内容项目。
 
 首页写一句想写什么，即可用当前笔记开始。写作页集中稿件与对话，发布页处理交付与公众号草稿。材料、知识、主张、证据、草稿和审查都保存在 Vault 的 Markdown 里；Python Kernel 负责状态与门禁，外部 CLI（Codex / Claude）负责生成，人工批准才算完成。
 
-当前版本 **0.8.1**，适合桌面作者试用。尚未上架 Obsidian 社区插件目录。MIT 许可。
+当前版本 **0.8.2**，适合桌面作者试用。尚未上架 Obsidian 社区插件目录。MIT 许可。
 
 ## 它做什么
 
@@ -31,7 +55,7 @@ Material → Knowledge / Idea → Claim / Evidence → Artifact → Critic → �
 
 ## 社区安装与外部运行时
 
-OpenContent 应用版本为 0.8.1，随附写作策略版本为 1.0.2。两者独立版本化；公开 release 的 tag 必须与应用 manifest 版本一致。
+OpenContent 应用版本为 0.8.2，随附写作策略版本为 1.0.2。两者独立版本化；公开 release 的 tag 必须与应用 manifest 版本一致。
 
 社区安装只取得 main.js、manifest.json、styles.css，不包含 Python 内核。使用完整功能前，请自行准备 Python 3.12+，将本仓库或完整运行时包解压到自己选定的本地目录，再在该目录手工执行 `python -m pip install -r requirements.txt`。插件不会下载、安装或更新自身、Python、依赖或 Agent CLI。
 
@@ -56,7 +80,7 @@ python scripts/install_plugin.py --vault "你的 Vault 路径" --configure
 
 然后在 Obsidian 中关闭安全模式，启用社区插件 **OpenContent**。首次打开会离线检查 Python、依赖、内核和 Vault 写权限；通过后 Kernel 才在本机回环启动。
 
-安装脚本会把界面文件和 `kernel-0.8.1/` 写入 `.obsidian/plugins/opencontent/`，替换前备份到 `.opencontent/install-backups/`。`--configure` 使用随包内核，并保留其他项目与账号设置。不要同时为同一 Vault 再手动启动一份 Kernel。
+安装脚本会把界面文件和 `kernel-0.8.2/` 写入 `.obsidian/plugins/opencontent/`，替换前备份到 `.opencontent/install-backups/`。`--configure` 使用随包内核，并保留其他项目与账号设置。不要同时为同一 Vault 再手动启动一份 Kernel。
 
 试用包与演示仓库见 [独立试用说明](docs/TRIAL-QUICKSTART.md)。
 

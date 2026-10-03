@@ -82,7 +82,7 @@
 .oc-preview-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
 
 /* 7. 创意能力包 (Narrative Pack) 控制台 */
-.oc-capability-panel { margin: 16px 0; padding: 14px; background: var(--background-secondary); border-radius: 10px; border: 1px solid rgba(var(--color-purple-rgb), 0.3); background: linear-gradient(180deg, rgba(var(--color-purple-rgb), 0.05), var(--background-secondary)); }
+.oc-capability-panel { margin: 16px 0; padding: 14px; border-radius: 10px; border: 1px solid rgba(var(--color-purple-rgb), 0.3); background: linear-gradient(180deg, rgba(var(--color-purple-rgb), 0.05), var(--background-secondary)); }
 .oc-capability-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 .oc-capability-title { font-weight: 600; font-size: 13.5px; color: var(--color-purple); }
 .oc-profile-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 12px; }
