@@ -1,0 +1,8 @@
+execution_profile: STRUCTURED_READONLY
+steps:
+  - 核验已批准母稿与作者意图
+  - 以语义目的规划每页角色、原文片段、主张、正文和真实附件
+  - 返回独立文案候选与可编辑逐页计划
+  - 校验来源保真与目标版本后保存独立 Artifact
+  - 独立 Critic 和人工批准
+  - 确定性本地 PNG 与自包含预览导出

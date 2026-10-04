@@ -1,5 +1,7 @@
 # OpenContent
 
+本 feature checkout 已接入统一图文构建、指定稿件/选区改稿和独立小红书本地图文包。三种主题的预览、富文本复制、导出与微信准备共用构建身份；图片候选需作者点击采用，渠道稿独立审查批准。小红书 PNG 使用本机字体确定性排版，并非 AI 绘图，未实现自动发帖。入口、旧 outbox 恢复与验收边界见 [三阶段说明](docs/THREE-STAGE-IMPLEMENTATION.md) 和 [验证记录](docs/THREE-STAGE-VERIFICATION.md)。已在独立 Obsidian 1.13.7 合成 Vault 完成最终宿主检查；完整回归仍保留三项 Windows 符号链接权限失败，不表示真实微信账号或作者审美验收通过。
+
 ## English overview
 
 OpenContent is a desktop plugin for turning local notes into articles with traceable sources, review records, and a final decision by the author. It captures material, extracts knowledge and claims, drafts an article, reviews it, and proposes targeted revisions. The author must approve the current article before it can be exported as a finished work. Drafts and review records are stored as Markdown in the vault.

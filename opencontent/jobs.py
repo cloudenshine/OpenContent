@@ -85,7 +85,7 @@ class Jobs:
         finally:
             with self.mutex:self.running.pop(run,None)
 
-    def submit(self, pid, provider=None, stage=None, resume=None, expected=None, instruction=None, mode='discuss'):
+    def submit(self, pid, provider=None, stage=None, resume=None, expected=None, instruction=None, mode='discuss', target_artifact_id=None, selection=None, capability_request=None):
         if provider is None:
             provider = next(iter(self.providers), None)
         if provider not in self.providers:
@@ -95,7 +95,8 @@ class Jobs:
                 raise Problem('请填写有效的项目指令并选择讨论、改稿或配图')
             if resume:raise Problem('对话失败后请重新发送指令；历史已保留')
             stage='conversation'
-        if stage not in (None, "critique", 'conversation') or stage=='conversation' and instruction is None:
+        if capability_request is not None:stage='social-graphic'
+        if stage not in (None, "critique", 'conversation', 'social-graphic') or stage=='conversation' and instruction is None:
             raise Problem("Only full production or re-critique is supported")
         previous = None
         if resume:
@@ -114,7 +115,12 @@ class Jobs:
             uid = uuid.uuid4().hex
             event = threading.Event()
             self.kernel.inspect(pid)
-            detail = {"provider": provider, "stage": stage, "attempts": [], "resumed_from": resume, "input_token": input_token}
+            target=None
+            if stage in ('conversation','critique','social-graphic'):
+                target=workbench.resolve_target(self.kernel.read()[0],pid,target_artifact_id,required=stage!='conversation' or mode=='revise')
+            detail = {"provider": provider, "stage": stage, "phase":"QUEUED", "attempts": [], "resumed_from": resume, "input_token": input_token,
+                      'target_artifact_id':target['oc_id'] if target else None,'selection':selection,'session_mode':'fresh-attempt',
+                      'cancel_requested':False,'capability_request':capability_request}
             if instruction is not None:detail.update(instruction=instruction,mode=mode)
             with self.kernel.vault.connection() as db:
                 db.execute("INSERT INTO jobs VALUES (?,?,?,?,?,?)", (uid, pid, "QUEUED", json.dumps(detail), now(), now()))
@@ -132,13 +138,21 @@ class Jobs:
                 stage = forced_stage or self.kernel.next_stage(pid)
                 if stage is None:
                     break
-                self.update(uid, "RUNNING", {**detail, "stage": stage})
+                detail.update(stage=stage,phase='ASSEMBLING_CONTEXT');self.update(uid, "RUNNING", detail)
+                if stage=='social-graphic':
+                    from .capabilities import PackRegistry, CapabilityRuntime
+                    reg=PackRegistry();reg.discover([__import__('pathlib').Path(__file__).resolve().parent.parent/'packs'])
+                    result=CapabilityRuntime(self.kernel,reg,jobs=self).execute_task(detail['capability_request'],provider_id,cancel_event=event)
+                    detail.update(phase='CANDIDATE_SAVED',candidate=result['artifact']['oc_id'],outcome='NEEDS_JUDGMENT')
+                    self.update(uid,'SUCCEEDED',detail);break
                 run_id = uuid.uuid4().hex
                 workspace = self.kernel.vault.runtime / "runs" / run_id
                 workspace.mkdir(parents=True)
                 skills=discover_skills(self.skill_roots)
-                request = (workbench.request(self.kernel,pid,detail['instruction'],detail['mode'],skills,uid)
-                           if stage=='conversation' else self.kernel.request(pid, stage, skills))
+                if stage=='critique' and not detail.get('target_artifact_id'):
+                    detail['target_artifact_id']=workbench.resolve_target(self.kernel.read()[0],pid,required=True)['oc_id']
+                request = (workbench.request(self.kernel,pid,detail['instruction'],detail['mode'],skills,uid,detail.get('target_artifact_id'),detail.get('selection'))
+                           if stage=='conversation' else self.kernel.request(pid, stage, skills,detail.get('target_artifact_id')))
                 if not detail["attempts"] and request["token"] != detail["input_token"]:
                     raise Problem("Vault changed while queued; no material sent to Agent", 409)
                 atomic(workspace / "request.json", json.dumps(request, ensure_ascii=False).encode("utf-8"))
@@ -146,16 +160,18 @@ class Jobs:
                 if request.get("writing_quality"):
                     attempt["writing_quality"] = request["writing_quality"]
                 detail["attempts"].append(attempt)
-                self.update(uid, "RUNNING", {**detail, "stage": stage})
+                detail.update(phase='PROVIDER_RUNNING');self.update(uid, "RUNNING", detail)
                 if previous:
                     result = provider.resume(request, workspace, event, previous)
                     previous = None
                 else:
                     result = provider.run(request, workspace, event)
-                if event.is_set():
-                    raise Problem("Cancelled before committing response")
-                added = (workbench.complete(self.kernel,pid,uid,result,workspace)['id'] if stage=='conversation'
-                         else self.kernel.apply_result(pid, stage, result, request["token"], provider_id, run_id))
+                with self.mutex:
+                    if event.is_set():raise Problem("Cancelled before committing response")
+                    detail.update(phase='VALIDATING_CANDIDATE');self.update(uid,'RUNNING',detail)
+                    added = (workbench.complete(self.kernel,pid,uid,result,workspace)['id'] if stage=='conversation'
+                             else self.kernel.apply_result(pid, stage, result, request["token"], provider_id, run_id,target_artifact_id=detail.get('target_artifact_id'),expected_snapshot=request.get('input_snapshot')))
+                    detail.update(phase='CANDIDATE_SAVED',candidate=added)
                 attempt.update(status="COMMITTED", completed=now(), objects=added)
                 self.update(uid, "RUNNING", detail)
                 if forced_stage:
@@ -164,6 +180,8 @@ class Jobs:
             self.update(uid, "SUCCEEDED", detail)
         except Exception as e:
             detail["error"] = f"{type(e).__name__}: {e}"
+            detail['phase']='CANCELLED' if event.is_set() else 'FAILED'
+            detail['cancel_requested']=event.is_set()
             if detail["attempts"] and detail["attempts"][-1]["status"] == "RUNNING":
                 detail["attempts"][-1].update(status="FAILED", completed=now())
             self.update(uid, "CANCELLED" if event.is_set() else "FAILED", detail)
@@ -177,6 +195,12 @@ class Jobs:
             record = self.running.get(uid)
             if not record:
                 raise Problem("Job is no longer running", 409)
+            saved=next(j for j in self.list() if j['id']==uid)
+            with self.kernel.vault.connection() as db:
+                db.execute("UPDATE jobs SET detail=?,updated=? WHERE id=? AND status IN ('QUEUED','RUNNING')",
+                    (json.dumps({**saved['detail'],'cancel_requested':True,'phase':'CANCEL_REQUESTED'}),now(),uid))
+            # Persist the request before signalling. Never overwrite a terminal
+            # receipt with a stale RUNNING row after a fast cancellation.
             self.providers[record["provider"]].cancel(record["event"])
             return {"id": uid, "status": "CANCELLING"}
 

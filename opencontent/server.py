@@ -97,8 +97,19 @@ class Handler(BaseHTTPRequestHandler):
             if route == '/discovery': return ideation.preview(k,body.get('goal','')) if body.get('ideas') else discovery.recommend(k,body.get('goal',''))
             if route == '/projects/selected': return discovery.create_selected(k,body['title'],body['goal'],body['audience'],body.get('selected',[]),body['token'])
             if route == '/conversation/history': return {'turns':workbench.history(k,body['project']),'token':k.vault.token()}
-            if route == '/conversation/send': return jobs.submit(body['project'],body.get('provider'),expected=body['token'],instruction=body['instruction'],mode=body.get('mode','discuss'))
+            if route == '/conversation/send': return jobs.submit(body['project'],body.get('provider'),expected=body['token'],instruction=body['instruction'],mode=body.get('mode','discuss'),target_artifact_id=body.get('target_artifact_id'),selection=body.get('selection'))
             if route == '/conversation/apply': return workbench.apply_revision(k,body['project'],body['turn'],body['token'])
+            if route == '/conversation/image/apply': return workbench.apply_image(k,body['project'],body['turn'],body['index'],body['token'])
+            if route in ('/build','/build/export'):
+                from .rendering import build, export_build
+                return (export_build(k,body['artifact'],body['token'],body.get('theme','serif')) if route.endswith('/export')
+                        else build(k,body['artifact'],body['token'],body.get('theme','serif'),body.get('approved',False)))
+            if route == '/social/start':
+                request={**body,'artifact':body['target_artifact_id'],'schema':'opencontent.creative-task.v1','pack':'xiaohongshu','task':'social-graphic'}
+                return jobs.submit(body['project'],body.get('provider'),expected=body['token'],target_artifact_id=body['target_artifact_id'],capability_request=request)
+            if route in ('/social/preview','/social/export'):
+                from .social_graphic import preview_bundle, export_bundle
+                return (export_bundle if route.endswith('/export') else preview_bundle)(k,body['artifact'],body['token'])
             if route == '/sources/preview': return lifecycle.refresh_preview(k,body['material'])
             if route == '/sources/refresh': return lifecycle.refresh_source(k,body['material'],body['body'],body['source_hash'],body['token'])
             if route == '/sources/reuse': return lifecycle.reuse_material(k,body['material'],body['project'],body['token'])
@@ -111,6 +122,7 @@ class Handler(BaseHTTPRequestHandler):
             if route == '/publications/prepare': return pub.prepare(body['artifact'],body['channel'],body['action'],body['token'],body.get('options'),body.get('draft_publication'))
             if route == '/publications/confirm': return pub.confirm(body['publication'],body['confirmation'],body['reviewer'],body['token'])
             if route == '/publications/reconcile': return pub.reconcile(body['publication'],body.get('recovery_id'))
+            if route == '/publications/assets/reconcile': return pub.reconcile_asset(body['publication'],body['asset_hash'],body.get('url'))
             if route == '/publications/cancel': return pub.cancel_preview(body['publication'],body['token'])
             if route == '/feedback': return lifecycle.feedback(k,body['publication'],body['source'],body['body'],body['suggestion'],body['token'])
             if route == '/feedback/decide': return lifecycle.judge_feedback(k,body['publication'],body['feedback'],body['decision'],body['reviewer'],body['reason'],body['token'])
@@ -127,11 +139,11 @@ class Handler(BaseHTTPRequestHandler):
                 return k.advance(body["project"], body["target"], body["token"], body.get("thesis"))
             if route == "/reviews":
                 return k.review(body["artifact"], body["reviewer"], body["axes"], body["claims_complete"],
-                                body.get("conflict_resolution", ""), body.get("summary", ""), body["token"])
+                                body.get("conflict_resolution", ""), body.get("summary", ""), body["token"], expected_snapshot=body.get("input_snapshot"), claim_reviews=body.get("claim_reviews"))
             if route == "/decisions":
                 return k.decide(body["artifact"], body["decision"], body["reviewer"], body["reason"], body["token"])
             if route == "/jobs":
-                return jobs.submit(body["project"], body.get("provider"), body.get("stage"), body.get("resume"), body.get("token"))
+                return jobs.submit(body["project"], body.get("provider"), body.get("stage"), body.get("resume"), body.get("token"),target_artifact_id=body.get('target_artifact_id'))
             if route == "/cancel":
                 return jobs.cancel(body["id"])
             if route == "/capabilities":

@@ -7,6 +7,7 @@ STATE_DELTA_SCHEMA_V1 = "opencontent.state-delta.v1"
 CANDIDATE_SCHEMA_V1 = "opencontent.candidate-artifact.v1"
 
 ALLOWED_TASK_TYPES = (
+    "social-graphic",
     "long-scan",
     "short-scan",
     "long-analyze",

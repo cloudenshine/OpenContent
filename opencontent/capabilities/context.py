@@ -1,5 +1,6 @@
 """Context Assembler for Creative Capability Tasks."""
 from typing import Dict, List, Any, Optional
+import json
 from opencontent.vault import Problem
 from .contracts import CONTEXT_SCHEMA_V1
 
@@ -19,11 +20,37 @@ class ContextAssembler:
         constraints: Optional[Dict[str, Any]] = None,
         budget_limit: int = 120000,
     ) -> Dict[str, Any]:
+        if not isinstance(task,str) or not isinstance(instruction,str) or not isinstance(project,dict):raise Problem('Context task, instruction and project have invalid types')
+        for name,value in (('artifact',artifact),('profile',profile),('state_data',state_data),('constraints',constraints)):
+            if value is not None and not isinstance(value,dict):raise Problem('Context '+name+' must be an object')
+        if project.get('type','Project')!='Project':raise Problem('Context project must be Project')
+        if artifact is not None:
+            if artifact.get('type','Artifact')!='Artifact' or not isinstance(artifact.get('body',''),str):raise Problem('Context target must be an Artifact with text')
+            if artifact.get('project') is not None and artifact['project']!=project.get('oc_id'):raise Problem('Context artifact belongs to another project')
         profile = profile or {}
         sources = sources or []
         state_data = state_data or {}
         constraints = constraints or {}
+        if set(constraints)-{'must_preserve','must_not_do'}:raise Problem('Unsupported context constraints')
+        for owner,fields in ((constraints,('must_preserve','must_not_do')),(profile,('invariants','forbidden','creative_freedom'))):
+            for field in fields:
+                if field in owner and (not isinstance(owner[field],list) or any(not isinstance(item,str) for item in owner[field])):raise Problem('Context '+field+' must be a text list')
+        for field in ('characters','world','timeline','open_threads','relationships'):
+            if field in state_data and not isinstance(state_data[field],list):raise Problem('Context state '+field+' must be a list')
 
+        if not isinstance(sources,list):raise Problem('Context sources must be a list')
+        for source in sources:
+            if not isinstance(source,dict) or not isinstance(source.get('body'),str) or not source['body'].strip():
+                raise Problem('Context sources require complete original text')
+            if source.get('type','Material')!='Material':raise Problem('Only original Material is factual source context')
+            if source.get('project') is not None and source['project']!=project.get('oc_id'):
+                raise Problem('Context source belongs to another project')
+            allowed={'oc_id','type','title','body','source','source_url','project','created','derived_from','path','hash','role','capture_hash','source_note_hash','versions','reused_from','execution','provenance'}
+            if set(source)-allowed:raise Problem('Unsupported source context fields')
+            for field in ('oc_id','title','source','source_url','role'):
+                if field in source and not isinstance(source[field],str):raise Problem('Context source '+field+' must be text')
+            if source.get('source','').lower().startswith(('assistant:','agent:','model:','discussion:')):raise Problem('Model discussion is not original source evidence')
+            if source.get('role','reference') not in ('reference','primary','background','evidence'):raise Problem('Unsupported source evidence role')
         provenance = []
 
         # 1. P0: Intent and Instruction
@@ -127,7 +154,7 @@ class ContextAssembler:
         selected_sources = []
         for s in sources:
             s_body = s.get("body", "")
-            excerpt = s_body if len(s_body) <= 2000 else s_body[:2000] + "\n[...]"
+            excerpt = s_body
             selected_sources.append({
                 "oc_id": s.get("oc_id"),
                 "title": s.get("title"),
@@ -171,4 +198,20 @@ class ContextAssembler:
             "provenance": provenance,
         }
 
+        package['omissions'] = {
+            'characters': len(all_chars)-len(selected_chars),
+            'timeline': max(0,len(all_timeline)-len(selected_timeline)),
+            'world': max(0,len(all_rules)-len(relevant_state['world'])),
+            'sources': 0,
+        }
+        if not isinstance(budget_limit,int) or isinstance(budget_limit,bool) or budget_limit <= 0:
+            raise Problem('Context budget_limit must be a positive byte limit')
+        # Byte accounting includes provenance, omissions, and the budget receipt.
+        package['budget'] = {'limit':budget_limit,'bytes':0,'unit':'utf8-bytes'}
+        for _ in range(5):
+            size=len(json.dumps(package,ensure_ascii=False).encode('utf-8'))
+            if size==package['budget']['bytes']:break
+            package['budget']['bytes']=size
+        if package['budget']['bytes'] > budget_limit:
+            raise Problem('Required context/evidence exceeds budget; reduce scope explicitly, no evidence was silently dropped')
         return package

@@ -26,3 +26,4 @@ node_modules/
 *.py[cod]
 .cache/
 .pytest_cache/
+.execution/
