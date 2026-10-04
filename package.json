@@ -5,7 +5,7 @@
   "main": "plugin/main.js",
   "scripts": {
     "build": "node scripts/bundle_plugin.js",
-    "test": "node --test tests/capabilities-ui.test.cjs tests/sidebar.test.cjs tests/ideation-ui.test.cjs tests/doctor-ui.test.cjs tests/writing-ui.test.cjs tests/adversarial-review.test.cjs tests/three-stage-ui.test.cjs plugin/engine/domain.test.cjs plugin/engine/pipeline.test.cjs plugin/engine/typography.test.cjs",
+    "test": "node --test tests/capabilities-ui.test.cjs tests/sidebar.test.cjs tests/ideation-ui.test.cjs tests/doctor-ui.test.cjs tests/writing-ui.test.cjs tests/adversarial-review.test.cjs tests/three-stage-ui.test.cjs tests/task-flow-ui.test.cjs plugin/engine/domain.test.cjs plugin/engine/pipeline.test.cjs plugin/engine/typography.test.cjs",
     "lint": "eslint plugin package.json",
     "lint:compat": "eslint --config eslint.compat.config.mjs plugin",
     "lint:controls": "node scripts/check_lint_controls.mjs"
