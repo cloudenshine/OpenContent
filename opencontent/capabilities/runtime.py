@@ -41,7 +41,7 @@ class CapabilityRuntime:
         self.deconstructor = StoryDeconstructor(kernel)
         self.media_adapter = MediaGenerationAdapter(kernel, providers=self.jobs.providers if self.jobs else {})
 
-    def execute_task(self, task_request, provider_name=None, run_id=None):
+    def execute_task(self, task_request, provider_name=None, run_id=None, cancel_event=None):
         run_id = run_id or uuid.uuid4().hex
         if not isinstance(run_id, str) or not re.fullmatch(r"[A-Za-z0-9_-]{1,80}", run_id):
             raise Problem("Invalid run_id")
@@ -56,7 +56,7 @@ class CapabilityRuntime:
             "run_id": run_id, "task": task_request.get("task"), "status": "RUNNING", "at": now(),
         })
         try:
-            return self._execute_task(task_request, provider_name, run_id)
+            return self._execute_task(task_request, provider_name, run_id, cancel_event)
         except Exception as error:
             self._save_specialized_receipt(run_id, task_request, {
                 "run_id": run_id, "task": task_request.get("task"), "status": "FAILED",
@@ -71,6 +71,7 @@ class CapabilityRuntime:
         task_request: Dict[str, Any],
         provider_name: Optional[str] = None,
         run_id: Optional[str] = None,
+        cancel_event=None,
     ) -> Dict[str, Any]:
         """Execute a creative task within an isolated run workspace."""
         start_time = time.monotonic()
@@ -92,6 +93,12 @@ class CapabilityRuntime:
         profile = routed["profile"]
         workflow = routed["workflow"]
         task_name = routed["task"]
+        if task_name == 'social-graphic':
+            from opencontent.social_graphic import generate
+            result=generate(self.kernel,self.jobs,task_request,routed,provider_name,
+                            self.kernel.vault.safe(f'.opencontent/runs/{run_id}'),cancel_event)
+            self._save_specialized_receipt(run_id,task_request,result['receipt'])
+            return result
 
         # Target artifact resolution
         target_aid = task_request.get("artifact")

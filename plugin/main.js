@@ -334,6 +334,10 @@ function field(parent, label, value='', multiline=false) {
   input.setAttribute('aria-label',label); return input;
 }
 
+function buildPreviewDocument(content){
+  return '<!doctype html><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; img-src data:; style-src \'unsafe-inline\'">'+content;
+}
+
 function publicationPreviewDocument(content, doc=document) {
   const allowed=new Set(['section','div','p','span','h1','h2','h3','h4','h5','h6','strong','b','em','i','u','s','del','ul','ol','li','blockquote','pre','code','table','thead','tbody','tfoot','tr','td','th','br','hr']);
   const blocked=new Set(['script','style','iframe','frame','object','embed','meta','link','base','form','input','button','svg','math','template','noscript','video','audio','source','picture','img']);
@@ -368,6 +372,95 @@ class FormModal extends Modal {
 
 class Cockpit extends ItemView {
   constructor(leaf,plugin) { super(leaf); this.plugin=plugin; this.tab='board'; this.selected=plugin.settings.lastProject; this.artifact=plugin.settings.lastArtifact; }
+  flowSteps(){return [
+    {id:'prepare',title:'准备',hint:'目标与材料',tab:'board'},
+    {id:'create',title:'创作',hint:'写作与修改',tab:'project'},
+    {id:'check',title:'检查',hint:'核对并批准',tab:'inspector'},
+    {id:'deliver',title:'交付',hint:'选择渠道',tab:'publishing'}
+  ];}
+  stepForTab(tab=this.tab){
+    if(tab==='board'||tab==='sources')return 'prepare';
+    if(['project','conversation'].includes(tab))return 'create';
+    if(['inspector','inbox'].includes(tab))return 'check';
+    return 'deliver';
+  }
+  axisLabel(axis){return ({EVIDENCE:'事实依据',LOGIC:'逻辑完整',ORIGINALITY:'独立表达',VOICE:'表达自然',UTILITY:'读者价值'})[String(axis).toUpperCase()]||axis;}
+  journeyState(data){
+    const project=data.projects.find(p=>p.oc_id===this.selected)||null;
+    if(!project)return {project:null,artifact:null,message:'从这里开始：说清楚想写什么，并选择需要的材料。',next:'先完成准备'};
+    const artifact=project.artifacts.find(a=>a.oc_id===this.artifact)||project.artifacts[0]||null;
+    if(!artifact)return {project:project.title,artifact:null,message:'准备已完成。下一步补充材料并生成第一版稿件。',next:'进入创作'};
+    if(data.diagnostics?.length)return {project:project.title,artifact:artifact.title,message:'材料或文件需要修复，当前状态尚不能确认。',next:'处理诊断后重新检查'};
+    if(artifact.gate?.approved&&['PUBLISHED','LEARNING'].includes(artifact.effective_state||artifact.state))return {project:project.title,artifact:artifact.title,message:'当前稿件已发表，交付记录可以查阅。',next:'查看交付记录或继续优化'};
+    if(artifact.gate?.approved)return {project:project.title,artifact:artifact.title,message:'当前版本已批准，可以交付。',next:'进入交付：选择公众号、小红书或本地文件'};
+    if(artifact.gate?.status==='PASS')return {project:project.title,artifact:artifact.title,message:'检查已通过，等你批准当前版本。',next:'批准当前版本'};
+    return {project:project.title,artifact:artifact.title,message:'当前稿件还在完善中。',next:'继续创作，完成后进入检查'};
+  }
+  renderJourney(root,data){
+    const state=this.journeyState(data),current=this.stepForTab();
+    const context=el(root,'section',undefined,'oc-current-work');
+    const top=el(context,'div',undefined,'oc-current-line');
+    el(top,'span','当前作品','oc-current-label');
+    if(data.projects.length>1)this.projectSelect(top,data);else el(top,'strong',state.project||'还没有作品');
+    this.sharedProjectSelector=true;
+    if(state.artifact)el(top,'span','· '+state.artifact,'oc-muted');
+    el(context,'p',state.message);
+    const nav=el(root,'nav',undefined,'oc-journey');nav.setAttribute('aria-label','创作步骤');
+    const steps=this.flowSteps();
+    for(let index=0;index<steps.length;index++){
+      const step=steps[index];
+      const b=el(nav,'button',undefined,'oc-journey-step '+(step.id===current?'active':''));
+      b.setAttribute('aria-current',step.id===current?'step':'false');
+      el(b,'span',String(index+1),'oc-journey-index');
+      const copy=el(b,'span',undefined,'oc-journey-copy');el(copy,'strong',step.title);el(copy,'small',step.hint);
+      b.addEventListener('click',async()=>{this.tab=step.tab;await this.render();});
+    }
+    const more=el(root,'details',undefined,'oc-secondary-nav');el(more,'summary','更多');
+    button(more,'材料库',async()=>{this.tab='sources';await this.render();});
+    button(more,'待确认',async()=>{this.tab='inbox';await this.render();});
+    button(more,this.plugin.settings.viewMode==='expert'?'使用简洁检查':'显示专业检查',async()=>{
+      this.plugin.settings.viewMode=this.plugin.settings.viewMode==='expert'?'simple':'expert';await this.plugin.saveData(this.plugin.settings);await this.render();
+    });
+    button(more,'连接设置',()=>this.plugin.configure());
+    const guide=el(root,'section',undefined,'oc-step-guide');guide.setAttribute('aria-label','本步操作说明');
+    const descriptions={
+      prepare:['写作目标与原始材料','选择材料、读者和创作方式','一个可继续创作的项目'],
+    create:['写作要求或修改意见','直接编辑正文，或先预览改稿提案','当前稿件与待采用候选'],
+      check:['当前稿件及引用依据','处理检查问题，再重新检查','你明确批准的当前版本'],
+      deliver:['已经批准的稿件','选择渠道与排版，核对交付内容','交付文件、草稿回执或发表记录']
+    };
+    const copy=descriptions[current];
+    for(let i=0;i<copy.length;i++){const item=el(guide,'div');el(item,'strong',['输入','调整','输出'][i]);el(item,'span',copy[i]);}
+  }
+  renderFlowFooter(root,data){
+    if(!['board','project','conversation','inspector','publishing'].includes(this.tab))return;
+    const footer=el(root,'section',undefined,'oc-flow-footer');footer.setAttribute('aria-label','本步完成与下一步');
+    const current=this.stepForTab(),state=this.journeyState(data);
+    if(current==='prepare'){el(footer,'small','填写目标后开始构思，或选择材料后开始写作。','oc-muted');return;}
+    if(current==='create'){
+      button(footer,'上一步：准备',async()=>{this.tab='board';await this.render();});
+      const project=data.projects.find(p=>p.oc_id===this.selected),approved=project?.artifacts.find(a=>a.oc_id===this.artifact)?.gate?.approved;
+      const next=button(footer,approved?'下一步：选择交付方式':'下一步：检查当前稿件',async()=>{this.tab=approved?'publishing':'inspector';await this.render();},'mod-cta');next.disabled=!state.artifact;
+      if(!state.artifact)el(footer,'small','第一版稿件生成后，就可以进入检查。','oc-muted');
+    }else if(current==='check'){
+      button(footer,'返回创作',async()=>{this.tab='project';await this.render();});
+      const project=data.projects.find(p=>p.oc_id===this.selected),artifact=project?.artifacts.find(a=>a.oc_id===this.artifact);
+      if(artifact?.gate?.approved)button(footer,'下一步：选择交付方式',async()=>{this.tab='publishing';await this.render();},'mod-cta');
+      else el(footer,'small','检查通过后，请在本页明确批准当前版本。','oc-muted');
+    }else{
+      button(footer,'返回检查',async()=>{this.tab='inspector';await this.render();});
+      el(footer,'small','以文件或平台回执确认交付结果。送入草稿箱后仍需在平台发表。','oc-muted');
+    }
+  }
+  showDeliveryResult(root,result,artifact){
+    const box=el(root,'section',undefined,'oc-delivery-result');box.setAttribute('role','status');
+    el(box,'strong',result.path?'交付文件已生成':'富文本已复制');
+    el(box,'p',artifact.title+' · 当前已批准版本');
+    if(result.path){el(box,'p','保存位置');el(box,'code',result.path);
+      button(box,'打开交付正文',()=>this.plugin.openNote(result.path+'/article.md'));
+    }else el(box,'p','可粘贴到目标编辑器；粘贴后检查排版再发表。','oc-muted');
+    el(box,'small','本次完成本地交付，尚未上传或发表。','oc-muted');
+  }
   getViewType(){return VIEW;}
   getDisplayText(){return 'OpenContent';}
   getIcon(){return 'workflow';}
@@ -385,28 +478,8 @@ class Cockpit extends ItemView {
     const cursor=typing?[focused.selectionStart,focused.selectionEnd]:null;
     const root=this.contentEl; root.empty(); root.addClass('oc-root');
     const heading=el(root,'div',undefined,'oc-header'); el(heading,'h1','OpenContent');
-    el(heading,'p','把你的笔记，写成值得分享的文章。');
-    const nav=el(root,'nav',undefined,'oc-nav');
-    // Dual-Mode bar
-    const modeBar = el(root, 'div', undefined, 'oc-mode-bar');
-    const isExpert = this.plugin.settings.viewMode === 'expert';
-    const modeBadge = el(modeBar, 'span', isExpert ? '🛡️ 专家门禁模式' : '⚡ 极简创作模式', 'oc-mode-badge ' + (isExpert ? 'expert' : 'simple'));
-    modeBadge.title = '点击切换：默认极简3步流 vs 深度五轴门禁与雷达';
-    modeBadge.onclick = async () => {
-      this.plugin.settings.viewMode = isExpert ? 'simple' : 'expert';
-      await this.plugin.saveData(this.plugin.settings);
-      await this.render();
-    };
-    const modeHint = el(modeBar, 'span', isExpert ? '已展开完整证明链与对抗审核' : '轻量3步：选题 → 论据 → 正文', 'oc-muted');
-    modeHint.classList.add('oc-mode-hint');
-    const current=['project','conversation','inspector','inbox'].includes(this.tab)?'project':this.tab;
-    for(const [id,title] of [['board','首页'],['project','写作'],['publishing','发布']]){
-      const b=button(nav,title,async()=>{this.tab=id;await this.render();},id===current?'mod-cta':'');
-      if(id===current)b.setAttribute('aria-current','page');
-    }
-    const more=el(nav,'details',undefined,'oc-more');el(more,'summary','更多');
-    for(const [id,title] of [['sources','材料库'],['inbox','待处理稿件']])button(more,title,async()=>{this.tab=id;await this.render();});
-    button(more,'连接设置',()=>this.plugin.configure());
+    el(heading,'p','从材料到成稿，再到真正可交付的作品。');
+    const journeyHost=el(root,'div',undefined,'oc-journey-host');
     const content=el(root,'div',undefined,'oc-content');
     let connected=false;
     try{
@@ -414,6 +487,7 @@ class Cockpit extends ItemView {
       this.plugin.jobsActive=data.jobs.some(j=>['QUEUED','RUNNING'].includes(j.status));
       if(data.diagnostics.length) el(content,'pre','Vault 诊断（已阻止推进）：\n'+data.diagnostics.join('\n'),'oc-error');
       if(!data.projects.some(p=>p.oc_id===this.selected)) this.selected=data.projects[0]?.oc_id||null;
+      this.sharedProjectSelector=false;this.renderJourney(journeyHost,data);
       if(this.tab==='board') await this.board(content,data);
       if(this.tab==='inbox') this.inbox(content,data);
       if(this.tab==='project') await this.project(content,data);
@@ -422,6 +496,7 @@ class Cockpit extends ItemView {
       if(this.tab==='publishing') await this.publishing(content,data);
       if(this.tab==='conversation') await this.project(content,data);
       this.jobs(content,data);
+      this.renderFlowFooter(root,data);
       await this.plugin.remember(this.selected,this.artifact);
       root.scrollTop=previousScroll;
       if(typing){const editor=root.querySelector(`textarea[aria-label="${inputLabel}"]`);if(editor){editor.focus();editor.setSelectionRange(...cursor);}}
@@ -437,18 +512,25 @@ class Cockpit extends ItemView {
     }
   }
   projectSelect(root,data){
-    const select=el(root,'select'); select.setAttribute('aria-label','正在写的文章');
+    if(this.sharedProjectSelector)return data.projects.find(p=>p.oc_id===this.selected);
+    const select=el(root,'select'); select.setAttribute('aria-label','当前作品');
     for(const p of data.projects){ const opt=el(select,'option',p.title);opt.value=p.oc_id;opt.selected=p.oc_id===this.selected; }
-    select.addEventListener('change',async()=>{this.selected=select.value;this.artifact=null;await this.render();});
+    select.addEventListener('change',async()=>{this.selected=select.value;this.artifact=null;this.localSelection=null;await this.render();});
     return data.projects.find(p=>p.oc_id===this.selected);
+  }
+  missingProject(root){
+    const empty=el(root,'section',undefined,'oc-empty-state');el(empty,'h2','先准备一件作品');
+    el(empty,'p','填写想写的内容，并选择需要的材料。创建作品后，可以在这里创作、检查和交付。','oc-muted');
+    button(empty,'前往准备：填写写作目标',async()=>{this.tab='board';await this.render();},'mod-cta');
   }
   async board(root,data){
     // Auto-Feeding Pipeline Banner
     if (pipelineEngine && this.app?.vault) {
-      const feedBanner = el(root, 'section', undefined, 'oc-pipeline-banner');
+      const feedBanner = el(root, 'details', undefined, 'oc-pipeline-banner');
+      el(feedBanner,'summary','从笔记发现灵感');
       const feedHeader = el(feedBanner, 'div', undefined, 'oc-pipeline-header');
-      el(feedHeader, 'div', '⚡ 灵感自动喂养管道', 'oc-pipeline-title');
-      const scanBtn = button(feedHeader, '扫描新灵感', async () => {
+      el(feedHeader, 'div', '从已有笔记里发现新的写作角度', 'oc-pipeline-title');
+      const scanBtn = button(feedHeader, '扫描笔记', async () => {
         try {
           scanBtn.textContent = '正在挖掘灵感…';
           scanBtn.disabled = true;
@@ -468,7 +550,7 @@ class Cockpit extends ItemView {
         } catch(err) {
           new Notice('自动喂养扫描失败: ' + err.message);
         } finally {
-          scanBtn.textContent = '扫描新灵感';
+          scanBtn.textContent = '扫描笔记';
           scanBtn.disabled = false;
         }
       });
@@ -488,7 +570,7 @@ class Cockpit extends ItemView {
       }
     }
 
-    const hero=el(root,'section',undefined,'oc-start');el(hero,'h2','今天想写点什么？');
+    const hero=el(root,'section',undefined,'oc-start');root.prepend?.(hero);el(hero,'h2','今天想写点什么？');
     let sync=()=>{};
     const input=field(hero,'告诉我你的想法',this.homeGoal||'',true);
     input.placeholder='例如：把读书笔记写成一篇新手也能看懂的文章';input.maxLength=4000;
@@ -651,76 +733,31 @@ class Cockpit extends ItemView {
     }).open();
   }
   async project(root,data){
-    const p=this.projectSelect(root,data);if(!p){await this.board(root,data);return;}
+    const p=this.projectSelect(root,data);if(!p){this.missingProject(root);return;}
     const detail=await this.plugin.api('/objects/'+p.oc_id);
-    el(root,'h2',p.title);el(root,'p',`${LABELS[p.effective_state]} · ${p.audience}`,'oc-muted');
+    el(root,'h2','创作');el(root,'p','写给：'+p.audience,'oc-audience oc-muted');
     if(this.startError?.project===p.oc_id){
       el(root,'p','文章已保存，助手暂未开始：'+this.startError.message,'oc-error');
       el(root,'p','可以从这里继续，无需重新创建。','oc-muted');
     }
     const materials=detail.objects.filter(o=>o.type==='Material');
-    const actions=el(root,'div',undefined,'oc-actions');
-    button(actions,materials.length?`资料 · ${materials.length} 篇`:'添加资料',()=>this.selectMaterials(p,data));
+    const workspace=el(root,'div',undefined,'oc-author-workspace');
+    const editorPane=el(workspace,'section',undefined,'oc-editor-pane');el(editorPane,'h3','输入与调整');
+    const outputPane=el(workspace,'section',undefined,'oc-output-pane');el(outputPane,'h3','输出 · 当前稿件');
+    el(outputPane,'p','采用改稿后，当前稿件会更新；生成的候选仍需你确认。','oc-muted');
+    const options=p.artifacts.length?el(editorPane,'details',undefined,'oc-editor-options'):editorPane;
+    if(options!==editorPane)el(options,'summary','材料设置');
+    const actions=el(options,'div',undefined,'oc-actions');
+    button(actions,materials.length?`材料 ${materials.length} 篇`:'添加材料',()=>this.selectMaterials(p,data));
     const running=data.jobs.some(j=>j.project===p.oc_id&&['RUNNING','QUEUED'].includes(j.status));
     if(!p.artifacts.length){
-      const start=button(actions,running?'正在写作…':'写成初稿',()=>this.startProduction(p,detail),'mod-cta');start.disabled=running||!materials.length;
-      if(!materials.length)el(root,'p','可以先聊想法；添加资料后，就能写成有依据的初稿。','oc-muted');
+      const start=button(actions,running?'正在生成…':'生成第一版',()=>this.startProduction(p,detail),'mod-cta');start.disabled=running||!materials.length;
+      if(!materials.length)el(editorPane,'p','先添加至少一份材料；有依据后再生成第一版。','oc-muted');
+      el(outputPane,'p',running?'第一版正在生成，请稍候。':'还没有稿件。添加材料并生成第一版后，正文会出现在这里。','oc-empty-state');
     }
-    const isExpertMode = this.plugin.settings.viewMode === 'expert';
-
-    // 默认极简创作流（Simple Mode）：只显示“1. 选题目标 → 2. 论据核心 → 3. 当前初稿”
-    if (!isExpertMode) {
-      const flowBox = el(root, 'div', undefined, 'oc-simple-flow');
-      
-      // Step 1: 选题目标
-      const s1 = el(flowBox, 'div', undefined, 'oc-flow-step');
-      const s1Head = el(s1, 'div', undefined, 'oc-flow-step-header');
-      el(s1Head, 'span', '1', 'oc-step-badge');
-      el(s1Head, 'span', '我想写什么 (Topic & Goal)');
-      el(s1, 'p', p.goal || '暂未设定明确目标', 'oc-muted');
-
-      // Step 2: 核心论据
-      const s2 = el(flowBox, 'div', undefined, 'oc-flow-step');
-      const s2Head = el(s2, 'div', undefined, 'oc-flow-step-header');
-      el(s2Head, 'span', '2', 'oc-step-badge');
-      el(s2Head, 'span', 'AI 提炼的核心论据列表 (Verified Claims)');
-      const claims = detail.objects.filter(o => o.type === 'Claim');
-      if (claims.length) {
-        const cList = el(s2, 'div', undefined, 'oc-claim-list');
-        for (const c of claims) {
-          const cItem = el(cList, 'div', undefined, 'oc-claim-item');
-          el(cItem, 'strong', c.title);
-          if (c.body) el(cItem, 'div', c.body, 'oc-muted');
-        }
-      } else {
-        el(s2, 'p', '尚未生成结构化论据，可在下方与助手对话或添加资料提炼。', 'oc-muted');
-      }
-
-      // Step 3: 正文初稿引导
-      const s3 = el(flowBox, 'div', undefined, 'oc-flow-step');
-      const s3Head = el(s3, 'div', undefined, 'oc-flow-step-header');
-      el(s3Head, 'span', '3', 'oc-step-badge');
-      el(s3Head, 'span', '正文草稿与快速导出 (Draft & Publish)');
-    }
-
     if(p.artifacts.length){
-      if(p.artifacts.length > 1) {
-        const artBar = el(root, 'div', undefined, 'oc-artifact-bar');
-        el(artBar, 'span', '📖 章节 / 稿件切换：', 'oc-muted');
-        const artSelect = el(artBar, 'select');
-        artSelect.setAttribute('aria-label', '选择章节稿件');
-        for(const a of p.artifacts) {
-          const opt = el(artSelect, 'option', a.title);
-          opt.value = a.oc_id;
-          opt.selected = a.oc_id === this.artifact;
-        }
-        artSelect.addEventListener('change', async () => {
-          this.artifact = artSelect.value;
-          await this.render();
-        });
-      }
       const draft=p.artifacts.find(a=>a.oc_id===this.artifact)||p.artifacts[0];this.artifact=draft.oc_id;
-      const preview=el(root,'section',undefined,'oc-draft');
+      const preview=el(outputPane,'section',undefined,'oc-draft');
       const previewHeader = el(preview, 'div', undefined, 'oc-preview-header');
       el(previewHeader,'h3', draft.title || '当前稿件');
       if (p.artifacts.length > 1) el(previewHeader, 'small', `第 ${p.artifacts.indexOf(draft) + 1} / ${p.artifacts.length} 篇`, 'oc-muted');
@@ -728,15 +765,17 @@ class Cockpit extends ItemView {
       const body=draft.body||detail.objects.find(o=>o.oc_id===draft.oc_id)?.body||'';
       const claims=new Set(draft.derived_from||[]);
       el(prose,'p',body.replace(/\[\[([0-9a-f]{32})(?:\|[^\]]+)?\]\]/g,(marker,id)=>claims.has(id)?'':marker));
-      button(preview,'打开正文',()=>this.plugin.openNote(draft.path));
+      button(preview,'在编辑器中修改',()=>this.plugin.openNote(draft.path));
       const pending=data.inbox.find(i=>i.artifact===draft.oc_id);
-      button(preview,draft.gate?.approved?'查看定稿':pending?.gate.status==='PASS'?'检查并定稿':'查看需要修改的地方',async()=>{this.tab='inspector';await this.render();});
+      button(preview,draft.gate?.approved?'已批准 · 查看检查':pending?.gate.status==='PASS'?'检查通过 · 去批准':'去检查',async()=>{this.tab='inspector';await this.render();});
     }
 
-    // 🎭 创意能力包 · 叙事创作控制台 (Narrative Capability Pack)
-    this.renderCapabilityPanel(root, data, p, detail);
-    await this.conversation(root,data,p);
-    const management=el(root,'details',undefined,'oc-project-details');el(management,'summary','文章设置与资料详情');
+    const creative=el(root,'details',undefined,'oc-creative-tools');el(creative,'summary','更多创作能力');
+    this.renderCapabilityPanel(creative, data, p, detail);
+    const inputArea=el(editorPane,'div',undefined,'oc-input-area');
+    await this.conversation(inputArea,data,p,outputPane);
+    if(options!==editorPane)editorPane.appendChild(options);
+    const management=el(root,'details',undefined,'oc-project-details');el(management,'summary','作品设置与材料');
     el(management,'h3','写作目标');el(management,'p',p.goal);el(management,'h3','核心观点');el(management,'p',p.thesis||'写作过程中逐步形成');
     const planned=field(management,'计划发表日期',p.planning?.planned_for||'');planned.type='date';
     button(management,'保存计划',async()=>{await this.plugin.api('/projects/plan',{project:p.oc_id,planned_for:planned.value,token:detail.token});await this.render();});
@@ -769,11 +808,11 @@ class Cockpit extends ItemView {
   renderCapabilityPanel(root, data, p, detail) {
     const capPanel = el(root, 'section', undefined, 'oc-capability-panel');
     const capHeader = el(capPanel, 'div', undefined, 'oc-capability-header');
-    el(capHeader, 'div', '🎭 创意能力包 · 叙事全流程 (Narrative Pack v1)', 'oc-capability-title');
+    el(capHeader, 'div', '叙事与小说创作', 'oc-capability-title');
     
     // Profile selector bar
     const profBar = el(capPanel, 'div', undefined, 'oc-profile-bar');
-    el(profBar, 'span', '创作类型 (Profile)：', 'oc-muted');
+    el(profBar, 'span', '创作类型', 'oc-muted');
     const profSelect = el(profBar, 'select');
     profSelect.setAttribute('aria-label', '创作类型');
     const profiles = [
@@ -1160,7 +1199,7 @@ class Cockpit extends ItemView {
       button(actions,'查看稿件与依据',async()=>{this.selected=item.project;this.artifact=item.artifact;this.tab='inspector';await this.render();});
       const accept=button(actions,'确认定稿',()=>this.decision(item,'accept',data.token),'mod-cta');accept.disabled=item.gate.status!=='PASS';
       button(actions,'退回修改',()=>this.decision(item,'reject',data.token));
-      button(actions,'重新检查',async()=>{const detail=await this.plugin.api('/objects/'+item.project);this.startProduction(detail.object,detail,{stage:'critique'});});
+      button(actions,'重新检查',async()=>{const detail=await this.plugin.api('/objects/'+item.project);this.startProduction(detail.object,detail,{stage:'critique',target_artifact_id:item.artifact});});
     }
   }
   decision(item,decision,token){
@@ -1175,98 +1214,78 @@ class Cockpit extends ItemView {
   }
   issues(root,g){el(root,'p',g.status==='PASS'?'检查已通过':'还有问题需要处理','oc-gate '+(g.status==='PASS'?'pass':'fail'));if(g.issues.length){const list=el(root,'ul');for(const issue of g.issues)el(list,'li',issue);}}
   async inspector(root,data){
-    const p=this.projectSelect(root,data);if(!p)return;
+    const p=this.projectSelect(root,data);if(!p){this.missingProject(root);return;}
     if(!p.artifacts.length){el(root,'p','还没有稿件，先回到写作继续。');button(root,'继续写作',async()=>{this.tab='project';await this.render();});return;}
     if(!p.artifacts.some(a=>a.oc_id===this.artifact))this.artifact=p.artifacts[0].oc_id;
     const select=el(root,'select');select.setAttribute('aria-label','当前稿件');
     for(const a of p.artifacts){const o=el(select,'option',a.title);o.value=a.oc_id;o.selected=a.oc_id===this.artifact;}
     select.addEventListener('change',async()=>{this.artifact=select.value;await this.render();});
     const detail=await this.plugin.api('/objects/'+this.artifact);const a=detail.object;
-    el(root,'h2',a.title);
-    // 门禁盾牌与五轴雷达可视化 (Gate & Radar)
-    const gateStatus = detail.gate?.status || 'WARN';
-    const shieldBox = el(root, 'div', undefined, 'oc-gate-shield ' + (gateStatus === 'PASS' ? 'pass' : 'fail'));
-    el(shieldBox, 'span', gateStatus === 'PASS' ? '🛡️ 门禁已通过 (PASS)' : '⚠️ 门禁未通过 / 需修订 (WARN/FAIL)');
-    
-    // 五轴质量雷达展示卡片 (Five-Axes Radar)
-    if (detail.gate?.axes) {
-      const radarGrid = el(root, 'div', undefined, 'oc-radar-grid');
-      for (const [axisName, axisVal] of Object.entries(detail.gate.axes)) {
-        const axCard = el(radarGrid, 'div', undefined, 'oc-radar-card');
-        el(axCard, 'div', axisName, 'axis-name');
-        const st = (axisVal.status || 'WARN').toLowerCase();
-        el(axCard, 'div', axisVal.status || 'WARN', 'axis-val ' + st);
-        el(axCard, 'small', axisVal.reason || '', 'oc-muted');
-      }
+    el(root,'h2','作品检查');el(root,'p',a.title,'oc-work-title');
+    const axisEntries=Object.entries(detail.gate?.axes||{});
+    const passed=axisEntries.filter(([,value])=>value.status==='PASS').length;
+    const attention=axisEntries.length-passed;
+    const summary=el(root,'section',undefined,'oc-check-summary '+(attention?'needs-work':'pass'));
+    const gatePassed=detail.gate?.status==='PASS';
+    summary.className='oc-check-summary '+(gatePassed?'pass':'needs-work');
+    el(summary,'strong',gatePassed?'全部检查已通过':attention?`${passed} 项已通过 · ${attention} 项需要处理`:'当前版本还不能批准');
+    el(summary,'p',gatePassed?(detail.gate.approved?'当前版本已由你批准，可以选择交付方式。':'内容检查完成；请明确批准当前版本。'):'先处理下面的问题，再重新检查；已有通过项不能代替当前版本的核验。','oc-muted');
+    const list=el(root,'div',undefined,'oc-check-list');
+    for(const [axis,value] of axisEntries){
+      const row=el(list,'div',undefined,'oc-check-row '+String(value.status||'WARN').toLowerCase());
+      el(row,'span',value.status==='PASS'?'✓':value.status==='FAIL'?'×':'!','oc-check-icon');
+      const copy=el(row,'div');el(copy,'strong',this.axisLabel(axis));el(copy,'small',value.reason||'','oc-muted');
     }
-
-    this.issues(root,detail.gate);
-
-    // 原生排版渲染与交付预览面板 (Typography Panel)
-    if (typographyEngine) {
-      const typoPanel = el(root, 'section', undefined, 'oc-typography-panel');
-      el(typoPanel, 'h3', '🎨 排版渲染与交付预览');
-      el(typoPanel, 'p', detail.gate.approved ? '此版本已通过人工定稿，可复制正式富文本交付发布。' : '草稿排版预览。注意：草稿尚未通过人工定稿审查，不得作为正式成品直接发布。', 'oc-muted');
-
-      const picker = el(typoPanel, 'div', undefined, 'oc-theme-picker');
-      const currentTheme = this.plugin.settings.typographyTheme || 'serif';
-      
-      for (const [thId, thObj] of Object.entries(typographyEngine.THEMES)) {
-        const btn = el(picker, 'button', thObj.name, 'oc-theme-btn ' + (thId === currentTheme ? 'active' : ''));
-        btn.onclick = async () => {
-          this.plugin.settings.typographyTheme = thId;
-          await this.plugin.saveData(this.plugin.settings);
-          await this.render();
-        };
-      }
-
-      const previewBox = el(typoPanel, 'div', undefined, 'oc-rendered-preview-box');
-      const renderedHtml = typographyEngine.renderArticleHtml(a.body || '', currentTheme, a.title || '');
-      previewBox.replaceChildren(sanitizeHTMLToDom(renderedHtml));
-
-      if (detail.gate.approved) {
-        button(typoPanel, '📋 复制已批准成品 (富文本)', async () => {
-          try {
-            const handoffRes = await this.plugin.api('/handoff', {artifact: a.oc_id, token: detail.token});
-            const readerMarkdown = handoffRes.article || a.body || '';
-            const finalHtml = typographyEngine.renderArticleHtml(readerMarkdown, currentTheme);
-            const ok = await typographyEngine.copyRichTextToClipboard(finalHtml, readerMarkdown);
-            if (ok) new Notice('✅ 已复制已批准成品富文本到剪贴板，内部主张标记已剔除。');
-            else new Notice('⚠️ 剪贴板 API 暂不可用，可直接打开正文复制');
-          } catch(err) {
-            new Notice('正式交付复制失败: ' + err.message);
-          }
-        }, 'mod-cta');
-      } else {
-        button(typoPanel, '📋 复制草稿预览 (未定稿)', async () => {
-          try {
-            const ok = await typographyEngine.copyRichTextToClipboard(renderedHtml, a.body || '');
-            if (ok) new Notice('⚠️ 已复制草稿排版预览。注意：草稿尚未通过人工定稿，非正式成品。');
-            else new Notice('⚠️ 剪贴板 API 暂不可用，可直接打开正文复制');
-          } catch(err) {
-            new Notice('复制失败: ' + err.message);
-          }
-        });
-      }
+    if(detail.gate?.issues?.length){
+      const blockers=el(root,'section',undefined,'oc-check-blockers');el(blockers,'strong','需要处理');
+      const ul=el(blockers,'ul');for(const issue of detail.gate.issues)el(ul,'li',issue);
     }
+    const expert=el(root,'details',undefined,'oc-expert-checks');el(expert,'summary','查看专业检查详情');this.axes(expert,detail.gate);this.issues(expert,detail.gate);
+    const typoPanel=el(root,'details',undefined,'oc-typography-panel');
+    el(typoPanel,'summary','预览交付效果');
+    el(typoPanel,'h3','排版样式');
+    const currentTheme=this.plugin.settings.typographyTheme||'serif';
+    for(const [id,name] of [['serif','优雅衬线'],['academic','学术极简'],['techDark','科技深色']]){
+      button(typoPanel,name,async()=>{this.plugin.settings.typographyTheme=id;await this.plugin.saveData(this.plugin.settings);await this.render();});
+    }
+    try{
+      const built=await this.plugin.api('/build',{artifact:a.oc_id,theme:currentTheme,token:detail.token});
+      el(typoPanel,'p',built.status==='APPROVED_BUILD'?'当前稿件已独立批准':'未批准预览，不能正式交付','oc-muted');
+      const frame=el(typoPanel,'iframe');frame.title='统一图文构建预览';frame.className='oc-publish-preview';frame.setAttribute('sandbox','');
+      frame.srcdoc=buildPreviewDocument(built.html);
+      button(typoPanel,detail.gate.approved?'复制已批准富文本':'复制未批准预览',async()=>{
+        const fresh=await this.plugin.api('/build',{artifact:a.oc_id,theme:currentTheme,token:detail.token,approved:detail.gate.approved});
+        const ok=await typographyEngine.copyRichTextToClipboard(fresh.html,fresh.markdown);
+        new Notice(ok?'已复制 '+fresh.status:'剪贴板暂不可用');
+      });
+      if(detail.gate.approved)button(typoPanel,'导出离线图文包',async()=>{
+        const exported=await this.plugin.api('/build/export',{artifact:a.oc_id,theme:currentTheme,token:detail.token});
+        new Notice('本地图文包：'+exported.path);
+      });
+    }catch(error){el(typoPanel,'p',error.message,'oc-error');}
+    if(a.channel==='xiaohongshu'&&detail.gate.dependency_status==='STALE')el(root,'p','母稿已变化，这份渠道稿需要重新生成。','oc-error');
     const pending=data.inbox.find(i=>i.artifact===a.oc_id);
-    if(pending){const accept=button(root,'确认定稿',()=>this.decision(pending,'accept',detail.token),'mod-cta');accept.disabled=detail.gate.status!=='PASS';}
-    button(root,'让助手修改',async()=>{this.chatMode='revise';this.tab='project';await this.render();});
-    button(root,'重新检查',async()=>{const project=await this.plugin.api('/objects/'+p.oc_id);await this.startProduction(p,project,{stage:'critique'});});
-    const checks=el(root,'details');el(checks,'summary','查看检查说明');this.axes(checks,detail.gate);
-    button(root,'在编辑器中修订',()=>this.plugin.openNote(a.path));
-    button(checks,'手动填写检查结果',()=>this.manualReview(a,detail));
-    button(root,'刷新检查',()=>this.render());
+    const next=el(root,'section',undefined,'oc-check-next');
     if(detail.gate.approved){
-      button(root,'准备公众号草稿',()=>this.prepareDraft(a),'mod-cta');
-      button(root,'导出文章',()=>this.handoff(a,detail));
-      button(root,'登记微信后台手动发表',()=>this.manualPublication(a,detail));
+      el(next,'strong','✓ 当前版本已批准，可以交付');el(next,'p','正文、来源和当前图片依赖已经绑定到这个批准版本。','oc-muted');
+      button(next,'去交付',async()=>{this.tab='publishing';await this.render();},'mod-cta');
+    }else if(pending&&detail.gate.status==='PASS'){
+      el(next,'strong','检查已通过，批准后才能交付');el(next,'p','批准只绑定当前版本；正文、来源或图片变化后会自动失效。','oc-muted');
+      button(next,'批准当前版本',()=>this.decision(pending,'accept',detail.token),'mod-cta');
+    }else{
+      el(next,'strong','还需要修改');el(next,'p','处理检查项后重新检查，直到当前版本可以批准。','oc-muted');
+      button(next,'返回修改',async()=>{this.chatMode='revise';this.tab='project';await this.render();},'mod-cta');
     }
+    summary.after?.(next);
+    const checkActions=el(root,'div',undefined,'oc-actions');
+    button(checkActions,'重新检查',async()=>{const project=await this.plugin.api('/objects/'+p.oc_id);await this.startProduction(p,project,{stage:'critique',target_artifact_id:a.oc_id});});
+    button(checkActions,'在编辑器中修改',()=>this.plugin.openNote(a.path));
+    button(expert,'手动填写检查结果',()=>this.manualReview(a,detail));
     el(root,'h3','当前草稿');el(root,'pre',a.body,'oc-prose');
-    const diff=el(root,'details');el(diff,'summary','Diff · 与最近审查的草稿比较');
+    const diff=el(root,'details');el(diff,'summary','与上次检查的正文比较');
     const reviewed=detail.gate.review?.reviewed_body;
     if(reviewed===undefined)el(diff,'p','尚无已保存的审查快照。');
-    else if(reviewed===a.body)el(diff,'p','正文与最近审查一致。资料或政策变化仍会使 Gate 失效。');
+    else if(reviewed===a.body)el(diff,'p','正文与最近检查一致；资料或写作规则变化后仍需重新检查。');
     else{el(diff,'h4','审查时');el(diff,'pre',reviewed,'oc-prose');el(diff,'h4','当前');el(diff,'pre',a.body,'oc-prose');}
     const evidence=el(root,'details');el(evidence,'summary','查看引用和原始资料');
     for(const chain of detail.provenance){
@@ -1348,10 +1367,10 @@ class Cockpit extends ItemView {
           new Notice('封面已上传，素材回执已保存在本地。');
         });
       }
-      el(root,'p','封面需属于此账号。此处准备单篇图文；正文图片暂需在微信后台处理。下一步先预览，确认后才送入草稿箱。');
+      el(root,'p','封面需属于此账号。此处准备单篇图文；正文图片使用冻结附件，确认后上传并回读核验。下一步先预览，确认后才送入草稿箱。');
       button(root,'生成投递预览',async()=>{
         const preview=await this.plugin.api('/publications/prepare',{artifact:a.oc_id,channel:select.value,action:'draft',token:data.token,
-          options:{title:title.value,author:author.value,digest:summary.value,thumb_media_id:cover.value}});
+          options:{title:title.value,author:author.value,digest:summary.value,thumb_media_id:cover.value,theme:this.plugin.settings.typographyTheme||'serif'}});
         modal.close();this.tab='publishing';await this.render();this.publicationPreview(preview);
       },'mod-cta');
     }).open();
@@ -1364,6 +1383,7 @@ class Cockpit extends ItemView {
       el(root,'p',pub.action==='draft'?'本次会在微信账号中创建草稿。':'本次会调用微信发表接口。请先在微信后台核对排版及封面；这不是群发操作。',pub.action==='publish'?'oc-error':'');
       const frame=el(root,'iframe');frame.title='公众号正文预览';frame.className='oc-publish-preview';frame.setAttribute('sandbox','');
       frame.srcdoc=publicationPreviewDocument(pub.payload.content,frame.ownerDocument);
+      if(pub.build)this.plugin.api('/build',{artifact:pub.artifact,theme:pub.build.theme,token:pub.token}).then(b=>{frame.srcdoc=buildPreviewDocument(b.html);}).catch(e=>el(root,'p',e.message,'oc-error'));
       const reviewer=field(root,'本次投递确认人',this.plugin.settings.reviewer);
       const label=el(root,'label');const agree=el(label,'input');agree.type='checkbox';el(label,'span','我已核对账号、标题、正文、摘要及封面，确认执行本次操作');
       button(root,pub.action==='draft'?'确认送入草稿箱':'确认发表',async()=>{
@@ -1375,7 +1395,36 @@ class Cockpit extends ItemView {
   }
   deliveryLabel(status){return ({PREPARED:'待确认',SENDING:'提交中 / 中断后需核验',UNKNOWN:'结果未知，禁止重复提交',REMOTE_DRAFT:'微信草稿已核验',SUBMITTED:'已受理，尚未发表',PUBLISHED:'已发表并核验',FAILED:'失败',CONFLICT:'远端内容不一致',CANCELLED:'预览已取消',WITHDRAWN:'已删除或封禁'})[status]||'手动登记（未经 API 核验）';}
   async publishing(root,data){
-    const outbox=await this.plugin.api('/publications');el(root,'h2','微信公众号 · 发布与反馈');
+    el(root,'h2','交付');
+    const p=this.projectSelect(root,data);
+    if(!p){this.missingProject(root);return;}
+    const detail=await this.plugin.api('/objects/'+p.oc_id);
+    const approved=p.artifacts.filter(a=>a.gate?.approved);
+    const current=approved.find(a=>a.oc_id===this.artifact)||approved[0]||null;
+    if(current)this.artifact=current.oc_id;
+    const switcher=el(root,'div',undefined,'oc-delivery-switcher');
+    this.deliveryChannel=this.deliveryChannel||'wechat';
+    for(const [id,label] of [['wechat','公众号'],['xiaohongshu','小红书'],['markdown','Markdown'],['rich','富文本']]){
+      button(switcher,label,async()=>{this.deliveryChannel=id;await this.render();},id===this.deliveryChannel?'mod-cta':'');
+    }
+    if(!current){const empty=el(root,'section',undefined,'oc-empty-state');el(empty,'p','还没有已批准的稿件。先完成检查并批准当前版本，交付入口就会打开。');button(empty,'去检查',async()=>{this.tab='inspector';await this.render();},'mod-cta');return;}
+    el(root,'p','当前稿件：'+current.title,'oc-muted');
+    if(this.deliveryChannel==='xiaohongshu'){await this.socialPanel(root,data,p,detail);return;}
+    if(this.deliveryChannel==='markdown'){
+      el(root,'h3','Markdown / 离线图文包');el(root,'p','生成当前已批准版本的本地交付文件，不会上传到任何平台。');
+      const resultHost=el(root,'div');
+      if(this.deliveryResult?.artifact===current.oc_id&&this.deliveryResult.token===detail.token&&this.deliveryResult.channel==='markdown')this.showDeliveryResult(resultHost,this.deliveryResult.result,current);
+      button(root,'生成本地交付包',async()=>{const exported=await this.plugin.api('/build/export',{artifact:current.oc_id,theme:this.plugin.settings.typographyTheme||'serif',token:detail.token});this.deliveryResult={artifact:current.oc_id,token:detail.token,channel:'markdown',result:exported};resultHost.replaceChildren();this.showDeliveryResult(resultHost,exported,current);new Notice('本地交付包：'+exported.path);},'mod-cta');
+      return;
+    }
+    if(this.deliveryChannel==='rich'){
+      el(root,'h3','富文本');el(root,'p','复制当前已批准版本的排版结果，便于粘贴到支持富文本的编辑器。');
+      const resultHost=el(root,'div');
+      if(this.deliveryResult?.artifact===current.oc_id&&this.deliveryResult.token===detail.token&&this.deliveryResult.channel==='rich')this.showDeliveryResult(resultHost,this.deliveryResult.result,current);
+      button(root,'复制已批准富文本',async()=>{const built=await this.plugin.api('/build',{artifact:current.oc_id,theme:this.plugin.settings.typographyTheme||'serif',token:detail.token,approved:true});const ok=await typographyEngine.copyRichTextToClipboard(built.html,built.markdown);if(ok){this.deliveryResult={artifact:current.oc_id,token:detail.token,channel:'rich',result:{}};resultHost.replaceChildren();this.showDeliveryResult(resultHost,{},current);}new Notice(ok?'已复制富文本':'剪贴板暂不可用');},'mod-cta');
+      return;
+    }
+    const outbox=await this.plugin.api('/publications');el(root,'h3','公众号');
     if(outbox.channels.some(c=>c.kind==='test'))el(root,'p','软件验收模式：使用模拟微信协议，下面的回执不代表真实公众号发表。','oc-error');
     button(root,'添加公众号',()=>this.channelForm());button(root,'刷新本地回执',()=>this.render());
     el(root,'p','默认送入微信草稿箱，核对后由本人在微信后台发表并登记链接。已确认具备发表权限的账号可单独启用 API 发表。菜单未显示某项不等于该接口必定不可调用，实际权限以微信响应为准。');
@@ -1478,68 +1527,147 @@ class Cockpit extends ItemView {
       for(const axis of AXES){const row=el(root,'div');el(row,'h4',axis);const status=el(row,'select');status.setAttribute('aria-label',axis+' status');for(const name of ['WARN','PASS','FAIL']){const o=el(status,'option',name);o.value=name;}fields[axis]={status,reason:field(row,axis+' 依据','',true)};}
       const conflict=field(root,'反对证据处理','',true);const summary=field(root,'审查结论','',true);
       const label=el(root,'label');const complete=el(label,'input');complete.type='checkbox';el(label,'span','我已检查重要事实均登记为 Claim');
-      button(root,'保存 Review',async()=>{const axes={};for(const [axis,f]of Object.entries(fields))axes[axis]={status:f.status.value,reason:f.reason.value};await this.plugin.api('/reviews',{artifact:a.oc_id,reviewer:reviewer.value,axes,claims_complete:complete.checked,conflict_resolution:conflict.value,summary:summary.value,token:detail.token});modal.close();await this.render();});
+      button(root,'保存 Review',async()=>{const axes={};for(const [axis,f]of Object.entries(fields))axes[axis]={status:f.status.value,reason:f.reason.value};await this.plugin.api('/reviews',{artifact:a.oc_id,reviewer:reviewer.value,axes,claims_complete:complete.checked,conflict_resolution:conflict.value,summary:summary.value,token:detail.token,input_snapshot:detail.input_snapshot});modal.close();await this.render();});
     }).open();
   }
   jobs(root,data){
     if(!data.jobs.length)return;
     const section=el(root,'details',undefined,'oc-jobs');el(section,'summary','运行记录 · '+data.jobs.length);
     for(const job of data.jobs.slice(0,12)){
-      const row=el(section,'div',undefined,'oc-card');el(row,'p',`${job.status} · ${job.detail.stage||job.detail.outcome||'production'} · ${job.id.slice(0,8)}`);
+      const row=el(section,'div',undefined,'oc-card');el(row,'p',`${job.status} · ${job.detail.phase||job.detail.stage||job.detail.outcome||'production'} · ${job.id.slice(0,8)}`);
       if(job.detail.error)el(row,'pre',job.detail.error,'oc-error');
       if(job.detail.kind==='ideation'){button(row,'查看综合选题',()=>this.discoverIdeas(job.id));continue;}
       if(['RUNNING','QUEUED'].includes(job.status))button(row,'取消任务',async()=>{await this.plugin.api('/cancel',{id:job.id});await this.render();});
-      if(['FAILED','CANCELLED','INTERRUPTED'].includes(job.status))button(row,'从当前 Vault 继续',async()=>{if(job.detail.instruction){this.selected=job.project;this.tab='conversation';this.composers||={};this.composers[job.project]=job.detail.instruction;await this.render();return;}const detail=await this.plugin.api('/objects/'+job.project);this.startProduction(detail.object,detail,{resume:job.id,stage:job.detail.stage==='critique'?'critique':undefined});});
+      if(['FAILED','CANCELLED','INTERRUPTED'].includes(job.status))button(row,'从当前 Vault 继续',async()=>{if(job.detail.instruction){this.selected=job.project;this.tab='conversation';this.composers||={};this.composers[job.project]=job.detail.instruction;await this.render();return;}const detail=await this.plugin.api('/objects/'+job.project);this.startProduction(detail.object,detail,{resume:job.id,stage:job.detail.stage==='critique'?'critique':undefined,target_artifact_id:job.detail.target_artifact_id});});
     }
   }
-  async conversation(root,data,selectedProject){
+  async captureArtifactSelection(aid){
+    if(!aid)throw new Error('先选择目标稿件');
+    const detail=await this.plugin.api('/objects/'+aid);const a=detail.object;
+    const active=this.app.workspace.activeEditor;
+    if(!active?.editor||active.file?.path!==a.path)throw new Error('请在编辑器打开所选 Artifact 正文并选择原文');
+    const editorRaw=active.editor.getValue();const raw=editorRaw.replace(/\r\n/g,'\n');
+    const saved=(await this.app.vault.adapter.read(a.path)).replace(/\r\n/g,'\n');
+    if(raw!==saved)throw new Error('编辑器有未保存变化，请保存后重新捕获选区');
+    const frontmatter=raw.match(/^---\n[\s\S]*?\n---(?:\n|$)/);
+    const contentStart=frontmatter?frontmatter[0].length:0;
+    const bodyOffset=contentStart+(raw.slice(contentStart).match(/^\s*/)?.[0].length||0);const text=active.editor.getSelection().replace(/\r\n/g,'\n');
+    const from=editorRaw.slice(0,active.editor.posToOffset(active.editor.getCursor('from'))).replace(/\r\n/g,'\n').length;
+    const to=editorRaw.slice(0,active.editor.posToOffset(active.editor.getCursor('to'))).replace(/\r\n/g,'\n').length;
+    if(raw.slice(bodyOffset).trimEnd()!==a.body.trimEnd())throw new Error('正文与内核快照不一致，请保存后重新捕获');
+    if(bodyOffset<0||from<bodyOffset||to>bodyOffset+a.body.length||!text)throw new Error('只能选择当前正文中的非空范围');
+    const start=Array.from(a.body.slice(0,from-bodyOffset)).length;
+    const end=Array.from(a.body.slice(0,to-bodyOffset)).length;
+    return {artifact:aid,selection:{start,end,text,base_hash:detail.input_snapshot.base_hash}};
+  }
+  async assertArtifactSelection(aid,selection){
+    const current=await this.captureArtifactSelection(aid);
+    if(JSON.stringify(current.selection)!==JSON.stringify(selection))throw new Error('原文、标题或选区变化，请重新捕获并生成');
+  }
+  async socialPanel(root,data,p,detail){
+    const panel=el(root,'details',undefined,'oc-social-panel');el(panel,'summary','小红书 · 本地图文');
+    el(panel,'p','选择当前已批准母稿与意图，生成独立候选。正式导出需独立审查与人工批准；本地成品不等于远端草稿或发表。');
+    const select=el(panel,'select');select.setAttribute('aria-label','小红书母稿');
+    const empty=el(select,'option','选择已批准母稿');empty.value='';
+    for(const a of p.artifacts.filter(a=>a.gate?.approved&&!a.mother_dependency)){const option=el(select,'option',a.title);option.value=a.oc_id;}
+    const intent=field(panel,'图文读者与表达意图','',true);
+    button(panel,'生成小红书独立候选',async()=>{
+      if(!select.value||!intent.value.trim())throw new Error('选择已批准母稿并填写意图');
+      await this.plugin.api('/social/start',{project:p.oc_id,target_artifact_id:select.value,instruction:intent.value,token:detail.token,provider:this.chatProvider||undefined});
+      this.plugin.jobsActive=true;await this.render();
+    });
+    for(const a of p.artifacts.filter(a=>a.channel==='xiaohongshu')){
+      el(panel,'p',a.title+' · '+(a.gate?.dependency_status||'CURRENT')+' · '+(a.gate?.approved?'已独立批准':'待独立审查'));
+      button(panel,'查看图文稿与页面',async()=>{this.artifact=a.oc_id;this.tab='inspector';await this.render();});
+      button(panel,'审查此图文稿',()=>this.startProduction(p,detail,{stage:'critique',target_artifact_id:a.oc_id}));
+    }
+  }
+  async socialPreview(a,detail,formal){
+    const result=await this.plugin.api(formal?'/social/export':'/social/preview',{artifact:a.oc_id,token:detail.token});
+    new FormModal(this.plugin,formal?'本地图文包已就绪':'未批准图文预览',(root)=>{
+      el(root,'p',result.status+' · '+result.path);
+      const frame=el(root,'iframe');frame.title='小红书真实图文页';frame.className='oc-publish-preview';frame.setAttribute('sandbox','');frame.srcdoc=result.preview_html;
+      el(root,'p','含真实 PNG、文案、可编辑计划和来源/批准/资源清单。没有上传到账号。');
+    }).open();
+  }
+  async conversation(root,data,selectedProject,outputRoot){
     const p=selectedProject||this.projectSelect(root,data);if(!p){el(root,'p','说说你想写什么，就能开始。');button(root,'开始写作',()=>this.newProject());return;}
     const [history,providers]=await Promise.all([this.plugin.api('/conversation/history',{project:p.oc_id}),this.plugin.api('/providers')]);
     const panel=el(root,'details',undefined,'oc-tools');el(panel,'summary','写作助手 · '+(Object.keys(providers.active).join(' / ')||'未连接'));
-    el(panel,'p','沿用本地工具的模型设置。只带入这篇文章的资料、稿件、规则和最近 12 轮对话。');
+    el(panel,'p','沿用本地工具的模型设置。只带入目标稿件、相关完整证据、作者意图与最近 12 轮对话；超过预算会明确失败。');
     for(const candidate of providers.available){el(panel,'p',candidate.name+' · '+candidate.path);if(!providers.active[candidate.name])button(panel,'启用 '+candidate.name,async()=>{await this.plugin.api('/providers/activate',{name:candidate.name});await this.render();});}
     const provider=el(panel,'select');provider.setAttribute('aria-label','执行 CLI');
     for(const [name,caps] of Object.entries(providers.active)){const option=el(provider,'option',name);option.value=name;option.selected=name===this.chatProvider;el(panel,'p',`${name}：保留项目历史；${caps.image_generation===false?'当前适配器仅支持配图方案': '实际生图取决于 CLI 已配置的图像工具'}`);}
     provider.addEventListener('change',()=>{this.chatProvider=provider.value;});
     if(!Object.keys(providers.active).length)el(root,'p',providers.notice||'还没有可用的写作助手。展开“写作助手”检查连接。','oc-error');
+    const targetPicker=el(root,'label',undefined,'oc-field');el(targetPicker,'span','这些要求作用于哪篇稿件');
+    const targetSelect=el(targetPicker,'select');targetSelect.setAttribute('aria-label','作用于稿件');
+    if(!p.artifacts.length){const empty=el(targetSelect,'option','尚无稿件');empty.value='';}
+    for(const a of p.artifacts){const option=el(targetSelect,'option',a.title);option.value=a.oc_id;option.selected=a.oc_id===this.artifact;}
+    const target=p.artifacts.find(a=>a.oc_id===this.artifact)||(p.artifacts.length===1?p.artifacts[0]:null);
+    targetSelect.value=target?.oc_id||'';
+    targetSelect.addEventListener('change',async()=>{this.artifact=targetSelect.value;this.localSelection=null;await this.render();});
+    button(root,'只改编辑器选中的文字',async()=>{this.localSelection=await this.captureArtifactSelection(targetSelect.value);this.chatMode='revise';await this.render();});
+    if(this.localSelection)el(root,'pre','只替换已捕获选区：\n'+this.localSelection.selection.text,'oc-prose');
+    if(this.localSelection)button(root,'清除局部选区',async()=>{this.localSelection=null;await this.render();});
     const composer=el(root,'section',undefined,'oc-composer');
-    const transcript=el(root,'div',undefined,'oc-conversation');
+    root.prepend?.(targetPicker,composer);
+    el(composer,'p','填写创作或修改要求。助手给出候选，你核对并采用后更新正文。','oc-muted');
+    const records=el(outputRoot||root,'details',undefined,'oc-candidate-history');records.open=history.turns.some(turn=>turn.revision&&!turn.applied);
+    el(records,'summary',history.turns.some(turn=>turn.revision&&!turn.applied)?'输出 · 待采用的改稿与助手回复':'查看助手回复与修改记录');
+    const transcript=el(records,'div',undefined,'oc-conversation');
     for(const turn of history.turns){
       const card=el(transcript,'article',undefined,'oc-card');el(card,'small',({RUNNING:'正在思考',SUCCEEDED:'已完成',INTERRUPTED:'上次未完成'})[turn.status]||'未完成');
       el(card,'h3','你的指令');el(card,'p',turn.instruction,'oc-prose');el(card,'h3','助手');el(card,'p',turn.reply||'正在运行本地 CLI…','oc-prose');
       const receipt=el(card,'details');el(receipt,'summary','本次记录');button(receipt,'打开记录',()=>this.plugin.openNote(`OpenContent-Workspace/${p.oc_id}/${turn.id}.md`));
-      if(turn.revision){const r=turn.revision;const diff=el(card,'details');el(diff,'summary',turn.applied?'已应用的改稿':'核对改稿提案');
+      if(turn.revision){const r=turn.revision;const diff=el(card,'details');diff.open=!turn.applied;el(diff,'summary',turn.applied?'已应用的改稿':'核对改稿提案');
         const old=data.projects.find(x=>x.oc_id===p.oc_id)?.artifacts.find(x=>x.oc_id===r.artifact);
-        el(diff,'h4','当前正文');el(diff,'pre',old?.body||'请打开稿件核对原文','oc-prose');el(diff,'h4',r.title);el(diff,'pre',r.body,'oc-prose');
+        if(r.diff)el(diff,'pre',r.diff,'oc-prose');el(diff,'h4','当前正文');el(diff,'pre',old?.body||'请打开稿件核对原文','oc-prose');el(diff,'h4',r.title);el(diff,'pre',r.body,'oc-prose');
         if(!turn.applied)button(diff,'采用并检查',async()=>{
+          if(r.selection)await this.assertArtifactSelection(r.artifact,r.selection);
           await this.plugin.api('/conversation/apply',{project:p.oc_id,turn:turn.id,token:history.token});
-          try{const latest=await this.plugin.api('/objects/'+p.oc_id);await this.startProduction(p,latest,{stage:'critique'});}
+          try{const latest=await this.plugin.api('/objects/'+p.oc_id);await this.startProduction(p,latest,{stage:'critique',target_artifact_id:r.artifact});}
           catch(e){await this.render();new Notice('改稿已保存，检查尚未开始：'+e.message+'。可点击“重新检查”继续。');}
         });
-        else button(diff,'重新审查这篇稿件',async()=>{const detail=await this.plugin.api('/objects/'+p.oc_id);this.startProduction(detail.object,detail,{stage:'critique'});});}
+        else button(diff,'重新审查这篇稿件',async()=>{const detail=await this.plugin.api('/objects/'+p.oc_id);this.startProduction(detail.object,detail,{stage:'critique',target_artifact_id:r.artifact});});}
       for(const brief of turn.illustrations||[]){const b=el(card,'details');el(b,'summary','配图方案 · '+brief.placement);el(b,'pre',brief.prompt,'oc-prose');button(b,'复制配图指令',()=>navigator.clipboard.writeText(brief.prompt));}
       if(turn.image_status==='BRIEF_ONLY')el(card,'p','本轮仅完成配图方案，没有生成图片。','oc-muted');
       for(const asset of turn.images||[]){const file=this.app.vault.getAbstractFileByPath(asset.path);if(file){const img=el(card,'img');img.src=this.app.vault.getResourcePath(file);img.alt=asset.alt;img.className='oc-generated-image';}
-        el(card,'p',asset.placement+' · '+asset.path);button(card,'复制图片 Markdown',()=>navigator.clipboard.writeText(`![${asset.alt.replace(/[[\]]/g,'')}](${asset.path})`));}
+        el(card,'p',asset.placement+' · '+asset.path);button(card,'检查并插入到目标稿件',async()=>{await this.plugin.api('/conversation/image/apply',{project:p.oc_id,turn:turn.id,index:turn.images.indexOf(asset),token:history.token});await this.render();});button(card,'复制图片 Markdown',()=>navigator.clipboard.writeText(`![${asset.alt.replace(/[[\]]/g,'')}](${asset.path})`));}
     }
     const mode=el(composer,'select');mode.setAttribute('aria-label','想做什么');
     const modeValue=!p.artifacts.length&&this.chatMode==='revise'?'discuss':this.chatMode||'discuss';
-    for(const [id,label] of [['discuss','聊想法'],['revise','改文章'],['illustrate','配张图']]){const o=el(mode,'option',label);o.value=id;o.selected=id===modeValue;o.disabled=id==='revise'&&!p.artifacts.length;}
+    for(const [id,label] of [['discuss','一起想'],['revise','修改正文'],['illustrate','生成配图']]){const o=el(mode,'option',label);o.value=id;o.selected=id===modeValue;o.disabled=id==='revise'&&!p.artifacts.length;}
     mode.addEventListener('change',()=>{this.chatMode=mode.value;});
     this.composers||={};
     const input=field(composer,'给这个项目的指令',this.composers[p.oc_id]||'',true);input.placeholder='说说你想怎么写、哪里需要改…';input.maxLength=8000;
+    const quick=el(composer,'div',undefined,'oc-quick-actions');
+    const presets=[
+      ['加强开头','revise','把开头改得更有吸引力，但不要改变事实、数字、限定条件和结论边界。'],
+      ['讲得更清楚','revise','把当前稿件讲得更清楚、更自然；保留原有事实、数字、否定和限定条件。'],
+      ['删掉废话','revise','删掉重复、空泛和不推进内容的句子；不要丢失事实、条件和关键论证。'],
+      ['补充例子','revise','补充一个真正帮助理解的例子；如果现有材料不足以支撑事实例子，就明确写成假设示例。'],
+      ['配图','illustrate','为当前稿件设计并生成真正帮助理解内容的配图；不要为了装饰而加图。']
+    ];
+    for(const [label,kind,prompt] of presets)button(quick,label,()=>{mode.value=kind;this.chatMode=kind;input.value=prompt;this.composers[p.oc_id]=prompt;input.dispatchEvent?.(new Event('input'));});
+    button(quick,'自定义要求',()=>input.focus?.());
     const running=data.jobs.find(j=>j.project===p.oc_id&&['RUNNING','QUEUED'].includes(j.status));
-    const send=button(composer,running?'停止生成':'发送',async()=>{
+    const send=button(composer,running?'停止生成':'发送创作要求',async()=>{
       if(running){await this.plugin.api('/cancel',{id:running.id});await this.render();return;}
       if(!input.value.trim())return;
-      await this.plugin.api('/conversation/send',{project:p.oc_id,instruction:input.value,mode:mode.value,provider:provider.value||undefined,token:history.token});
+      if(p.artifacts.length>1&&!targetSelect.value)throw new Error('请选择目标稿件');
+      if(this.localSelection)await this.assertArtifactSelection(targetSelect.value,this.localSelection.selection);
+      await this.plugin.api('/conversation/send',{project:p.oc_id,instruction:input.value,mode:mode.value,provider:provider.value||undefined,token:history.token,
+        target_artifact_id:targetSelect.value||undefined,selection:mode.value==='revise'?this.localSelection?.selection:undefined});
       this.composers[p.oc_id]='';this.chatProvider=provider.value;this.chatMode=mode.value;this.plugin.jobsActive=true;await this.render();
     },'mod-cta');
-    const sync=()=>{send.disabled=!running&&(!input.value.trim()||!Object.keys(providers.active).length);};sync();
+    send.setAttribute('data-action','send');
+    const sync=()=>{send.disabled=!running&&(!input.value.trim()||!Object.keys(providers.active).length);send.textContent=running?'停止生成':mode.value==='revise'?'生成改稿提案':mode.value==='illustrate'?'生成配图':'发送创作要求';};sync();
+    mode.addEventListener('change',sync);
     input.addEventListener('input',()=>{this.composers[p.oc_id]=input.value;sync();});
     input.addEventListener('keydown',event=>{if(event.key==='Enter'&&(event.ctrlKey||event.metaKey)&&!event.isComposing&&!running){event.preventDefault();if(!send.disabled)send.click();}});
     el(composer,'small','Ctrl / ⌘ + Enter 发送。修改会先给你看，采用后才写入。','oc-muted');
-    if(running)el(composer,'p','正在处理，可以停止；已保存的内容会保留。','oc-muted');
+    if(running)el(composer,'p',(running.detail?.phase||'QUEUED')+' · 目标 '+(running.detail?.target_artifact_id||'项目')+' · 可请求取消；候选仍需审查批准。','oc-muted');
     el(panel,'p','配图使用本地工具已有的图像能力；没有能力时只返回方案。图片可复制到正文中。');
   }
 }

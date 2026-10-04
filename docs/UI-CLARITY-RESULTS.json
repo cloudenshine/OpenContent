@@ -1,0 +1,40 @@
+{
+  "schema": "opencontent.ui-clarity-deployment-results.v1",
+  "at": "2026-10-04T08:23:26.450643+00:00",
+  "version": "0.8.2",
+  "node_checks_passed": 53,
+  "installed_browser_checks_passed": 16,
+  "installed_capability_checks_passed": 15,
+  "independent_http_checks_passed": 39,
+  "python_suite": {
+    "executions": 269,
+    "unique_tests": 248,
+    "passed": 269,
+    "skipped": 0,
+    "overall_passed": true,
+    "failures": [],
+    "original_tests_unchanged": true,
+    "verification": "docs/WINDOWS-VERIFICATION-RESULTS.json",
+    "historical_permission_failures": 3,
+    "reason": "Verified unchanged tests with real links in a scoped standard UAC test process"
+  },
+  "deployment": {
+    "payload_files_matched": 82,
+    "content_files_unchanged": 61,
+    "settings_preserved": true,
+    "old_runtime_files_retained": 89,
+    "project_gates_unchanged": true,
+    "diagnostics": []
+  },
+  "independent_review": "No required changes after restoring asset isolation, GET compatibility, and rejecting linked cards for GET/POST",
+  "native_obsidian_reload": "UNVERIFIED",
+  "real_model_and_platform_validation": "NOT_PERFORMED",
+  "release_published": false,
+  "canonical_lf_sha256": {
+    "plugin/main.js": "f310221eaff1c0a7405cba33667d9bc5cb2e695a5aeda17f6c667f5f3db65810",
+    "plugin/styles.css": "26cd8149cf4c0c0a70aa9b4f68d34abd2ea539d0585a2598b1d0ca50bcb4d890",
+    "opencontent/server.py": "1133cef77dfcdc65668a2f3da91522ceb08a36f22c66a29a49b4ff28333da525",
+    "opencontent/vault.py": "f3a65c06dd62ea41477eb325bef315d2c4a2fd10b7da125b4e4fef75262a4354"
+  },
+  "windows_permission_verification_at": "2026-10-04T08:57:23.584616+00:00"
+}

@@ -27,6 +27,7 @@ bundles[source_name].extend(root/'docs'/name for name in (
     'market-evidence/market-snapshot.json','market-evidence/ailu-audit-manifest.json'))
 bundles[source_name].append(root/'docs/market-evidence/wechat-api-sources.json')
 bundles[source_name].append(root/'docs/WRITING-QUALITY-INTEGRATION.md')
+bundles[source_name].extend(root/'docs'/name for name in ('THREE-STAGE-IMPLEMENTATION.md','THREE-STAGE-VERIFICATION.md'))
 bundles[source_name].extend(root/'docs'/name for name in ('NARRATIVE-PRODUCTION-REPAIR-ZH.md', 'narrative-acceptance-results.json'))
 bundles[source_name].extend(p for p in (root/'docs/writing-quality-evidence').rglob('*') if p.is_file() and p.suffix in ('.json', '.md', '.txt'))
 report={}

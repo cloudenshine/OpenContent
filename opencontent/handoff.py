@@ -43,11 +43,16 @@ def export_approved(kernel, aid, expected):
             raise Problem("Content changed before handoff; refresh and review", 409)
         objects, errors = kernel.read()
         artifact = require_object(objects, aid, "Artifact")
-        result = gate(objects, artifact, vault.constitution(artifact["project"]), [*errors,*kernel.source_issues(objects,artifact['project'])])
+        result = gate(objects, artifact, vault.constitution(artifact['project']),
+                      [*errors,*kernel.source_issues(objects,artifact['project'])])
+        if result['approved'] or 'External dependencies require current Kernel verification' in result['issues']:
+            result = kernel.quality(objects, artifact, errors=errors)
         if not result["approved"]:
             raise Problem("Only a currently approved artifact can be handed off")
         # Provenance remains in the Vault; reader-facing exports contain authored text only.
-        article = f"# {artifact['title']}\n\n{reader_body(artifact)}\n"
+        from .rendering import public_markdown
+        public_markdown({'body':artifact['title'],'derived_from':[]})
+        article = f"# {artifact['title']}\n\n{public_markdown(artifact)}\n"
         # Version the export path so existing v1 handoffs and user edits remain intact.
         rel = f"OpenContent-Exports/{aid}-{result['context_hash'][:16]}-reader-v2.md"
         raw = article.encode("utf-8")

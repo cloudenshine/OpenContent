@@ -1,0 +1,17 @@
+schema: opencontent.capability-pack.v1
+id: xiaohongshu
+name: 小红书本地图文
+version: 1.0.0
+description: 从已批准母稿产生独立文案与语义页面候选，经独立审查后导出本地图文包。无账号写入。
+profiles: [source-faithful]
+tasks: [social-graphic]
+runtime:
+  tools: disabled
+  workspace_write: disabled
+  session: disabled
+  web: disabled
+workflows:
+  social-graphic: workflows/social-graphic.yaml
+context:
+  selector: context/selector.py
+outputs: [artifact, proposal]

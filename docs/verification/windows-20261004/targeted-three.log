@@ -1,0 +1,8 @@
+test_output_path_rejects_internal_symlinks_and_windows_forms (test_capability_runtime_acceptance.RuntimeAcceptanceTests.test_output_path_rejects_internal_symlinks_and_windows_forms) ... ok
+test_import_rejects_symlink_hardlink_and_nonregular_file (test_market_sources.MarketSourceTests.test_import_rejects_symlink_hardlink_and_nonregular_file) ... ok
+test_linked_images_and_lexical_ancestor_links_fail (test_media_generation.CoverGenerationTests.test_linked_images_and_lexical_ancestor_links_fail) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.193s
+
+OK

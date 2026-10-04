@@ -1,0 +1,86 @@
+{
+  "schema": "opencontent.windows-permission-results.v1",
+  "at": "2026-10-04T08:57:23.584616+00:00",
+  "status": "PASS",
+  "python_version": "3.12.10",
+  "environment": "native Windows, standard UAC child only",
+  "persistent_permission_changes": false,
+  "original_tests_unchanged": true,
+  "unrelated_work_preserved": true,
+  "changed_during_checks": [],
+  "real_link_preflight": {
+    "file_symlink": true,
+    "directory_symlink": true,
+    "hardlink": true,
+    "file_reparse_tag": 2684354572,
+    "directory_reparse_tag": 2684354572,
+    "fixtures_removed_after_probe": true
+  },
+  "checks": [
+    {
+      "name": "targeted-three",
+      "exit_code": 0,
+      "sha256": "dee83e2201b65769cb665d065963c99ad3141a9338ef6d0faec00d420fd6b375",
+      "executions": 3,
+      "evidence": "docs/verification/windows-20261004/targeted-three.log"
+    },
+    {
+      "name": "python-full",
+      "exit_code": 0,
+      "sha256": "1908e9c572fa1dab6034789b590372d8e3221f38e3012c9c19bbf2c74b9573d7",
+      "executions": 269,
+      "discovered": 269,
+      "unique_tests": 248,
+      "skipped": 0,
+      "identities_matched": true,
+      "missing_test_executions": [],
+      "unexpected_test_executions": [],
+      "evidence": "docs/verification/windows-20261004/python-full.log"
+    },
+    {
+      "name": "node-full",
+      "exit_code": 0,
+      "sha256": "bc21a65567a231c711692ec5c20d9d53be716814e09db08d21fd3db007217fd6",
+      "tests": 53,
+      "pass": 53,
+      "fail": 0,
+      "skipped": 0,
+      "evidence": "docs/verification/windows-20261004/node-full.log"
+    }
+  ],
+  "capability_http": {
+    "status": "PASS",
+    "checks": {
+      "long-scan_succeeded": true,
+      "long-scan_board_clean": true,
+      "short-scan_succeeded": true,
+      "short-scan_board_clean": true,
+      "long-analyze_succeeded": true,
+      "long-analyze_board_clean": true,
+      "short-analyze_succeeded": true,
+      "short-analyze_board_clean": true,
+      "cards_readable": true,
+      "project_readable": true,
+      "GET_rejects_linked_cards_outside_vault": true,
+      "POST_rejects_linked_cards_outside_vault": true,
+      "Project/broken.md_diagnosed": true,
+      "unexpected/broken.md_diagnosed": true,
+      "http_scenario_completed": true
+    },
+    "synthetic_fixture_only": true
+  },
+  "preserved_negative_evidence": [
+    ".execution/deploy-ui-20261004/python-tests-release.log",
+    ".execution/windows-permissions-20261004/baseline-runtime.log",
+    ".execution/windows-verify-unelevated-20261004/report.json",
+    ".execution/windows-verify-elevated-20261004/report.json",
+    ".execution/windows-verify-final-20261004/report.json"
+  ],
+  "native_obsidian_reload": "UNVERIFIED",
+  "real_model_and_platform_validation": "NOT_PERFORMED",
+  "canonical_lf_sha256": {
+    "scripts/verify_windows.py": "e8c1c95441e75a23abf4ec263ab081bef116853d2713e7758602f8f233a125d1",
+    "scripts/verify_windows.ps1": "9eff038a0e03b486191526787d0c08c3401fdec18de0c82ed670b083b7bef1e8",
+    "package.json": "864a2cffd9e1099b3f978c47b68967b2deaedd12ecddb966eeb2dea9fd9e64b0"
+  }
+}

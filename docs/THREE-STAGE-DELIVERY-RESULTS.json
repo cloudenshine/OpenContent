@@ -1,0 +1,313 @@
+{
+  "schema": "opencontent.three-stage-delivery-verification.v1",
+  "at": "2026-10-04T04:34:59.198864+00:00",
+  "base": "3c63ba76a873f5a04522853a8b81abc09836a04d",
+  "branch": "feat/wesight-delivery-20261004",
+  "full_suite_passed": false,
+  "source_unchanged_during_and_after_verification": true,
+  "node": {
+    "executions": 49,
+    "passed": 49
+  },
+  "python": {
+    "executions": 269,
+    "unique_tests": 248,
+    "passed_executions": 266,
+    "baseline_permission_failures": [
+      "test_import_rejects_symlink_hardlink_and_nonregular_file",
+      "test_linked_images_and_lexical_ancestor_links_fail",
+      "test_output_path_rejects_internal_symlinks_and_windows_forms"
+    ],
+    "skipped_or_xfailed_to_mask_failures": false
+  },
+  "checks": [
+    {
+      "name": "lint",
+      "exit_code": 0,
+      "evidence": ".execution/closure-lint.log",
+      "sha256": "7b9d1d0f29ea7ac56d9ed71d9d47b06a88d5dd5867ac3b39770da9d0fc2e6ab4"
+    },
+    {
+      "name": "compat",
+      "exit_code": 0,
+      "evidence": ".execution/closure-compat.log",
+      "sha256": "224157f3ae41658925590761267b8d2933a0061d41c36b550071c04af5ae81b0"
+    },
+    {
+      "name": "controls",
+      "exit_code": 0,
+      "evidence": ".execution/closure-controls.log",
+      "sha256": "ee3b19840a22659c7bd42d1b1adeda2f34ee2beb374d669e1d45287d44bc60db"
+    },
+    {
+      "name": "build",
+      "exit_code": 0,
+      "evidence": ".execution/closure-build.log",
+      "sha256": "274e3a3d457c5ecfe8e2c18e3c03b30520d401e06f4053d78662cf52bad3cf2c"
+    },
+    {
+      "name": "doctor",
+      "exit_code": 0,
+      "evidence": ".execution/closure-doctor.log",
+      "sha256": "986af28c16660a6cfd732450de50c12c443df094862cc1e21bdab7beaa5f50a2"
+    },
+    {
+      "name": "reader-cases",
+      "exit_code": 0,
+      "evidence": ".execution/closure-reader-cases.log",
+      "sha256": "8513c20df9ffb4e6c5d87868b7d08abbb26f9760e32ee8cbf351b09d07e0e620"
+    },
+    {
+      "name": "package",
+      "exit_code": 0,
+      "evidence": ".execution/closure-package.log",
+      "sha256": "8109ac7215b9262bcc9778be39927d0d31528237fc504c245cb6281cb509cb0a"
+    }
+  ],
+  "package": [
+    {
+      "name": "package-stable",
+      "exit_code": 0,
+      "log": ".execution/completion-package-stable.log",
+      "sha256": "3aceb2082bf5f2125986ada8bdbd4ab0d23c15b4c8b07e9d48fd5c44eab28853"
+    },
+    {
+      "name": "packed-doctor",
+      "exit_code": 0,
+      "log": ".execution/completion-packed-doctor.log",
+      "sha256": "51b59c03621140680c79f7e4a9e959ad73dd99f5bd1d5d952d48a28b1b6d39e8"
+    },
+    {
+      "name": "packed-board",
+      "exit_code": 0,
+      "log": ".execution/completion-packed-board.log",
+      "sha256": "660d09949aa264ff988bab51c1bc729aee5672be087cb08f1589b4dfe154f438"
+    },
+    {
+      "name": "install-final",
+      "exit_code": 0,
+      "log": ".execution/completion-install-final.log",
+      "sha256": "f69a8aeda6547b8770c2cf65bd48bf73d39910d33d0ea89f607e18553ac139c3"
+    },
+    {
+      "name": "installed-doctor",
+      "exit_code": 0,
+      "log": ".execution/completion-installed-doctor.log",
+      "sha256": "51b59c03621140680c79f7e4a9e959ad73dd99f5bd1d5d952d48a28b1b6d39e8"
+    },
+    {
+      "name": "resources-and-archives",
+      "exit_code": 0,
+      "plugin_files": 82,
+      "archives": {
+        "opencontent-plugin-0.8.2.zip": {
+          "sha256": "e935d2ad021e7e0b77c73b52702bf6f0a5762138ae68a1ba8044cf8c6822ae55",
+          "files": 82
+        },
+        "opencontent-source-0.8.2.zip": {
+          "sha256": "e9f501849631d19b665a102c3213dfee10c27e348d2efff36b9959914c7bf14a",
+          "files": 269
+        },
+        "opencontent-trial-0.8.2.zip": {
+          "sha256": "d9f93e7fe53e3a56a1aec7ff399f4e81260413cc1c99d0a783320620f03cec0e",
+          "files": 98
+        }
+      },
+      "synthetic_only": true,
+      "native_host_started": false
+    }
+  ],
+  "native": {
+    "passed": true,
+    "obsidian": "1.13.7",
+    "synthetic_vault_only": true,
+    "clipboard": "OS boundary intercepted; real UI payload verified; user clipboard preserved",
+    "steps": [
+      {
+        "name": "disable",
+        "passed": true,
+        "exit_code": 0,
+        "evidence": ".execution/native-disable.log",
+        "sha256": "14d3c9433e9e284b14d46ddb5b9a8864edd33a7eaf8149791b2fe29608637b29",
+        "checks": []
+      },
+      {
+        "name": "install",
+        "passed": true,
+        "exit_code": 0,
+        "evidence": ".execution/native-install.log",
+        "sha256": "52e0d0e10918d87a13ff704874dd23a489cf18863820f83638fd0fb4ed858896",
+        "checks": []
+      },
+      {
+        "name": "enable",
+        "passed": true,
+        "exit_code": 0,
+        "evidence": ".execution/native-enable.log",
+        "sha256": "bd2830d7c986ebaa2ef803b1c21acbbef214bf36a130a7385c585459f7924734",
+        "checks": []
+      },
+      {
+        "name": "render",
+        "passed": true,
+        "exit_code": 0,
+        "evidence": ".execution/native-render.log",
+        "sha256": "5a4756620b5ae793d643f68ccbf13209c2c5da10861351486035392781811e82",
+        "checks": [
+          {
+            "name": "button_enabled:优雅衬线",
+            "passed": true
+          },
+          {
+            "name": "native_canonical_preview:serif",
+            "passed": true
+          },
+          {
+            "name": "button_enabled:学术极简",
+            "passed": true
+          },
+          {
+            "name": "native_canonical_preview:academic",
+            "passed": true
+          },
+          {
+            "name": "button_enabled:科技深色",
+            "passed": true
+          },
+          {
+            "name": "native_canonical_preview:techDark",
+            "passed": true
+          },
+          {
+            "name": "three_distinct_rendered_themes",
+            "passed": true
+          },
+          {
+            "name": "button_enabled:导出离线图文包",
+            "passed": true
+          },
+          {
+            "name": "native_export_matches_reviewed_build",
+            "passed": true
+          },
+          {
+            "name": "button_enabled:复制已批准富文本",
+            "passed": true
+          },
+          {
+            "name": "clipboard_handler_uses_canonical_payload_without_OS_write",
+            "passed": true
+          },
+          {
+            "name": "native_artifact_selector_changes_target",
+            "passed": true
+          }
+        ]
+      },
+      {
+        "name": "selection",
+        "passed": true,
+        "exit_code": 0,
+        "evidence": ".execution/native-selection.log",
+        "sha256": "60a714cdad01be9dcbaef5888413f4853d83e090ab88466a6c0ae46749ddbe71",
+        "checks": [
+          {
+            "name": "native_unicode_selection_capture",
+            "passed": true
+          },
+          {
+            "name": "native_selection_button_stores_target_snapshot",
+            "passed": true
+          },
+          {
+            "name": "native_changed_selection_rejected",
+            "passed": true
+          }
+        ]
+      },
+      {
+        "name": "social",
+        "passed": true,
+        "exit_code": 0,
+        "evidence": ".execution/native-social.log",
+        "sha256": "2f5289e5d58094400712e5f47d64a32ffba081d6f11de399e93f17e9d03db236",
+        "checks": [
+          {
+            "name": "native_social_preview_real_pages",
+            "passed": true
+          },
+          {
+            "name": "native_formal_social_local_not_published",
+            "passed": true
+          },
+          {
+            "name": "native_file_hash:page-01.png",
+            "passed": true
+          },
+          {
+            "name": "native_file_hash:page-02.png",
+            "passed": true
+          },
+          {
+            "name": "native_file_hash:page-03.png",
+            "passed": true
+          }
+        ]
+      }
+    ]
+  },
+  "reader_cases": {
+    "test_only": true,
+    "real_model_executed": false,
+    "real_account_written": false,
+    "fonts_redistributed": false,
+    "image_text": {
+      "serif": {
+        "build_id": "102d9d2ffa9cca66dff3133adf25fcaac9abc30f9710940bec6c27943e8d2028",
+        "preview": "image-text\\serif\\preview.html"
+      },
+      "academic": {
+        "build_id": "c34c1cb909fef5254ed5394e9d190d690c89de3ef47eeb591fa3fe7048915f47",
+        "preview": "image-text\\academic\\preview.html"
+      },
+      "techDark": {
+        "build_id": "494196983a3b6c409e73a9796371e8a12a443aea51d79768b6afe77cfcfdf0de",
+        "preview": "image-text\\techDark\\preview.html"
+      }
+    },
+    "social_graphic": {
+      "status": "LOCAL_BUNDLE_READY",
+      "pages": [
+        {
+          "path": "page-01.png",
+          "hash": "37ed2637e4f8d54bca9d14670c2a0204774189b11cc1893ac6d8b606db73481a",
+          "width": 1080,
+          "height": 1440
+        },
+        {
+          "path": "page-02.png",
+          "hash": "6b75ba62be5efdba6cc4a2e044d2796044900cdfcadc0715ccf3e5e2a3d0f63c",
+          "width": 1080,
+          "height": 1440
+        },
+        {
+          "path": "page-03.png",
+          "hash": "fce24a70c240b14d571ec673143ffb2095dd666eb9d622dcf16328679003d47e",
+          "width": 1080,
+          "height": 1440
+        }
+      ],
+      "preview": "social-graphic/preview.html"
+    },
+    "deterministic_repeat": "PASS",
+    "native_host": "NOT_VERIFIED"
+  },
+  "limits": {
+    "real_model_generation_quality": "NOT_VERIFIED",
+    "real_wechat_image_upload_and_draft": "NOT_VERIFIED",
+    "real_social_platform_draft_or_publish": "NOT_IMPLEMENTED_IN_LOCAL_PACK",
+    "author_content_and_visual_acceptance": "PENDING",
+    "production_vault_deployment": "NOT_PERFORMED",
+    "release_publication": "NOT_PERFORMED"
+  }
+}

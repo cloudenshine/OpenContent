@@ -10,6 +10,15 @@ from .vault import Problem
 class UnknownOutcome(Problem): pass
 class RemoteRejected(Problem): pass
 
+
+def platform_image_url(url):
+    try:
+        p=urllib.parse.urlsplit(url)
+        if p.scheme!='https' or p.hostname not in ('mmbiz.qpic.cn','mmbiz.qlogo.cn') or p.username or p.password or p.port not in (None,443):
+            raise ValueError()
+        return url
+    except (ValueError,TypeError):raise Problem('正文图片回执不是受信任的微信 HTTPS 资源 URL') from None
+
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, *args, **kwargs): return None
 
@@ -83,3 +92,26 @@ class WeChat:
               f'Content-Type: {mime}\r\n\r\n').encode()+raw+f'\r\n--{boundary}--\r\n'.encode()
         path='/cgi-bin/material/add_material?type=image&access_token='+urllib.parse.quote(self.token(),safe='')
         return self.check(self.transport(path,body,'multipart/form-data; boundary='+boundary,True))
+
+    def upload_image(self, raw, mime):
+        boundary='OpenContent'+uuid.uuid4().hex
+        extension='png' if mime=='image/png' else 'jpg'
+        body=(f'--{boundary}\r\nContent-Disposition: form-data; name="media"; filename="body.{extension}"\r\n'
+              f'Content-Type: {mime}\r\n\r\n').encode()+raw+f'\r\n--{boundary}--\r\n'.encode()
+        path='/cgi-bin/media/uploadimg?access_token='+urllib.parse.quote(self.token(),safe='')
+        value=self.check(self.transport(path,body,'multipart/form-data; boundary='+boundary,True))
+        platform_image_url(value.get('url'))
+        return value
+
+    def verify_image(self, url, asset):
+        from .rendering import decode_image, MAX_BYTES
+        url=platform_image_url(url)
+        opener=urllib.request.build_opener(urllib.request.ProxyHandler({}),NoRedirect())
+        try:
+            with opener.open(urllib.request.Request(url),timeout=15) as response:raw=response.read(MAX_BYTES+1)
+            remote=decode_image(raw)
+            # A platform transform is not silently trusted. Explicit import/rebuild is
+            # required when remote bytes differ from the frozen local asset.
+            if remote['hash']!=asset['hash']:raise ValueError()
+            return {'url':url,'hash':remote['hash'],'width':remote['width'],'height':remote['height']}
+        except Exception:raise Problem('平台图片回读与冻结资产不符或无法核验；禁止投递',409) from None

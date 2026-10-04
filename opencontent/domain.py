@@ -73,6 +73,9 @@ def validate(obj, objects):
                     raise Problem(f"{name} needs PASS/WARN/FAIL and a substantive reason")
             if not isinstance(obj.get("claims_complete"), bool):
                 raise Problem("Reviewer must explicitly assess claim completeness")
+            fidelity=obj.get('claim_reviews')
+            if fidelity is not None and (not isinstance(fidelity,dict) or set(fidelity)!=set(artifact.get('derived_from',[])) or any(not isinstance(v,dict) or type(v.get('faithful')) is not bool for v in fidelity.values())):
+                raise Problem('Claim fidelity review must address exactly the target claims with explicit booleans')
         elif obj.get("mode") == "decision":
             if obj.get("decision") not in ("accept", "reject") or obj.get("origin") != "human":
                 raise Problem("Final decision must be human accept/reject")
@@ -159,8 +162,10 @@ def argument_issues(objects, pid):
     return issues
 
 
-def gate(objects, artifact, policies, errors=()):
+def gate(objects, artifact, policies, errors=(), *, dependency_verified=False):
     issues = list(errors)
+    has_external = re.search(r'!\[',artifact.get('body','')) or artifact.get('pages') or artifact.get('mother_dependency') or any(r.get('artifact')==artifact['oc_id'] and r.get('semantic_hash') for r in objects.values() if r.get('type')=='Review')
+    if has_external and not dependency_verified:issues.append('External dependencies require current Kernel verification')
     pid = artifact["project"]
     try:
         project = require_object(objects, pid, "Project")
@@ -254,7 +259,8 @@ def gate(objects, artifact, policies, errors=()):
             "needs_judgment": not approved, "decision": decision}
 
 
-def transition(objects, project, target, policies, errors=()):
+def transition(objects, project, target, policies, errors=(), quality=None):
+    evaluate = quality or (lambda a: gate(objects,a,policies,errors))
     current = project.get("state")
     if current not in STATES or target not in STATES or STATES.index(target) != STATES.index(current) + 1:
         raise Problem(f"Illegal transition {current} → {target}")
@@ -279,7 +285,7 @@ def transition(objects, project, target, policies, errors=()):
             raise Problem("; ".join(issues))
     if target == "APPROVED":
         artifacts = linked(objects, pid, "Artifact")
-        if not artifacts or not all(gate(objects, a, policies, errors)["approved"] for a in artifacts):
+        if not artifacts or not all(evaluate(a)["approved"] for a in artifacts):
             raise Problem("Approval requires current passing gate and explicit human decision for every artifact")
     if target == "PUBLISHED":
         for a in linked(objects,pid,'Artifact'):
@@ -288,7 +294,7 @@ def transition(objects, project, target, policies, errors=()):
                 p.get('context_hash')==context_hash(objects,a,policies)]
             if not matches:
                 raise Problem('Every artifact requires a current published receipt')
-            if not gate(objects, a, policies, errors)["approved"]:
+            if not evaluate(a)["approved"]:
                 raise Problem("Publication requires approved artifact")
     if target == "LEARNING" and not any(p.get("body", "").strip() for p in linked(objects, pid, "Publication")):
         raise Problem("Learning tracking needs an explicit observation; automatic feedback learning is out of scope")

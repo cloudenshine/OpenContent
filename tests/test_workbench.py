@@ -111,7 +111,7 @@ class WorkbenchTests(unittest.TestCase):
         workspace=self.k.vault.runtime/'image-run';workspace.mkdir()
         # Small known PNG fixture; not presented as a model-generated acceptance image.
         import base64
-        (workspace/'image.png').write_bytes(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aS1cAAAAASUVORK5CYII='))
+        (workspace/'image.png').write_bytes(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4//8/AAX+Av4N70a4AAAAAElFTkSuQmCC'))
         result={'reply':'测试图像导入。','revision':None,'illustrations':[],'images':[{'path':'image.png','alt':'图','placement':'封面'}]}
         turn=workbench.complete(self.k,self.p,uid,result,workspace)
         self.assertEqual(turn['image_status'],'GENERATED')

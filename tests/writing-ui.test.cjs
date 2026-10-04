@@ -71,7 +71,7 @@ test('running task uses the same action to stop, without submitting a second req
 });
 test('unsent text survives rerender and failed sends, keyboard obeys button guard',async()=>{
   const x=setup({failStart:true});await x.view.conversation(x.root,x.data,x.project);
-  const input=x.nodes().find(n=>n.attrs['aria-label']==='给这个项目的指令');const send=x.nodes().find(n=>n.textContent==='发送');
+  const input=x.nodes().find(n=>n.attrs['aria-label']==='给这个项目的指令');const send=x.nodes().find(n=>n.attrs['data-action']==='send');
   await input.dispatch('keydown',{key:'Enter',ctrlKey:true,preventDefault(){}});assert.ok(!x.calls.some(c=>c.route==='/conversation/send'));
   input.value='换一个开头';await input.dispatch('input');await send.click();assert.equal(x.view.composers.p,'换一个开头');
   x.root.empty();await x.view.conversation(x.root,x.data,x.project);
