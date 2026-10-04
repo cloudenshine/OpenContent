@@ -38,17 +38,17 @@
 | Node 界面及引擎回归 | 53 项通过 |
 | 安装包浏览器流程 | 16 项通过，使用实际安装的插件和内核、临时合成 Vault |
 | 报告与机制卡片 HTTP 流程 | 源码及安装内核均 15 项通过；修复前失败证据保留；损坏普通对象仍被诊断；GET 与 POST 均拒绝库外联接卡片 |
-| 完整 Python 回归 | 269 次执行，266 次通过，三项既有 Windows 符号链接权限失败；完整套件仍未通过 |
+| 完整 Python 回归 | Windows 权限复验后 269 次执行全部通过，248 个不同测试，零跳过；发现清单与实际执行逐项匹配 |
 | 安装前后环境检查 | 通过；界面和内核版本一致；不表示模型登录已实测 |
 | lint 与兼容检查 | 零错误，一项原有设置搜索兼容提示；负例检查通过 |
 | 构建及长提案检查 | 构建通过；320、440、1000 像素宽度下长提案无重叠 |
 
-三项完整套件失败为 `test_output_path_rejects_internal_symlinks_and_windows_forms`、`test_import_rejects_symlink_hardlink_and_nonregular_file` 和 `test_linked_images_and_lexical_ancestor_links_fail`，均在制造 Windows 符号链接对象时遇到 WinError 1314。本轮未跳过测试、放宽断言或修改系统权限。
+首次完整套件有三项 WinError 1314：`test_output_path_rejects_internal_symlinks_and_windows_forms`、`test_import_rejects_symlink_hardlink_and_nonregular_file` 和 `test_linked_images_and_lexical_ancestor_links_fail`。按用户要求，现已用标准 UAC 仅提升测试进程，真实文件和目录符号链接及硬链接预检通过，原三项断言保持不变并全部通过。随后冻结验证入口，重跑完整 Python 回归 269 次（248 个不同测试）、Node 53 项、能力 HTTP 15 项，全部通过，零跳过，源码及测试文件在运行期间未变化。原先失败和验证入口迭代期间的失败报告保留；没有开启开发者模式、修改账号权限或系统安全策略。独立复核指出的执行清单和入口指纹问题已修正。复现步骤见 [Windows 验证说明](WINDOWS-VERIFICATION.md)，可核对的日志及机器摘要见 `WINDOWS-VERIFICATION-RESULTS.json`。
 
 浏览器与 HTTP 流程的模型、账号及宿主行为均为明确的测试替身；测试数据不会写入正式作品。没有执行真实模型生成或平台发表。独立复核结果及机器可读摘要见本目录的 `UI-CLARITY-RESULTS.json`；详细原始证据留在本机 `.execution/deploy-ui-20261004`。
 
 ## 复现与使用
 
-使用 Python 3.12 或更高版本和仓库固定依赖，可运行 `npm test`、`python -B -m unittest discover -s tests -v` 与 `python -B scripts/verify_capability_assets.py --runtime . --output .execution/capability-assets.json`。启动 `tests/helpers/ui_clarity_preview.py` 后，以其输出地址运行 `tests/ui-clarity-journey.playwright.js` 中的浏览器流程。预览默认使用仓库插件；可通过 `OPENCONTENT_PREVIEW_PLUGIN_DIR` 和 `OPENCONTENT_PREVIEW_RUNTIME` 指向实际安装文件进行隔离验证。
+使用 Python 3.12 或更高版本和仓库固定依赖，Windows 完整验证使用 `scripts/verify_windows.ps1 -PythonExe "C:\Program Files\Python312\python.exe" -Elevate`；已有符号链接权限的环境可直接运行 `npm test`、`python -B -m unittest discover -s tests -v` 与 `python -B scripts/verify_capability_assets.py --runtime . --output .execution/capability-assets.json`。启动 `tests/helpers/ui_clarity_preview.py` 后，以其输出地址运行 `tests/ui-clarity-journey.playwright.js` 中的浏览器流程。预览默认使用仓库插件；可通过 `OPENCONTENT_PREVIEW_PLUGIN_DIR` 和 `OPENCONTENT_PREVIEW_RUNTIME` 指向实际安装文件进行隔离验证。
 
 安装文件已经替换。请在保存当前编辑内容后，重新加载 OpenContent 或重启 Obsidian，使正在运行的旧插件切换到新版本。此会话无法确认原生宿主已经重新加载，不将安装包的浏览器检查当作原生验收。本轮更新仓库源代码与现有 PR，不发布或覆盖同版本的 GitHub Release。

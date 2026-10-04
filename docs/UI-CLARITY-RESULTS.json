@@ -8,14 +8,15 @@
   "independent_http_checks_passed": 39,
   "python_suite": {
     "executions": 269,
-    "passed": 266,
-    "overall_passed": false,
-    "failures": [
-      "test_capability_runtime_acceptance.RuntimeAcceptanceTests.test_output_path_rejects_internal_symlinks_and_windows_forms",
-      "test_market_sources.MarketSourceTests.test_import_rejects_symlink_hardlink_and_nonregular_file",
-      "test_media_generation.CoverGenerationTests.test_linked_images_and_lexical_ancestor_links_fail"
-    ],
-    "reason": "Existing Windows file-symlink creation privilege unavailable (WinError 1314); tests unchanged"
+    "unique_tests": 248,
+    "passed": 269,
+    "skipped": 0,
+    "overall_passed": true,
+    "failures": [],
+    "original_tests_unchanged": true,
+    "verification": "docs/WINDOWS-VERIFICATION-RESULTS.json",
+    "historical_permission_failures": 3,
+    "reason": "Verified unchanged tests with real links in a scoped standard UAC test process"
   },
   "deployment": {
     "payload_files_matched": 82,
@@ -34,5 +35,6 @@
     "plugin/styles.css": "26cd8149cf4c0c0a70aa9b4f68d34abd2ea539d0585a2598b1d0ca50bcb4d890",
     "opencontent/server.py": "1133cef77dfcdc65668a2f3da91522ceb08a36f22c66a29a49b4ff28333da525",
     "opencontent/vault.py": "f3a65c06dd62ea41477eb325bef315d2c4a2fd10b7da125b4e4fef75262a4354"
-  }
+  },
+  "windows_permission_verification_at": "2026-10-04T08:57:23.584616+00:00"
 }
