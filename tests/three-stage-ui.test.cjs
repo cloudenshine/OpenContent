@@ -42,7 +42,7 @@ test('writing target, proposal/apply, Critic and social buttons reach real HTTP 
     const nodes=flatten(root);nodes.find(n=>n.attrs['aria-label']==='想做什么').value='revise';
     nodes.find(n=>n.attrs['aria-label']==='给这个项目的指令').value='只修改选定第二稿';
     await nodes.find(n=>n.attrs['aria-label']==='给这个项目的指令').dispatch('input');
-    await nodes.find(n=>n.textContent==='发送').click();await waitJob();
+    await nodes.find(n=>n.attrs['data-action']==='send').click();await waitJob();
     const sent=calls.find(c=>c.route==='/conversation/send');assert.equal(sent.body.target_artifact_id,config.second);
     let history=await api('/conversation/history',{project:config.project});assert.equal(history.turns[0].revision.artifact,config.second);
     const originalFirst=(await api('/objects/'+config.first)).object.body;
@@ -54,7 +54,7 @@ test('writing target, proposal/apply, Critic and social buttons reach real HTTP 
     data=await api('/board');p=data.projects[0];view.chatMode='illustrate';view.composers[config.project]='生成两张合成图片';
     const imageRoot=new Element();await view.conversation(imageRoot,data,p);
     const imageMode=flatten(imageRoot).find(n=>n.attrs['aria-label']==='想做什么');imageMode.value='illustrate';
-    await flatten(imageRoot).find(n=>n.textContent==='发送').click();await waitJob();
+    await flatten(imageRoot).find(n=>n.attrs['data-action']==='send').click();await waitJob();
     for(let index=0;index<2;index++){
       data=await api('/board');p=data.projects[0];const candidates=new Element();await view.conversation(candidates,data,p);
       await flatten(candidates).filter(n=>n.textContent==='检查并插入到目标稿件')[index].click();

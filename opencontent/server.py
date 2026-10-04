@@ -87,6 +87,16 @@ class Handler(BaseHTTPRequestHandler):
                 return k.inspect(route.split("/")[-1])
             if route == "/jobs":
                 return jobs.list()
+            if route == "/capabilities/mechanisms":
+                cards = []
+                for p in sorted(k.vault.content.rglob("机制卡片/*.md")):
+                    try:
+                        safe_path = k.vault.safe(p.relative_to(k.vault.root))
+                        raw = safe_path.read_text(encoding="utf-8")
+                        cards.append({"path": p.relative_to(k.vault.root).as_posix(), "title": p.stem, "content": raw})
+                    except (Problem, OSError, UnicodeError):
+                        pass
+                return {"mechanisms": cards}
         elif self.command == "POST":
             if route == '/ideation/preview': return ideation.preview(k,body.get('direction',''),body.get('folders'),body.get('limit',24))
             if route == '/ideation/retry': return jobs.retry_ideation(body['id'])
@@ -169,9 +179,10 @@ class Handler(BaseHTTPRequestHandler):
                 cards = []
                 for p in sorted(k.vault.content.rglob("机制卡片/*.md")):
                     try:
-                        raw = p.read_text(encoding="utf-8")
+                        safe_path = k.vault.safe(p.relative_to(k.vault.root))
+                        raw = safe_path.read_text(encoding="utf-8")
                         cards.append({"path": p.relative_to(k.vault.root).as_posix(), "title": p.stem, "content": raw})
-                    except Exception:
+                    except (Problem, OSError, UnicodeError):
                         pass
                 return {"mechanisms": cards}
             if route == "/capabilities/market":

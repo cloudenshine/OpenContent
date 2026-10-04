@@ -14,6 +14,9 @@ import yaml
 
 TYPES = {"Material", "Knowledge", "Claim", "Evidence", "Idea", "Project", "Artifact", "Review", "Publication"}
 
+# Capability reports are separate assets with their own formats, not core objects.
+CAPABILITY_ASSET_DIRECTORIES = {"Market", "Deconstruction"}
+
 
 class Problem(ValueError):
     def __init__(self, message, status=422):
@@ -144,6 +147,8 @@ class Vault:
         objects, errors = {}, []
         seen = set()
         for path in sorted(self.content.rglob("*.md")):
+            if path.relative_to(self.content).parts[0] in CAPABILITY_ASSET_DIRECTORIES:
+                continue
             rel = path.relative_to(self.root).as_posix()
             try:
                 path = self.safe(rel)
